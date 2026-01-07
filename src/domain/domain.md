@@ -45,7 +45,7 @@ Persona que interactúa con el sistema dentro de una organización.
 Responsabilidades:
 - Ejecutar acciones según su rol
 - Ser trazable en auditoría
-
+    
 ---
 
 ### Rol
@@ -262,7 +262,7 @@ Sistema
 AuditLogCreated
 
 ---
-
+Z
 ## 6. Principios de Diseño del Dominio
 
 - El dominio no conoce frameworks
