@@ -67,4 +67,16 @@ pullDomainEvents(): DomainEvent[] {
 private record(event: DomainEvent): void {
     this.domainEvents.push(event);
 }
+getId(): string {
+    return this.id;
+}
+
+getSteps(): readonly ProcessStep[] {
+    return this.steps;
+}
+
+getStatus(): ProcessStatus {
+    return this.status;
+}
+
 }

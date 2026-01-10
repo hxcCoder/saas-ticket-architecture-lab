@@ -10,34 +10,35 @@ export class ProcessStep {
     private order: number;
     private status: ProcessStepStatus;
 
-constructor(params: {
-    id: string;
-    name: string;
-    order: number;
-}) {
-    if (!params.name.trim()) {
-        throw new EmptyStepNameError();
+    constructor(params: { id: string; name: string; order: number }) {
+        if (!params.name.trim()) {
+            throw new EmptyStepNameError();
+        }
+
+        if (params.order < 0) {
+            throw new InvalidStepOrderError();
+        }
+
+        this.id = params.id;
+        this.name = params.name;
+        this.order = params.order;
+        this.status = ProcessStepStatus.ACTIVE;
     }
 
-    if (params.order < 0) {
-        throw new InvalidStepOrderError();
+    getId(): string {
+        return this.id;
     }
 
-    this.id = params.id;
-    this.name = params.name;
-    this.order = params.order;
-    this.status = ProcessStepStatus.ACTIVE;
+    getOrder(): number {
+        return this.order;
+    }
+
+    isActive(): boolean {
+        return this.status === ProcessStepStatus.ACTIVE;
+    }
+
+    disable(): void {
+        this.status = ProcessStepStatus.DISABLED;
+    }
 }
 
-getOrder(): number {
-    return this.order;
-}
-
-isActive(): boolean {
-    return this.status === ProcessStepStatus.ACTIVE;
-}
-
-disable(): void {
-    this.status = ProcessStepStatus.DISABLED;
-}
-}

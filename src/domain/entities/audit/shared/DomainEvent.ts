@@ -1,7 +1,7 @@
 export abstract class DomainEvent {
-    readonly occurredOn: Date;
+  readonly occurredOn: Date;
 
-    protected constructor() {
+  protected constructor() {
     this.occurredOn = new Date();
-}
+  }
 }
