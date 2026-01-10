@@ -1,76 +1,70 @@
-// src/domain/entities/process/Process.ts || 1
+import { ProcessStatus } from "./ProcessStatus";
 import { ProcessStep } from "./ProcessStep";
-import { DomainEvent } from "../shared/DomainEvent";
 import {
     ProcessAlreadyActiveError,
-    ProcessCannotBeActivatedError,
     ProcessHasNoStepsError,
+    InvalidProcessStateError,
 } from "./ProcessErrors";
-
-export enum ProcessStatus {
-    DRAFT = "draft",
-    ACTIVE = "active",
-    ARCHIVED = "archived",
-}
+import { DomainEvent } from "../audit/shared/DomainEvent";
+import { ProcessCreated } from "./events/ProcessCreated";
+import { ProcessActivated } from "./events/ProcessActivated";
 
 export class Process {
+    private readonly id: string;
+    private name: string;
+    private status: ProcessStatus;
+    private steps: ProcessStep[] = [];
     private domainEvents: DomainEvent[] = [];
 
-    private constructor(
-    private readonly id: string,
-    private readonly organizationId: string,
-    private name: string,
-    private status: ProcessStatus,
-    private steps: ProcessStep[]
-) {}
+private constructor(id: string, name: string) {
+    this.id = id;
+    this.name = name;
+    this.status = ProcessStatus.DRAFT;
 
-  // 🪨 Ritual de nacimiento
-static create(id: string, organizationId: string, name: string): Process {
-    return new Process(
-        id,
-        organizationId,
-        name,
-        ProcessStatus.DRAFT,
-        []
+    this.record(new ProcessCreated(id, name));
+
+}
+
+static create(id: string, name: string): Process {
+    return new Process(id, name);
+}
+
+addStep(step: ProcessStep): void {
+    if (this.status !== ProcessStatus.DRAFT) {
+        throw new InvalidProcessStateError(
+        "Cannot add steps to a non-draft process"
     );
 }
 
-  // 📜 Definir la ley
-defineSteps(steps: ProcessStep[]): void {
-    if (this.status !== ProcessStatus.DRAFT) {
-    throw new ProcessCannotBeActivatedError();
-    }
-
-    if (steps.length === 0) {
-    throw new ProcessHasNoStepsError();
-    }
-
-    this.steps = steps;
+    this.steps.push(step);
 }
 
-  // 🔥 Consagrar la ley
 activate(): void {
-    if (this.status === ProcessStatus.ACTIVE) {
-        throw new ProcessAlreadyActiveError();
+    if (this.status !== ProcessStatus.DRAFT) {
+        throw new InvalidProcessStateError(
+        "Only draft processes can be activated"
+        );
     }
 
     if (this.steps.length === 0) {
-        new ProcessHasNoStepsError();
+        throw new ProcessHasNoStepsError();
     }
 
     this.status = ProcessStatus.ACTIVE;
-
-    // evento se registra, no se envía
-    // eso es trabajo de aplicación
+    this.record(new ProcessActivated(this.id));
 }
 
-archive(): void {
-    this.status = ProcessStatus.ARCHIVED;
+isActive(): boolean {
+    return this.status === ProcessStatus.ACTIVE;
 }
 
 pullDomainEvents(): DomainEvent[] {
     const events = [...this.domainEvents];
     this.domainEvents = [];
     return events;
+}
+
+private record(event: DomainEvent): void {
+    this.domainEvents.push(event);
 }
 }
