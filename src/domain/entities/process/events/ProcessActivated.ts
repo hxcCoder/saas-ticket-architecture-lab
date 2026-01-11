@@ -1,9 +1,11 @@
 import { DomainEvent } from "../../audit/shared/DomainEvent";
 
-export class ProcessActivated implements DomainEvent {
-    readonly occurredOn: Date;
+export class ProcessActivated extends DomainEvent {
+  constructor(public readonly processId: string) {
+    super();
+  }
 
-    constructor(public readonly processId: string) {
-    this.occurredOn = new Date();
-}
+  getEventName(): string {
+    return "process.activated";
+  }
 }

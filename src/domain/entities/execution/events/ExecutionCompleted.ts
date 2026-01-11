@@ -1,11 +1,11 @@
 import { DomainEvent } from "../../audit/shared/DomainEvent";
 
-export class ExecutionCompleted implements DomainEvent {
-  readonly occurredOn: Date;
+export class ExecutionCompleted extends DomainEvent {
+  constructor(public readonly executionId: string) {
+    super();
+  }
 
-  constructor(
-    public readonly executionId: string
-  ) {
-    this.occurredOn = new Date();
+  getEventName(): string {
+    return "execution.completed";
   }
 }

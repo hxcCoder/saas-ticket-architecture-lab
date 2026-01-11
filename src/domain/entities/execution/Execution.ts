@@ -3,71 +3,114 @@ import { ExecutionStatus } from "./ExecutionStatus";
 import { ExecutionStep } from "./ExecutionStep";
 import { DomainEvent } from "../audit/shared/DomainEvent";
 import { ExecutionStarted } from "./events/ExecutionStarted";
-import { InvalidProcessStateError } from "../process/ProcessErrors";
-import { ProcessStep } from "../process/ProcessStep";
 import { ExecutionStepCompleted } from "./events/ExecutionStepCompleted";
 import { ExecutionCompleted } from "./events/ExecutionCompleted";
+import { InvalidProcessStateError } from "../process/ProcessErrors";
+import { ProcessStep } from "../process/ProcessStep";
 
 export class Execution {
-    private readonly id: string;
-    private readonly processId: string;
-    private status: ExecutionStatus;
-    private steps: ExecutionStep[];
-    private domainEvents: DomainEvent[] = [];
+  private readonly id: string;
+  private readonly processId: string;
+  private status: ExecutionStatus;
+  private steps: ExecutionStep[];
+  private domainEvents: DomainEvent[] = [];
 
-    private constructor(id: string, process: Process) {
+  // Constructor para crear nueva ejecución
+  private constructor(
+    id: string,
+    processId: string,
+    status: ExecutionStatus,
+    steps: ExecutionStep[],
+    recordEvent: boolean
+  ) {
+    this.id = id;
+    this.processId = processId;
+    this.status = status;
+    this.steps = steps;
+
+    if (recordEvent) {
+      this.record(new ExecutionStarted(this.id, this.processId));
+    }
+  }
+
+  // 🔹 Caso de uso: iniciar ejecución
+  static start(id: string, process: Process): Execution {
     if (!process.isActive()) {
-        throw new InvalidProcessStateError(
+      throw new InvalidProcessStateError(
         "Cannot execute an inactive process"
-    );
+      );
     }
 
-    this.id = id;
-    this.processId = process.getId();
-    this.status = ExecutionStatus.RUNNING;
-
-    this.steps = process.getSteps().map(
-        (step: ProcessStep) => ExecutionStep.fromProcessStep(step)
+    const steps = process.getSteps().map(
+      step => ExecutionStep.fromProcessStep(step)
     );
 
-    this.record(new ExecutionStarted(this.id, this.processId));
-}
+    return new Execution(
+      id,
+      process.getId(),
+      ExecutionStatus.RUNNING,
+      steps,
+      true
+    );
+  }
 
-static start(id: string, process: Process): Execution {
-    return new Execution(id, process);
-}
+  // 🔹 Infraestructura: rehidratar desde DB
+  static rehydrate(params: {
+    id: string;
+    processId: string;
+    status: ExecutionStatus;
+    steps: ExecutionStep[];
+  }): Execution {
+    return new Execution(
+      params.id,
+      params.processId,
+      params.status,
+      params.steps,
+      false
+    );
+  }
 
-complete(): void {
-    if (this.steps.some(step => !step.isDone())) return;
-    this.status = ExecutionStatus.COMPLETED;
-}
+  // -------------------------
+  // Comportamiento de dominio
+  // -------------------------
 
-pullDomainEvents(): DomainEvent[] {
+  markStepDone(stepId: string): void {
+    const step = this.steps.find(s => s.getStepId() === stepId);
+    if (!step) throw new Error("Execution step not found");
+
+    step.markDone();
+    this.record(new ExecutionStepCompleted(this.id, stepId));
+
+    if (this.steps.every(s => s.isDone())) {
+      this.status = ExecutionStatus.COMPLETED;
+      this.record(new ExecutionCompleted(this.id));
+    }
+  }
+
+  pullDomainEvents(): DomainEvent[] {
     const events = [...this.domainEvents];
     this.domainEvents = [];
     return events;
-}
+  }
 
-private record(event: DomainEvent): void {
+  private record(event: DomainEvent): void {
     this.domainEvents.push(event);
-}
-markStepDone(stepId: string): void {
-    const step = this.steps.find(s => s.getStepId() === stepId);
+  }
 
-if (!step) {
-    throw new Error("Execution step not found");
-}
+  // Getters para infraestructura
+  getId(): string {
+    return this.id;
+  }
 
-    step.markDone();
+  getProcessId(): string {
+    return this.processId;
+  }
 
-    this.record(
-    new ExecutionStepCompleted(this.id, stepId)
-);
+  getStatus(): ExecutionStatus {
+    return this.status;
+  }
 
-if (this.steps.every(s => s.isDone())) {
-    this.status = ExecutionStatus.COMPLETED;
-    this.record(new ExecutionCompleted(this.id));
-}
-}
-
+  getSteps(): ExecutionStep[] {
+    return [...this.steps];
+  }
 }

@@ -1,34 +1,45 @@
 import { ProcessStep } from "../process/ProcessStep";
 
 export enum ExecutionStepStatus {
-    PENDING = "PENDING",
-    DONE = "DONE",
-    FAILED = "FAILED",
+  PENDING = "PENDING",
+  DONE = "DONE",
+  FAILED = "FAILED",
 }
 
 export class ExecutionStep {
-    private readonly stepId: string;
-    private status: ExecutionStepStatus;
+  private readonly stepId: string;
+  private status: ExecutionStepStatus;
 
-    private constructor(stepId: string) {
-        this.stepId = stepId;
-        this.status = ExecutionStepStatus.PENDING;
-    }
+  private constructor(stepId: string, status?: ExecutionStepStatus) {
+    this.stepId = stepId;
+    this.status = status ?? ExecutionStepStatus.PENDING;
+  }
 
-    static fromProcessStep(step: ProcessStep): ExecutionStep {
-        return new ExecutionStep(step.getId());
-    }
+  static fromProcessStep(step: ProcessStep): ExecutionStep {
+    return new ExecutionStep(step.getId());
+  }
 
-    markDone(): void {
-        if (this.status !== ExecutionStepStatus.PENDING) return;
-        this.status = ExecutionStepStatus.DONE;
-    }
+  static rehydrate(params: {
+    stepId: string;
+    status: ExecutionStepStatus;
+  }): ExecutionStep {
+    return new ExecutionStep(params.stepId, params.status);
+  }
 
-    isDone(): boolean {
-        return this.status === ExecutionStepStatus.DONE;
-    }
-    getStepId(): string {
-return this.stepId;
-}
+  markDone(): void {
+    if (this.status !== ExecutionStepStatus.PENDING) return;
+    this.status = ExecutionStepStatus.DONE;
+  }
 
+  isDone(): boolean {
+    return this.status === ExecutionStepStatus.DONE;
+  }
+
+  getStepId(): string {
+    return this.stepId;
+  }
+
+  getStatus(): ExecutionStepStatus {
+    return this.status;
+  }
 }

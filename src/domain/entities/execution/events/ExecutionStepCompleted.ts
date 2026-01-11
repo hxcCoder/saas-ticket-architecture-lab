@@ -1,12 +1,14 @@
 import { DomainEvent } from "../../audit/shared/DomainEvent";
 
-export class ExecutionStepCompleted implements DomainEvent {
-  readonly occurredOn: Date;
-
+export class ExecutionStepCompleted extends DomainEvent {
   constructor(
     public readonly executionId: string,
     public readonly stepId: string
   ) {
-    this.occurredOn = new Date();
+    super();
+  }
+
+  getEventName(): string {
+    return "execution.step.completed";
   }
 }

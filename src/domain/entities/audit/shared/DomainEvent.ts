@@ -1,7 +1,13 @@
-export abstract class DomainEvent {
-  readonly occurredOn: Date;
+import crypto from "crypto";
 
-  protected constructor() {
-    this.occurredOn = new Date();
-  }
+export abstract class DomainEvent {
+    public readonly id: string;
+    public readonly occurredOn: Date;
+
+    protected constructor(id?: string, occurredOn?: Date) {
+    this.id = id ?? crypto.randomUUID();
+    this.occurredOn = occurredOn ?? new Date();
+}
+
+    abstract getEventName(): string;
 }
