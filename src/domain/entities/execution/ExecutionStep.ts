@@ -23,6 +23,9 @@ export class ExecutionStep {
     stepId: string;
     status: ExecutionStepStatus;
   }): ExecutionStep {
+    if (!Object.values(ExecutionStepStatus).includes(params.status)) {
+      throw new Error("Invalid ExecutionStepStatus during rehydration");
+    }
     return new ExecutionStep(params.stepId, params.status);
   }
 

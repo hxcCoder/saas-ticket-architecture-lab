@@ -1,0 +1,33 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+model Execution {
+  id        String          @id
+  processId String
+  status    String
+  steps     ExecutionStep[]
+}
+
+model ExecutionStep {
+  id          String @id @default(uuid())
+  executionId String
+  stepId      String
+  status      String
+
+  execution Execution @relation(fields: [executionId], references: [id])
+}
+
+model auditLog {
+  id         String   @id @default(uuid())
+  eventId    String
+  eventName  String
+  eventData  Json
+  occurredOn DateTime
+  payload    Json
+}

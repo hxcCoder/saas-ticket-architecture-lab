@@ -1,30 +1,14 @@
-import { ExecutionRepository } from "./ports/ExecutionRepository";
-import { AuditRepository } from "./ports/AuditRepository";
+import { ExecutionRepository } from './ports/ExecutionRepository';
+import { Execution } from '../../domain/entities/execution/Execution';
 
-type Input = {
-    executionId: string;
-    stepId: string;
-};
 
 export class CompleteExecutionStep {
-    constructor(
-    private readonly executionRepository: ExecutionRepository,
-    private readonly auditRepository: AuditRepository
-) {}
+  constructor(private executionRepo: ExecutionRepository) {}
 
-async execute(input: Input): Promise<void> {
-    const execution = await this.executionRepository.findById(input.executionId);
-
-    if (!execution) {
-        throw new Error("Execution not found");
-    }
-
-    execution.markStepDone(input.stepId);
-
-    await this.executionRepository.save(execution);
-
-    for (const event of execution.pullDomainEvents()) {
-        await this.auditRepository.save(event);
-    }
-}
+  async execute(executionId: string, stepId: string): Promise<void> {
+    const execution = await this.executionRepo.findById(executionId);
+    if (!execution) throw new Error('Execution not found');
+    execution.markStepDone(stepId);
+    await this.executionRepo.save(execution);
+  }
 }

@@ -1,6 +1,10 @@
-import { PrismaClient } from "../../../generated/prisma/client"; // ajusta el path según tu proyecto
-import 'dotenv/config';
+import { PrismaClient } from "../../../generated/prisma"
 
-export const prisma = new PrismaClient({
-  log: ['query', 'info', 'warn', 'error'], // opcional
-});
+let prisma: PrismaClient | null = null
+
+export function getPrismaClient(): PrismaClient {
+  if (!prisma) {
+    prisma = new PrismaClient()
+  }
+  return prisma
+}

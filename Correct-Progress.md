@@ -1,6 +1,3 @@
-🎯 ORDEN CORRECTO DE IMPLEMENTACIÓN
-
-- NO empieces por Prisma.
 
 1- Domain (entidades + reglas)
 

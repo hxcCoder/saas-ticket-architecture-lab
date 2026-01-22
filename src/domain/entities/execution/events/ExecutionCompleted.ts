@@ -8,4 +8,10 @@ export class ExecutionCompleted extends DomainEvent {
   getEventName(): string {
     return "execution.completed";
   }
+
+  toPrimitives() {
+    return {
+      executionId: this.executionId,
+    };
+  }
 }
