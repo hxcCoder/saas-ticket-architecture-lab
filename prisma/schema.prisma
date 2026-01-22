@@ -1,5 +1,6 @@
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")  // obligatorio
 }
 
 generator client {
@@ -7,29 +8,37 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
-
+// Tablas existentes
 model Execution {
-  id        String   @id
+  id        String          @id
   processId String
   status    String
   steps     ExecutionStep[]
 }
 
 model ExecutionStep {
-  id          String @id @default(uuid())
+  id          String   @id @default(uuid())
   executionId String
   stepId      String
   status      String
-
-  execution Execution @relation(fields: [executionId], references: [id])
+  execution   Execution @relation(fields: [executionId], references: [id])
 }
 
 model auditLog {
   id         String   @id @default(uuid())
   eventId    String
   eventName  String
-  eventData  Json  
+  eventData  Json
   occurredOn DateTime
   payload    Json
 }
-  
+
+model Outbox {
+  id         String   @id @default(cuid())
+  eventName  String
+  payload    Json
+  occurredOn DateTime
+  published  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
