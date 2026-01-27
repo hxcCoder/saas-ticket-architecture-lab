@@ -1,5 +1,5 @@
-export enum ExecutionStatus {
-    RUNNING = "RUNNING",
-    COMPLETED = "COMPLETED",
-    FAILED = "FAILED",
-}
+    export enum ExecutionStatus {
+        RUNNING = "RUNNING",
+        COMPLETED = "COMPLETED",
+        FAILED = "FAILED",
+    }

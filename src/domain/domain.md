@@ -281,3 +281,12 @@ Para garantizar que el sistema sea auditable y robusto, cada acción sigue este 
 2. **Application (Use Case):** Orquestra la lógica. Llama al `SubscriptionService` para validar límites antes de permitir cambios.
 3. **Domain (Entity):** Ejecuta la lógica de transición de estados (ej. `activate()`). Si las reglas fallan, lanza una `DomainError`.
 4. **Infrastructure (Repository):** Persiste el estado final usando Prisma en una transacción atómica que incluye la tabla `Outbox`.
+
+## Gestión de Identidad
+Los IDs de las entidades (Process y ProcessStep) son generados por el cliente o la capa de aplicación antes de la persistencia. Esto permite:
+
+Rastrear la entidad a través de logs antes de que llegue a la base de datos.
+
+Evitar colisiones y asegurar la idempotencia en las operaciones de creación.
+
+Mantener la pureza del dominio al no depender de IDs autoincrementales de la base de datos.

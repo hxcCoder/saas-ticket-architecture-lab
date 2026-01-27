@@ -149,8 +149,7 @@ exports.Prisma.ExecutionScalarFieldEnum = {
   id: 'id',
   processId: 'processId',
   status: 'status',
-  startedAt: 'startedAt',
-  finishedAt: 'finishedAt'
+  startedAt: 'startedAt'
 };
 
 exports.Prisma.ExecutionStepScalarFieldEnum = {
@@ -160,21 +159,14 @@ exports.Prisma.ExecutionStepScalarFieldEnum = {
   status: 'status'
 };
 
-exports.Prisma.AuditLogScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  userId: 'userId',
-  eventName: 'eventName',
-  payload: 'payload',
-  occurredOn: 'occurredOn'
-};
-
 exports.Prisma.OutboxScalarFieldEnum = {
   id: 'id',
   eventName: 'eventName',
   payload: 'payload',
   published: 'published',
-  occurredOn: 'occurredOn'
+  occurredOn: 'occurredOn',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -191,17 +183,16 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
-
+exports.StepStatus = exports.$Enums.StepStatus = {
+  PENDING: 'PENDING',
+  DONE: 'DONE',
+  FAILED: 'FAILED'
+};
 
 exports.Prisma.ModelName = {
   Organization: 'Organization',
@@ -209,7 +200,6 @@ exports.Prisma.ModelName = {
   ProcessStep: 'ProcessStep',
   Execution: 'Execution',
   ExecutionStep: 'ExecutionStep',
-  AuditLog: 'AuditLog',
   Outbox: 'Outbox'
 };
 

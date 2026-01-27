@@ -9,24 +9,16 @@ import { ExecutionCompleted } from "./events/ExecutionCompleted";
 import { InvalidProcessStateError } from "../process/ProcessErrors";
 
 export class Execution {
-  private readonly id: string;
-  private readonly processId: string;
-  private status: ExecutionStatus;
-  private steps: ExecutionStep[];
   private domainEvents: DomainEvent[] = [];
 
   private constructor(
-    id: string,
-    processId: string,
-    status: ExecutionStatus,
-    steps: ExecutionStep[],
+    private readonly id: string,
+    private readonly processId: string,
+    private status: ExecutionStatus,
+    private steps: ExecutionStep[],
     recordEvent: boolean
   ) {
     Execution.validateState(status, steps);
-    this.id = id;
-    this.processId = processId;
-    this.status = status;
-    this.steps = steps;
 
     if (recordEvent) {
       this.record(new ExecutionStarted(this.id, this.processId));
@@ -38,9 +30,21 @@ export class Execution {
       throw new InvalidProcessStateError("Cannot execute an inactive process");
     }
 
-    const steps = process.getSteps().map(step => ExecutionStep.fromProcessStep(step));
+    const steps = process
+      .getSteps()
+      .map(step => ExecutionStep.fromProcessStep(step));
 
-    return new Execution(id, process.getId(), ExecutionStatus.RUNNING, steps, true);
+    if (steps.length === 0) {
+      throw new Error("Execution must contain at least one step");
+    }
+
+    return new Execution(
+      id,
+      process.getId(),
+      ExecutionStatus.RUNNING,
+      steps,
+      true
+    );
   }
 
   static rehydrate(params: {
@@ -49,19 +53,31 @@ export class Execution {
     status: ExecutionStatus;
     steps: ExecutionStep[];
   }): Execution {
-    if (!Object.values(ExecutionStatus).includes(params.status)) {
-      throw new Error("Invalid status during rehydration");
+    Execution.validateState(params.status, params.steps);
+
+    const unique = new Set(params.steps.map(s => s.getStepId()));
+    if (unique.size !== params.steps.length) {
+      throw new Error("Duplicate execution steps detected");
     }
-    const stepIds = params.steps.map(s => s.getStepId());
-    if (new Set(stepIds).size !== stepIds.length) {
-      throw new Error("Step IDs must be unique");
-    }
-    return new Execution(params.id, params.processId, params.status, params.steps, false);
+
+    return new Execution(
+      params.id,
+      params.processId,
+      params.status,
+      params.steps,
+      false
+    );
   }
 
   markStepDone(stepId: string): void {
+    if (this.status !== ExecutionStatus.RUNNING) {
+      throw new Error("Cannot update steps when execution is not running");
+    }
+
     const step = this.steps.find(s => s.getStepId() === stepId);
     if (!step) throw new Error("Execution step not found");
+
+    if (step.isDone()) return;
 
     step.markDone();
     this.record(new ExecutionStepCompleted(this.id, stepId));
@@ -73,7 +89,7 @@ export class Execution {
   }
 
   pullDomainEvents(): DomainEvent[] {
-    const events = [...this.domainEvents];
+    const events = this.domainEvents;
     this.domainEvents = [];
     return events;
   }
@@ -86,23 +102,36 @@ export class Execution {
   getProcessId(): string { return this.processId; }
   getStatus(): ExecutionStatus { return this.status; }
   getSteps(): ExecutionStep[] { return [...this.steps]; }
-  public isStepCompleted(stepId: string): boolean {
+
+  isStepCompleted(stepId: string): boolean {
     const step = this.steps.find(s => s.getStepId() === stepId);
-    return step ? step.isDone() : false;
+    return step?.isDone() ?? false;
   }
 
-  private static validateState(status: ExecutionStatus, steps: ExecutionStep[]): void {
+  private static validateState(
+    status: ExecutionStatus,
+    steps: ExecutionStep[]
+  ): void {
     if (!Object.values(ExecutionStatus).includes(status)) {
       throw new Error("Invalid ExecutionStatus");
     }
+
     if (!Array.isArray(steps)) {
       throw new Error("Steps must be an array");
     }
   }
 
-  static createForTest(id: string, processId: string, steps: ExecutionStep[] = []): Execution {
-    return new Execution(id, processId, ExecutionStatus.RUNNING, steps, false);
+  static createForTest(
+    id: string,
+    processId: string,
+    steps: ExecutionStep[] = []
+  ): Execution {
+    return new Execution(
+      id,
+      processId,
+      ExecutionStatus.RUNNING,
+      steps,
+      false
+    );
   }
 }
-
-export { ExecutionStatus };

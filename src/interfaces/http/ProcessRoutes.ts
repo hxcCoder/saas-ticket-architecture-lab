@@ -13,7 +13,10 @@ export class ProcessRoutes {
   }
 
   private initRoutes(): void {
-    this.router.post('/start-execution', this.controller.startExecution.bind(this.controller));
-    // Agrega más rutas si hay otros métodos en controller
-  }
+  // Ruta para crear (POST /)
+  this.router.post('/', this.controller.create.bind(this.controller));
+  
+  // Ruta para ejecutar (POST /start-execution)
+  this.router.post('/start-execution', this.controller.startExecution.bind(this.controller));
+}
 }

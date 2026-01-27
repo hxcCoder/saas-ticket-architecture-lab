@@ -1,45 +1,61 @@
+// src/infrastructure/persistence/prisma/PrismaExecutionRepository.ts
+import { PrismaClient, StepStatus } from "../../../generated/prisma";
+import { getPrismaClient } from "./PrismaClient";
 import { ExecutionRepository } from "../../../application/use-cases/ports/ExecutionRepository";
+import { OutboxRepository } from "../../../application/use-cases/ports/OutBoxRepository";
 import { Execution } from "../../../domain/entities/execution/Execution";
 import { ExecutionStep } from "../../../domain/entities/execution/ExecutionStep";
 import { ExecutionStatus } from "../../../domain/entities/execution/ExecutionStatus";
 import { ExecutionStepStatus } from "../../../domain/entities/execution/ExecutionStep";
-import { getPrismaClient } from "./PrismaClient";
-import { OutboxRepository } from "./PrismaOutboxRepository";
 import { toJsonValue } from "./Json";
-import { PrismaClient } from "@prisma/client";
+
+type DbExecutionStep = {
+  stepId: string;
+  status: string;
+};
+
+type DbExecution = {
+  id: string;
+  processId: string;
+  status: string;
+  steps: DbExecutionStep[];
+};
+
+const toPrismaStepStatus = (status: ExecutionStepStatus): StepStatus =>
+  status as unknown as StepStatus;
 
 export class PrismaExecutionRepository implements ExecutionRepository {
-  private prisma = getPrismaClient();
+  private prisma: PrismaClient = getPrismaClient();
 
   constructor(private readonly outboxRepo: OutboxRepository) {}
 
   async save(execution: Execution): Promise<void> {
     const events = execution.pullDomainEvents();
 
-    await this.prisma.$transaction(async (tx: PrismaClient) => {
+    await this.prisma.$transaction(async tx => {
       await tx.execution.upsert({
         where: { id: execution.getId() },
-        update: {
-          status: execution.getStatus(),
-        },
+        update: { status: execution.getStatus() as ExecutionStatus },
         create: {
           id: execution.getId(),
           processId: execution.getProcessId(),
-          status: execution.getStatus(),
+          status: execution.getStatus() as ExecutionStatus,
         },
       });
 
       for (const step of execution.getSteps()) {
         await tx.executionStep.upsert({
-          where: { id: step.getStepId() },
-          update: {
-            status: step.getStatus(),
+          where: {
+            executionId_stepId: {
+              executionId: execution.getId(),
+              stepId: step.getStepId(),
+            },
           },
+          update: { status: toPrismaStepStatus(step.getStatus()) },
           create: {
-            id: step.getStepId(),
             executionId: execution.getId(),
             stepId: step.getStepId(),
-            status: step.getStatus(),
+            status: toPrismaStepStatus(step.getStatus()),
           },
         });
       }
@@ -51,8 +67,6 @@ export class PrismaExecutionRepository implements ExecutionRepository {
           payload: toJsonValue(event.toPrimitives()),
           occurredOn: event.occurredOn,
           published: false,
-          createdAt: new Date(),
-          updatedAt: new Date(),
         });
       }
     });
@@ -63,20 +77,19 @@ export class PrismaExecutionRepository implements ExecutionRepository {
       where: { id },
       include: { steps: true },
     });
-
     if (!row) return null;
 
+    const dbRow = row as unknown as DbExecution;
     return Execution.rehydrate({
-      id: row.id,
-      processId: row.processId,
-      status: row.status as ExecutionStatus,
-      steps: row.steps.map(
-      (step: { stepId: string; status: string }) =>
+      id: dbRow.id,
+      processId: dbRow.processId,
+      status: dbRow.status as ExecutionStatus,
+      steps: dbRow.steps.map(step =>
         ExecutionStep.rehydrate({
           stepId: step.stepId,
           status: step.status as ExecutionStepStatus,
-    })
-),
+        })
+      ),
     });
   }
 }

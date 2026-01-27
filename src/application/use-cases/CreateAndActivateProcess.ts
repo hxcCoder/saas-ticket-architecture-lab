@@ -47,8 +47,9 @@ export class CreateAndActivateProcess {
 
         // 5. Persistencia Atómica
         // Usamos el Unit of Work para asegurar que si algo falla al guardar, no quede nada a medias
-        await this.unitOfWork.run(async () => {
-            await this.processRepo.save(process);
-        });
+        await this.unitOfWork.run(async (tx) => {
+        await this.processRepo.save(process, tx);
+});
+
     }
 }

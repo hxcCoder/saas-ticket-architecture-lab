@@ -1,56 +1,58 @@
+import { injectable } from "inversify";
 import { ProcessRepository } from "../../../application/use-cases/ports/ProcessRepository";
 import { Process } from "../../../domain/entities/process/Process";
 import { getPrismaClient } from "./PrismaClient";
+import { Prisma } from "@prisma/client";
 
+@injectable()
 export class PrismaProcessRepository implements ProcessRepository {
-    // Usamos un getter privado para mantener el código limpio y consistente
-    private get db() {
-        return getPrismaClient();
-    }
+  private getDb(tx?: Prisma.TransactionClient) {
+    return tx || getPrismaClient();
+  }
 
-    async save(process: Process): Promise<void> {
-        await this.db.process.upsert({
-            where: { id: process.getId() },
-            update: {
-                status: process.getStatus(),
-                name: process.getName(),
-            },
-            create: {
-                id: process.getId(),
-                name: process.getName(),
-                organizationId: process.getOrganizationId(),
-                status: process.getStatus(),
-                steps: {
-                    create: process.getSteps().map(step => ({
-                        id: step.getId(), 
-                        name: step.getName(),
-                        order: step.getOrder()
-                    }))
-                }
-            }
-        });
-    }
+  async save(process: Process, tx?: Prisma.TransactionClient): Promise<void> {
+    const db = this.getDb(tx);
 
-    async findById(id: string): Promise<Process | null> {
-        const data = await this.db.process.findUnique({
-            where: { id },
-            include: { steps: true }
-        });
+    const stepsData = process.getSteps().map(step => ({
+      id: step.getId(),
+      name: step.getName(),
+      order: step.getOrder(),
+    }));
 
-        if (!data) return null;
+    await db.process.upsert({
+      where: { id: process.getId() },
+      update: {
+        name: process.getName(),
+        status: process.getStatus(),
+        steps: { deleteMany: {}, create: stepsData },
+      },
+      create: {
+        id: process.getId(),
+        name: process.getName(),
+        organizationId: process.getOrganizationId(),
+        status: process.getStatus(),
+        steps: { create: stepsData },
+      },
+    });
+  }
 
-        // Rehidratación PROFESIONAL:
-        // Usamos un método estático "rehydrate" para no disparar el evento "ProcessCreated"
-        // cada vez que consultamos la base de datos.
-        return Process.rehydrate({
-            id: data.id,
-            name: data.name,
-            organizationId: data.organizationId,
-            status: data.status as any,
-            steps: data.steps.map((s: { name: string; order: number }) => ({ 
-            name: s.name, 
-            order: s.order 
-        }))
-        });
-    }
+  async findById(id: string): Promise<Process | null> {
+    const data = await getPrismaClient().process.findUnique({
+      where: { id },
+      include: { steps: true },
+    });
+    if (!data) return null;
+
+    return Process.rehydrate({
+      id: data.id,
+      name: data.name,
+      organizationId: data.organizationId,
+      status: data.status as any,
+      steps: data.steps.map((s: any) => ({
+        id: s.id,
+        name: s.name,
+        order: s.order,
+      })),
+    });
+  }
 }
