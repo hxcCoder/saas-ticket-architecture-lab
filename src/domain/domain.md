@@ -272,3 +272,12 @@ Z
 - Todo cambio relevante genera un evento
 
 ---
+---
+## 7. Flujo de Implementación Técnica (Auditabilidad)
+
+Para garantizar que el sistema sea auditable y robusto, cada acción sigue este flujo de capas:
+
+1. **Interfaces:** Recibe el request y valida el esquema (Zod).
+2. **Application (Use Case):** Orquestra la lógica. Llama al `SubscriptionService` para validar límites antes de permitir cambios.
+3. **Domain (Entity):** Ejecuta la lógica de transición de estados (ej. `activate()`). Si las reglas fallan, lanza una `DomainError`.
+4. **Infrastructure (Repository):** Persiste el estado final usando Prisma en una transacción atómica que incluye la tabla `Outbox`.

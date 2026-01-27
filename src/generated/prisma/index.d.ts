@@ -14,6 +14,21 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 
 /**
+ * Model Organization
+ * 
+ */
+export type Organization = $Result.DefaultSelection<Prisma.$OrganizationPayload>
+/**
+ * Model Process
+ * 
+ */
+export type Process = $Result.DefaultSelection<Prisma.$ProcessPayload>
+/**
+ * Model ProcessStep
+ * 
+ */
+export type ProcessStep = $Result.DefaultSelection<Prisma.$ProcessStepPayload>
+/**
  * Model Execution
  * 
  */
@@ -24,10 +39,10 @@ export type Execution = $Result.DefaultSelection<Prisma.$ExecutionPayload>
  */
 export type ExecutionStep = $Result.DefaultSelection<Prisma.$ExecutionStepPayload>
 /**
- * Model auditLog
+ * Model AuditLog
  * 
  */
-export type auditLog = $Result.DefaultSelection<Prisma.$auditLogPayload>
+export type AuditLog = $Result.DefaultSelection<Prisma.$AuditLogPayload>
 /**
  * Model Outbox
  * 
@@ -41,8 +56,8 @@ export type Outbox = $Result.DefaultSelection<Prisma.$OutboxPayload>
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Executions
- * const executions = await prisma.execution.findMany()
+ * // Fetch zero or more Organizations
+ * const organizations = await prisma.organization.findMany()
  * ```
  *
  *
@@ -62,8 +77,8 @@ export class PrismaClient<
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Executions
-   * const executions = await prisma.execution.findMany()
+   * // Fetch zero or more Organizations
+   * const organizations = await prisma.organization.findMany()
    * ```
    *
    *
@@ -153,6 +168,36 @@ export class PrismaClient<
   }>>
 
       /**
+   * `prisma.organization`: Exposes CRUD operations for the **Organization** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Organizations
+    * const organizations = await prisma.organization.findMany()
+    * ```
+    */
+  get organization(): Prisma.OrganizationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.process`: Exposes CRUD operations for the **Process** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Processes
+    * const processes = await prisma.process.findMany()
+    * ```
+    */
+  get process(): Prisma.ProcessDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.processStep`: Exposes CRUD operations for the **ProcessStep** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProcessSteps
+    * const processSteps = await prisma.processStep.findMany()
+    * ```
+    */
+  get processStep(): Prisma.ProcessStepDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.execution`: Exposes CRUD operations for the **Execution** model.
     * Example usage:
     * ```ts
@@ -173,14 +218,14 @@ export class PrismaClient<
   get executionStep(): Prisma.ExecutionStepDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.auditLog`: Exposes CRUD operations for the **auditLog** model.
+   * `prisma.auditLog`: Exposes CRUD operations for the **AuditLog** model.
     * Example usage:
     * ```ts
     * // Fetch zero or more AuditLogs
     * const auditLogs = await prisma.auditLog.findMany()
     * ```
     */
-  get auditLog(): Prisma.auditLogDelegate<ExtArgs, ClientOptions>;
+  get auditLog(): Prisma.AuditLogDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.outbox`: Exposes CRUD operations for the **Outbox** model.
@@ -632,9 +677,12 @@ export namespace Prisma {
 
 
   export const ModelName: {
+    Organization: 'Organization',
+    Process: 'Process',
+    ProcessStep: 'ProcessStep',
     Execution: 'Execution',
     ExecutionStep: 'ExecutionStep',
-    auditLog: 'auditLog',
+    AuditLog: 'AuditLog',
     Outbox: 'Outbox'
   };
 
@@ -654,10 +702,232 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "execution" | "executionStep" | "auditLog" | "outbox"
+      modelProps: "organization" | "process" | "processStep" | "execution" | "executionStep" | "auditLog" | "outbox"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
+      Organization: {
+        payload: Prisma.$OrganizationPayload<ExtArgs>
+        fields: Prisma.OrganizationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OrganizationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrganizationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OrganizationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrganizationPayload>
+          }
+          findFirst: {
+            args: Prisma.OrganizationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrganizationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OrganizationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrganizationPayload>
+          }
+          findMany: {
+            args: Prisma.OrganizationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrganizationPayload>[]
+          }
+          create: {
+            args: Prisma.OrganizationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrganizationPayload>
+          }
+          createMany: {
+            args: Prisma.OrganizationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OrganizationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrganizationPayload>[]
+          }
+          delete: {
+            args: Prisma.OrganizationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrganizationPayload>
+          }
+          update: {
+            args: Prisma.OrganizationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrganizationPayload>
+          }
+          deleteMany: {
+            args: Prisma.OrganizationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OrganizationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OrganizationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrganizationPayload>[]
+          }
+          upsert: {
+            args: Prisma.OrganizationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrganizationPayload>
+          }
+          aggregate: {
+            args: Prisma.OrganizationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOrganization>
+          }
+          groupBy: {
+            args: Prisma.OrganizationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OrganizationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OrganizationCountArgs<ExtArgs>
+            result: $Utils.Optional<OrganizationCountAggregateOutputType> | number
+          }
+        }
+      }
+      Process: {
+        payload: Prisma.$ProcessPayload<ExtArgs>
+        fields: Prisma.ProcessFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProcessFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProcessFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessPayload>
+          }
+          findFirst: {
+            args: Prisma.ProcessFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProcessFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessPayload>
+          }
+          findMany: {
+            args: Prisma.ProcessFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessPayload>[]
+          }
+          create: {
+            args: Prisma.ProcessCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessPayload>
+          }
+          createMany: {
+            args: Prisma.ProcessCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProcessCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessPayload>[]
+          }
+          delete: {
+            args: Prisma.ProcessDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessPayload>
+          }
+          update: {
+            args: Prisma.ProcessUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProcessDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProcessUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProcessUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProcessUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessPayload>
+          }
+          aggregate: {
+            args: Prisma.ProcessAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProcess>
+          }
+          groupBy: {
+            args: Prisma.ProcessGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProcessGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProcessCountArgs<ExtArgs>
+            result: $Utils.Optional<ProcessCountAggregateOutputType> | number
+          }
+        }
+      }
+      ProcessStep: {
+        payload: Prisma.$ProcessStepPayload<ExtArgs>
+        fields: Prisma.ProcessStepFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProcessStepFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessStepPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProcessStepFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessStepPayload>
+          }
+          findFirst: {
+            args: Prisma.ProcessStepFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessStepPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProcessStepFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessStepPayload>
+          }
+          findMany: {
+            args: Prisma.ProcessStepFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessStepPayload>[]
+          }
+          create: {
+            args: Prisma.ProcessStepCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessStepPayload>
+          }
+          createMany: {
+            args: Prisma.ProcessStepCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProcessStepCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessStepPayload>[]
+          }
+          delete: {
+            args: Prisma.ProcessStepDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessStepPayload>
+          }
+          update: {
+            args: Prisma.ProcessStepUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessStepPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProcessStepDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProcessStepUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProcessStepUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessStepPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProcessStepUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessStepPayload>
+          }
+          aggregate: {
+            args: Prisma.ProcessStepAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProcessStep>
+          }
+          groupBy: {
+            args: Prisma.ProcessStepGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProcessStepGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProcessStepCountArgs<ExtArgs>
+            result: $Utils.Optional<ProcessStepCountAggregateOutputType> | number
+          }
+        }
+      }
       Execution: {
         payload: Prisma.$ExecutionPayload<ExtArgs>
         fields: Prisma.ExecutionFieldRefs
@@ -806,76 +1076,76 @@ export namespace Prisma {
           }
         }
       }
-      auditLog: {
-        payload: Prisma.$auditLogPayload<ExtArgs>
-        fields: Prisma.auditLogFieldRefs
+      AuditLog: {
+        payload: Prisma.$AuditLogPayload<ExtArgs>
+        fields: Prisma.AuditLogFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.auditLogFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$auditLogPayload> | null
+            args: Prisma.AuditLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.auditLogFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$auditLogPayload>
+            args: Prisma.AuditLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>
           }
           findFirst: {
-            args: Prisma.auditLogFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$auditLogPayload> | null
+            args: Prisma.AuditLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.auditLogFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$auditLogPayload>
+            args: Prisma.AuditLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>
           }
           findMany: {
-            args: Prisma.auditLogFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$auditLogPayload>[]
+            args: Prisma.AuditLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>[]
           }
           create: {
-            args: Prisma.auditLogCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$auditLogPayload>
+            args: Prisma.AuditLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>
           }
           createMany: {
-            args: Prisma.auditLogCreateManyArgs<ExtArgs>
+            args: Prisma.AuditLogCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.auditLogCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$auditLogPayload>[]
+            args: Prisma.AuditLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>[]
           }
           delete: {
-            args: Prisma.auditLogDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$auditLogPayload>
+            args: Prisma.AuditLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>
           }
           update: {
-            args: Prisma.auditLogUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$auditLogPayload>
+            args: Prisma.AuditLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>
           }
           deleteMany: {
-            args: Prisma.auditLogDeleteManyArgs<ExtArgs>
+            args: Prisma.AuditLogDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.auditLogUpdateManyArgs<ExtArgs>
+            args: Prisma.AuditLogUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.auditLogUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$auditLogPayload>[]
+            args: Prisma.AuditLogUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>[]
           }
           upsert: {
-            args: Prisma.auditLogUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$auditLogPayload>
+            args: Prisma.AuditLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>
           }
           aggregate: {
             args: Prisma.AuditLogAggregateArgs<ExtArgs>
             result: $Utils.Optional<AggregateAuditLog>
           }
           groupBy: {
-            args: Prisma.auditLogGroupByArgs<ExtArgs>
+            args: Prisma.AuditLogGroupByArgs<ExtArgs>
             result: $Utils.Optional<AuditLogGroupByOutputType>[]
           }
           count: {
-            args: Prisma.auditLogCountArgs<ExtArgs>
+            args: Prisma.AuditLogCountArgs<ExtArgs>
             result: $Utils.Optional<AuditLogCountAggregateOutputType> | number
           }
         }
@@ -1050,9 +1320,12 @@ export namespace Prisma {
     omit?: Prisma.GlobalOmitConfig
   }
   export type GlobalOmitConfig = {
+    organization?: OrganizationOmit
+    process?: ProcessOmit
+    processStep?: ProcessStepOmit
     execution?: ExecutionOmit
     executionStep?: ExecutionStepOmit
-    auditLog?: auditLogOmit
+    auditLog?: AuditLogOmit
     outbox?: OutboxOmit
   }
 
@@ -1130,15 +1403,86 @@ export namespace Prisma {
 
 
   /**
+   * Count Type OrganizationCountOutputType
+   */
+
+  export type OrganizationCountOutputType = {
+    processes: number
+  }
+
+  export type OrganizationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    processes?: boolean | OrganizationCountOutputTypeCountProcessesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrganizationCountOutputType
+     */
+    select?: OrganizationCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountProcessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProcessWhereInput
+  }
+
+
+  /**
+   * Count Type ProcessCountOutputType
+   */
+
+  export type ProcessCountOutputType = {
+    steps: number
+    executions: number
+  }
+
+  export type ProcessCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    steps?: boolean | ProcessCountOutputTypeCountStepsArgs
+    executions?: boolean | ProcessCountOutputTypeCountExecutionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ProcessCountOutputType without action
+   */
+  export type ProcessCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessCountOutputType
+     */
+    select?: ProcessCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ProcessCountOutputType without action
+   */
+  export type ProcessCountOutputTypeCountStepsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProcessStepWhereInput
+  }
+
+  /**
+   * ProcessCountOutputType without action
+   */
+  export type ProcessCountOutputTypeCountExecutionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExecutionWhereInput
+  }
+
+
+  /**
    * Count Type ExecutionCountOutputType
    */
 
   export type ExecutionCountOutputType = {
-    steps: number
+    stepResults: number
   }
 
   export type ExecutionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    steps?: boolean | ExecutionCountOutputTypeCountStepsArgs
+    stepResults?: boolean | ExecutionCountOutputTypeCountStepResultsArgs
   }
 
   // Custom InputTypes
@@ -1155,7 +1499,7 @@ export namespace Prisma {
   /**
    * ExecutionCountOutputType without action
    */
-  export type ExecutionCountOutputTypeCountStepsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ExecutionCountOutputTypeCountStepResultsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ExecutionStepWhereInput
   }
 
@@ -1163,6 +1507,3284 @@ export namespace Prisma {
   /**
    * Models
    */
+
+  /**
+   * Model Organization
+   */
+
+  export type AggregateOrganization = {
+    _count: OrganizationCountAggregateOutputType | null
+    _min: OrganizationMinAggregateOutputType | null
+    _max: OrganizationMaxAggregateOutputType | null
+  }
+
+  export type OrganizationMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    status: string | null
+    plan: string | null
+    createdAt: Date | null
+  }
+
+  export type OrganizationMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    status: string | null
+    plan: string | null
+    createdAt: Date | null
+  }
+
+  export type OrganizationCountAggregateOutputType = {
+    id: number
+    name: number
+    status: number
+    plan: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type OrganizationMinAggregateInputType = {
+    id?: true
+    name?: true
+    status?: true
+    plan?: true
+    createdAt?: true
+  }
+
+  export type OrganizationMaxAggregateInputType = {
+    id?: true
+    name?: true
+    status?: true
+    plan?: true
+    createdAt?: true
+  }
+
+  export type OrganizationCountAggregateInputType = {
+    id?: true
+    name?: true
+    status?: true
+    plan?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type OrganizationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Organization to aggregate.
+     */
+    where?: OrganizationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Organizations to fetch.
+     */
+    orderBy?: OrganizationOrderByWithRelationInput | OrganizationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OrganizationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Organizations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Organizations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Organizations
+    **/
+    _count?: true | OrganizationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OrganizationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OrganizationMaxAggregateInputType
+  }
+
+  export type GetOrganizationAggregateType<T extends OrganizationAggregateArgs> = {
+        [P in keyof T & keyof AggregateOrganization]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOrganization[P]>
+      : GetScalarType<T[P], AggregateOrganization[P]>
+  }
+
+
+
+
+  export type OrganizationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrganizationWhereInput
+    orderBy?: OrganizationOrderByWithAggregationInput | OrganizationOrderByWithAggregationInput[]
+    by: OrganizationScalarFieldEnum[] | OrganizationScalarFieldEnum
+    having?: OrganizationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OrganizationCountAggregateInputType | true
+    _min?: OrganizationMinAggregateInputType
+    _max?: OrganizationMaxAggregateInputType
+  }
+
+  export type OrganizationGroupByOutputType = {
+    id: string
+    name: string
+    status: string
+    plan: string
+    createdAt: Date
+    _count: OrganizationCountAggregateOutputType | null
+    _min: OrganizationMinAggregateOutputType | null
+    _max: OrganizationMaxAggregateOutputType | null
+  }
+
+  type GetOrganizationGroupByPayload<T extends OrganizationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OrganizationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OrganizationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OrganizationGroupByOutputType[P]>
+            : GetScalarType<T[P], OrganizationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OrganizationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    status?: boolean
+    plan?: boolean
+    createdAt?: boolean
+    processes?: boolean | Organization$processesArgs<ExtArgs>
+    _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["organization"]>
+
+  export type OrganizationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    status?: boolean
+    plan?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["organization"]>
+
+  export type OrganizationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    status?: boolean
+    plan?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["organization"]>
+
+  export type OrganizationSelectScalar = {
+    id?: boolean
+    name?: boolean
+    status?: boolean
+    plan?: boolean
+    createdAt?: boolean
+  }
+
+  export type OrganizationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "status" | "plan" | "createdAt", ExtArgs["result"]["organization"]>
+  export type OrganizationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    processes?: boolean | Organization$processesArgs<ExtArgs>
+    _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type OrganizationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $OrganizationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Organization"
+    objects: {
+      processes: Prisma.$ProcessPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      status: string
+      plan: string
+      createdAt: Date
+    }, ExtArgs["result"]["organization"]>
+    composites: {}
+  }
+
+  type OrganizationGetPayload<S extends boolean | null | undefined | OrganizationDefaultArgs> = $Result.GetResult<Prisma.$OrganizationPayload, S>
+
+  type OrganizationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OrganizationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OrganizationCountAggregateInputType | true
+    }
+
+  export interface OrganizationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Organization'], meta: { name: 'Organization' } }
+    /**
+     * Find zero or one Organization that matches the filter.
+     * @param {OrganizationFindUniqueArgs} args - Arguments to find a Organization
+     * @example
+     * // Get one Organization
+     * const organization = await prisma.organization.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OrganizationFindUniqueArgs>(args: SelectSubset<T, OrganizationFindUniqueArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Organization that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OrganizationFindUniqueOrThrowArgs} args - Arguments to find a Organization
+     * @example
+     * // Get one Organization
+     * const organization = await prisma.organization.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OrganizationFindUniqueOrThrowArgs>(args: SelectSubset<T, OrganizationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Organization that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrganizationFindFirstArgs} args - Arguments to find a Organization
+     * @example
+     * // Get one Organization
+     * const organization = await prisma.organization.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OrganizationFindFirstArgs>(args?: SelectSubset<T, OrganizationFindFirstArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Organization that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrganizationFindFirstOrThrowArgs} args - Arguments to find a Organization
+     * @example
+     * // Get one Organization
+     * const organization = await prisma.organization.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OrganizationFindFirstOrThrowArgs>(args?: SelectSubset<T, OrganizationFindFirstOrThrowArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Organizations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrganizationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Organizations
+     * const organizations = await prisma.organization.findMany()
+     * 
+     * // Get first 10 Organizations
+     * const organizations = await prisma.organization.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const organizationWithIdOnly = await prisma.organization.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OrganizationFindManyArgs>(args?: SelectSubset<T, OrganizationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Organization.
+     * @param {OrganizationCreateArgs} args - Arguments to create a Organization.
+     * @example
+     * // Create one Organization
+     * const Organization = await prisma.organization.create({
+     *   data: {
+     *     // ... data to create a Organization
+     *   }
+     * })
+     * 
+     */
+    create<T extends OrganizationCreateArgs>(args: SelectSubset<T, OrganizationCreateArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Organizations.
+     * @param {OrganizationCreateManyArgs} args - Arguments to create many Organizations.
+     * @example
+     * // Create many Organizations
+     * const organization = await prisma.organization.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OrganizationCreateManyArgs>(args?: SelectSubset<T, OrganizationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Organizations and returns the data saved in the database.
+     * @param {OrganizationCreateManyAndReturnArgs} args - Arguments to create many Organizations.
+     * @example
+     * // Create many Organizations
+     * const organization = await prisma.organization.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Organizations and only return the `id`
+     * const organizationWithIdOnly = await prisma.organization.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OrganizationCreateManyAndReturnArgs>(args?: SelectSubset<T, OrganizationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Organization.
+     * @param {OrganizationDeleteArgs} args - Arguments to delete one Organization.
+     * @example
+     * // Delete one Organization
+     * const Organization = await prisma.organization.delete({
+     *   where: {
+     *     // ... filter to delete one Organization
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OrganizationDeleteArgs>(args: SelectSubset<T, OrganizationDeleteArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Organization.
+     * @param {OrganizationUpdateArgs} args - Arguments to update one Organization.
+     * @example
+     * // Update one Organization
+     * const organization = await prisma.organization.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OrganizationUpdateArgs>(args: SelectSubset<T, OrganizationUpdateArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Organizations.
+     * @param {OrganizationDeleteManyArgs} args - Arguments to filter Organizations to delete.
+     * @example
+     * // Delete a few Organizations
+     * const { count } = await prisma.organization.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OrganizationDeleteManyArgs>(args?: SelectSubset<T, OrganizationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Organizations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrganizationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Organizations
+     * const organization = await prisma.organization.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OrganizationUpdateManyArgs>(args: SelectSubset<T, OrganizationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Organizations and returns the data updated in the database.
+     * @param {OrganizationUpdateManyAndReturnArgs} args - Arguments to update many Organizations.
+     * @example
+     * // Update many Organizations
+     * const organization = await prisma.organization.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Organizations and only return the `id`
+     * const organizationWithIdOnly = await prisma.organization.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OrganizationUpdateManyAndReturnArgs>(args: SelectSubset<T, OrganizationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Organization.
+     * @param {OrganizationUpsertArgs} args - Arguments to update or create a Organization.
+     * @example
+     * // Update or create a Organization
+     * const organization = await prisma.organization.upsert({
+     *   create: {
+     *     // ... data to create a Organization
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Organization we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OrganizationUpsertArgs>(args: SelectSubset<T, OrganizationUpsertArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Organizations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrganizationCountArgs} args - Arguments to filter Organizations to count.
+     * @example
+     * // Count the number of Organizations
+     * const count = await prisma.organization.count({
+     *   where: {
+     *     // ... the filter for the Organizations we want to count
+     *   }
+     * })
+    **/
+    count<T extends OrganizationCountArgs>(
+      args?: Subset<T, OrganizationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OrganizationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Organization.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrganizationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OrganizationAggregateArgs>(args: Subset<T, OrganizationAggregateArgs>): Prisma.PrismaPromise<GetOrganizationAggregateType<T>>
+
+    /**
+     * Group by Organization.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrganizationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OrganizationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OrganizationGroupByArgs['orderBy'] }
+        : { orderBy?: OrganizationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OrganizationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOrganizationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Organization model
+   */
+  readonly fields: OrganizationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Organization.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    processes<T extends Organization$processesArgs<ExtArgs> = {}>(args?: Subset<T, Organization$processesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Organization model
+   */
+  interface OrganizationFieldRefs {
+    readonly id: FieldRef<"Organization", 'String'>
+    readonly name: FieldRef<"Organization", 'String'>
+    readonly status: FieldRef<"Organization", 'String'>
+    readonly plan: FieldRef<"Organization", 'String'>
+    readonly createdAt: FieldRef<"Organization", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Organization findUnique
+   */
+  export type OrganizationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Organization
+     */
+    select?: OrganizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Organization
+     */
+    omit?: OrganizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrganizationInclude<ExtArgs> | null
+    /**
+     * Filter, which Organization to fetch.
+     */
+    where: OrganizationWhereUniqueInput
+  }
+
+  /**
+   * Organization findUniqueOrThrow
+   */
+  export type OrganizationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Organization
+     */
+    select?: OrganizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Organization
+     */
+    omit?: OrganizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrganizationInclude<ExtArgs> | null
+    /**
+     * Filter, which Organization to fetch.
+     */
+    where: OrganizationWhereUniqueInput
+  }
+
+  /**
+   * Organization findFirst
+   */
+  export type OrganizationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Organization
+     */
+    select?: OrganizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Organization
+     */
+    omit?: OrganizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrganizationInclude<ExtArgs> | null
+    /**
+     * Filter, which Organization to fetch.
+     */
+    where?: OrganizationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Organizations to fetch.
+     */
+    orderBy?: OrganizationOrderByWithRelationInput | OrganizationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Organizations.
+     */
+    cursor?: OrganizationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Organizations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Organizations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Organizations.
+     */
+    distinct?: OrganizationScalarFieldEnum | OrganizationScalarFieldEnum[]
+  }
+
+  /**
+   * Organization findFirstOrThrow
+   */
+  export type OrganizationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Organization
+     */
+    select?: OrganizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Organization
+     */
+    omit?: OrganizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrganizationInclude<ExtArgs> | null
+    /**
+     * Filter, which Organization to fetch.
+     */
+    where?: OrganizationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Organizations to fetch.
+     */
+    orderBy?: OrganizationOrderByWithRelationInput | OrganizationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Organizations.
+     */
+    cursor?: OrganizationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Organizations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Organizations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Organizations.
+     */
+    distinct?: OrganizationScalarFieldEnum | OrganizationScalarFieldEnum[]
+  }
+
+  /**
+   * Organization findMany
+   */
+  export type OrganizationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Organization
+     */
+    select?: OrganizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Organization
+     */
+    omit?: OrganizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrganizationInclude<ExtArgs> | null
+    /**
+     * Filter, which Organizations to fetch.
+     */
+    where?: OrganizationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Organizations to fetch.
+     */
+    orderBy?: OrganizationOrderByWithRelationInput | OrganizationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Organizations.
+     */
+    cursor?: OrganizationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Organizations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Organizations.
+     */
+    skip?: number
+    distinct?: OrganizationScalarFieldEnum | OrganizationScalarFieldEnum[]
+  }
+
+  /**
+   * Organization create
+   */
+  export type OrganizationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Organization
+     */
+    select?: OrganizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Organization
+     */
+    omit?: OrganizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrganizationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Organization.
+     */
+    data: XOR<OrganizationCreateInput, OrganizationUncheckedCreateInput>
+  }
+
+  /**
+   * Organization createMany
+   */
+  export type OrganizationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Organizations.
+     */
+    data: OrganizationCreateManyInput | OrganizationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Organization createManyAndReturn
+   */
+  export type OrganizationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Organization
+     */
+    select?: OrganizationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Organization
+     */
+    omit?: OrganizationOmit<ExtArgs> | null
+    /**
+     * The data used to create many Organizations.
+     */
+    data: OrganizationCreateManyInput | OrganizationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Organization update
+   */
+  export type OrganizationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Organization
+     */
+    select?: OrganizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Organization
+     */
+    omit?: OrganizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrganizationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Organization.
+     */
+    data: XOR<OrganizationUpdateInput, OrganizationUncheckedUpdateInput>
+    /**
+     * Choose, which Organization to update.
+     */
+    where: OrganizationWhereUniqueInput
+  }
+
+  /**
+   * Organization updateMany
+   */
+  export type OrganizationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Organizations.
+     */
+    data: XOR<OrganizationUpdateManyMutationInput, OrganizationUncheckedUpdateManyInput>
+    /**
+     * Filter which Organizations to update
+     */
+    where?: OrganizationWhereInput
+    /**
+     * Limit how many Organizations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Organization updateManyAndReturn
+   */
+  export type OrganizationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Organization
+     */
+    select?: OrganizationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Organization
+     */
+    omit?: OrganizationOmit<ExtArgs> | null
+    /**
+     * The data used to update Organizations.
+     */
+    data: XOR<OrganizationUpdateManyMutationInput, OrganizationUncheckedUpdateManyInput>
+    /**
+     * Filter which Organizations to update
+     */
+    where?: OrganizationWhereInput
+    /**
+     * Limit how many Organizations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Organization upsert
+   */
+  export type OrganizationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Organization
+     */
+    select?: OrganizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Organization
+     */
+    omit?: OrganizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrganizationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Organization to update in case it exists.
+     */
+    where: OrganizationWhereUniqueInput
+    /**
+     * In case the Organization found by the `where` argument doesn't exist, create a new Organization with this data.
+     */
+    create: XOR<OrganizationCreateInput, OrganizationUncheckedCreateInput>
+    /**
+     * In case the Organization was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OrganizationUpdateInput, OrganizationUncheckedUpdateInput>
+  }
+
+  /**
+   * Organization delete
+   */
+  export type OrganizationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Organization
+     */
+    select?: OrganizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Organization
+     */
+    omit?: OrganizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrganizationInclude<ExtArgs> | null
+    /**
+     * Filter which Organization to delete.
+     */
+    where: OrganizationWhereUniqueInput
+  }
+
+  /**
+   * Organization deleteMany
+   */
+  export type OrganizationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Organizations to delete
+     */
+    where?: OrganizationWhereInput
+    /**
+     * Limit how many Organizations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Organization.processes
+   */
+  export type Organization$processesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Process
+     */
+    select?: ProcessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Process
+     */
+    omit?: ProcessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessInclude<ExtArgs> | null
+    where?: ProcessWhereInput
+    orderBy?: ProcessOrderByWithRelationInput | ProcessOrderByWithRelationInput[]
+    cursor?: ProcessWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProcessScalarFieldEnum | ProcessScalarFieldEnum[]
+  }
+
+  /**
+   * Organization without action
+   */
+  export type OrganizationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Organization
+     */
+    select?: OrganizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Organization
+     */
+    omit?: OrganizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrganizationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Process
+   */
+
+  export type AggregateProcess = {
+    _count: ProcessCountAggregateOutputType | null
+    _min: ProcessMinAggregateOutputType | null
+    _max: ProcessMaxAggregateOutputType | null
+  }
+
+  export type ProcessMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    status: string | null
+    organizationId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProcessMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    status: string | null
+    organizationId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProcessCountAggregateOutputType = {
+    id: number
+    name: number
+    status: number
+    organizationId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProcessMinAggregateInputType = {
+    id?: true
+    name?: true
+    status?: true
+    organizationId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProcessMaxAggregateInputType = {
+    id?: true
+    name?: true
+    status?: true
+    organizationId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProcessCountAggregateInputType = {
+    id?: true
+    name?: true
+    status?: true
+    organizationId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProcessAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Process to aggregate.
+     */
+    where?: ProcessWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Processes to fetch.
+     */
+    orderBy?: ProcessOrderByWithRelationInput | ProcessOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProcessWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Processes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Processes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Processes
+    **/
+    _count?: true | ProcessCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProcessMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProcessMaxAggregateInputType
+  }
+
+  export type GetProcessAggregateType<T extends ProcessAggregateArgs> = {
+        [P in keyof T & keyof AggregateProcess]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProcess[P]>
+      : GetScalarType<T[P], AggregateProcess[P]>
+  }
+
+
+
+
+  export type ProcessGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProcessWhereInput
+    orderBy?: ProcessOrderByWithAggregationInput | ProcessOrderByWithAggregationInput[]
+    by: ProcessScalarFieldEnum[] | ProcessScalarFieldEnum
+    having?: ProcessScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProcessCountAggregateInputType | true
+    _min?: ProcessMinAggregateInputType
+    _max?: ProcessMaxAggregateInputType
+  }
+
+  export type ProcessGroupByOutputType = {
+    id: string
+    name: string
+    status: string
+    organizationId: string
+    createdAt: Date
+    updatedAt: Date
+    _count: ProcessCountAggregateOutputType | null
+    _min: ProcessMinAggregateOutputType | null
+    _max: ProcessMaxAggregateOutputType | null
+  }
+
+  type GetProcessGroupByPayload<T extends ProcessGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProcessGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProcessGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProcessGroupByOutputType[P]>
+            : GetScalarType<T[P], ProcessGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProcessSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    status?: boolean
+    organizationId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    steps?: boolean | Process$stepsArgs<ExtArgs>
+    executions?: boolean | Process$executionsArgs<ExtArgs>
+    _count?: boolean | ProcessCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["process"]>
+
+  export type ProcessSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    status?: boolean
+    organizationId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["process"]>
+
+  export type ProcessSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    status?: boolean
+    organizationId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["process"]>
+
+  export type ProcessSelectScalar = {
+    id?: boolean
+    name?: boolean
+    status?: boolean
+    organizationId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProcessOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "status" | "organizationId" | "createdAt" | "updatedAt", ExtArgs["result"]["process"]>
+  export type ProcessInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    steps?: boolean | Process$stepsArgs<ExtArgs>
+    executions?: boolean | Process$executionsArgs<ExtArgs>
+    _count?: boolean | ProcessCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ProcessIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }
+  export type ProcessIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }
+
+  export type $ProcessPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Process"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      steps: Prisma.$ProcessStepPayload<ExtArgs>[]
+      executions: Prisma.$ExecutionPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      status: string
+      organizationId: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["process"]>
+    composites: {}
+  }
+
+  type ProcessGetPayload<S extends boolean | null | undefined | ProcessDefaultArgs> = $Result.GetResult<Prisma.$ProcessPayload, S>
+
+  type ProcessCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProcessFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProcessCountAggregateInputType | true
+    }
+
+  export interface ProcessDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Process'], meta: { name: 'Process' } }
+    /**
+     * Find zero or one Process that matches the filter.
+     * @param {ProcessFindUniqueArgs} args - Arguments to find a Process
+     * @example
+     * // Get one Process
+     * const process = await prisma.process.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProcessFindUniqueArgs>(args: SelectSubset<T, ProcessFindUniqueArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Process that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProcessFindUniqueOrThrowArgs} args - Arguments to find a Process
+     * @example
+     * // Get one Process
+     * const process = await prisma.process.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProcessFindUniqueOrThrowArgs>(args: SelectSubset<T, ProcessFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Process that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessFindFirstArgs} args - Arguments to find a Process
+     * @example
+     * // Get one Process
+     * const process = await prisma.process.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProcessFindFirstArgs>(args?: SelectSubset<T, ProcessFindFirstArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Process that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessFindFirstOrThrowArgs} args - Arguments to find a Process
+     * @example
+     * // Get one Process
+     * const process = await prisma.process.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProcessFindFirstOrThrowArgs>(args?: SelectSubset<T, ProcessFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Processes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Processes
+     * const processes = await prisma.process.findMany()
+     * 
+     * // Get first 10 Processes
+     * const processes = await prisma.process.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const processWithIdOnly = await prisma.process.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProcessFindManyArgs>(args?: SelectSubset<T, ProcessFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Process.
+     * @param {ProcessCreateArgs} args - Arguments to create a Process.
+     * @example
+     * // Create one Process
+     * const Process = await prisma.process.create({
+     *   data: {
+     *     // ... data to create a Process
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProcessCreateArgs>(args: SelectSubset<T, ProcessCreateArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Processes.
+     * @param {ProcessCreateManyArgs} args - Arguments to create many Processes.
+     * @example
+     * // Create many Processes
+     * const process = await prisma.process.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProcessCreateManyArgs>(args?: SelectSubset<T, ProcessCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Processes and returns the data saved in the database.
+     * @param {ProcessCreateManyAndReturnArgs} args - Arguments to create many Processes.
+     * @example
+     * // Create many Processes
+     * const process = await prisma.process.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Processes and only return the `id`
+     * const processWithIdOnly = await prisma.process.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProcessCreateManyAndReturnArgs>(args?: SelectSubset<T, ProcessCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Process.
+     * @param {ProcessDeleteArgs} args - Arguments to delete one Process.
+     * @example
+     * // Delete one Process
+     * const Process = await prisma.process.delete({
+     *   where: {
+     *     // ... filter to delete one Process
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProcessDeleteArgs>(args: SelectSubset<T, ProcessDeleteArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Process.
+     * @param {ProcessUpdateArgs} args - Arguments to update one Process.
+     * @example
+     * // Update one Process
+     * const process = await prisma.process.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProcessUpdateArgs>(args: SelectSubset<T, ProcessUpdateArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Processes.
+     * @param {ProcessDeleteManyArgs} args - Arguments to filter Processes to delete.
+     * @example
+     * // Delete a few Processes
+     * const { count } = await prisma.process.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProcessDeleteManyArgs>(args?: SelectSubset<T, ProcessDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Processes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Processes
+     * const process = await prisma.process.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProcessUpdateManyArgs>(args: SelectSubset<T, ProcessUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Processes and returns the data updated in the database.
+     * @param {ProcessUpdateManyAndReturnArgs} args - Arguments to update many Processes.
+     * @example
+     * // Update many Processes
+     * const process = await prisma.process.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Processes and only return the `id`
+     * const processWithIdOnly = await prisma.process.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProcessUpdateManyAndReturnArgs>(args: SelectSubset<T, ProcessUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Process.
+     * @param {ProcessUpsertArgs} args - Arguments to update or create a Process.
+     * @example
+     * // Update or create a Process
+     * const process = await prisma.process.upsert({
+     *   create: {
+     *     // ... data to create a Process
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Process we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProcessUpsertArgs>(args: SelectSubset<T, ProcessUpsertArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Processes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessCountArgs} args - Arguments to filter Processes to count.
+     * @example
+     * // Count the number of Processes
+     * const count = await prisma.process.count({
+     *   where: {
+     *     // ... the filter for the Processes we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProcessCountArgs>(
+      args?: Subset<T, ProcessCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProcessCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Process.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProcessAggregateArgs>(args: Subset<T, ProcessAggregateArgs>): Prisma.PrismaPromise<GetProcessAggregateType<T>>
+
+    /**
+     * Group by Process.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProcessGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProcessGroupByArgs['orderBy'] }
+        : { orderBy?: ProcessGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProcessGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProcessGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Process model
+   */
+  readonly fields: ProcessFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Process.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProcessClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    steps<T extends Process$stepsArgs<ExtArgs> = {}>(args?: Subset<T, Process$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    executions<T extends Process$executionsArgs<ExtArgs> = {}>(args?: Subset<T, Process$executionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExecutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Process model
+   */
+  interface ProcessFieldRefs {
+    readonly id: FieldRef<"Process", 'String'>
+    readonly name: FieldRef<"Process", 'String'>
+    readonly status: FieldRef<"Process", 'String'>
+    readonly organizationId: FieldRef<"Process", 'String'>
+    readonly createdAt: FieldRef<"Process", 'DateTime'>
+    readonly updatedAt: FieldRef<"Process", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Process findUnique
+   */
+  export type ProcessFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Process
+     */
+    select?: ProcessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Process
+     */
+    omit?: ProcessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessInclude<ExtArgs> | null
+    /**
+     * Filter, which Process to fetch.
+     */
+    where: ProcessWhereUniqueInput
+  }
+
+  /**
+   * Process findUniqueOrThrow
+   */
+  export type ProcessFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Process
+     */
+    select?: ProcessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Process
+     */
+    omit?: ProcessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessInclude<ExtArgs> | null
+    /**
+     * Filter, which Process to fetch.
+     */
+    where: ProcessWhereUniqueInput
+  }
+
+  /**
+   * Process findFirst
+   */
+  export type ProcessFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Process
+     */
+    select?: ProcessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Process
+     */
+    omit?: ProcessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessInclude<ExtArgs> | null
+    /**
+     * Filter, which Process to fetch.
+     */
+    where?: ProcessWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Processes to fetch.
+     */
+    orderBy?: ProcessOrderByWithRelationInput | ProcessOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Processes.
+     */
+    cursor?: ProcessWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Processes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Processes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Processes.
+     */
+    distinct?: ProcessScalarFieldEnum | ProcessScalarFieldEnum[]
+  }
+
+  /**
+   * Process findFirstOrThrow
+   */
+  export type ProcessFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Process
+     */
+    select?: ProcessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Process
+     */
+    omit?: ProcessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessInclude<ExtArgs> | null
+    /**
+     * Filter, which Process to fetch.
+     */
+    where?: ProcessWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Processes to fetch.
+     */
+    orderBy?: ProcessOrderByWithRelationInput | ProcessOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Processes.
+     */
+    cursor?: ProcessWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Processes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Processes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Processes.
+     */
+    distinct?: ProcessScalarFieldEnum | ProcessScalarFieldEnum[]
+  }
+
+  /**
+   * Process findMany
+   */
+  export type ProcessFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Process
+     */
+    select?: ProcessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Process
+     */
+    omit?: ProcessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessInclude<ExtArgs> | null
+    /**
+     * Filter, which Processes to fetch.
+     */
+    where?: ProcessWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Processes to fetch.
+     */
+    orderBy?: ProcessOrderByWithRelationInput | ProcessOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Processes.
+     */
+    cursor?: ProcessWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Processes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Processes.
+     */
+    skip?: number
+    distinct?: ProcessScalarFieldEnum | ProcessScalarFieldEnum[]
+  }
+
+  /**
+   * Process create
+   */
+  export type ProcessCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Process
+     */
+    select?: ProcessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Process
+     */
+    omit?: ProcessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Process.
+     */
+    data: XOR<ProcessCreateInput, ProcessUncheckedCreateInput>
+  }
+
+  /**
+   * Process createMany
+   */
+  export type ProcessCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Processes.
+     */
+    data: ProcessCreateManyInput | ProcessCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Process createManyAndReturn
+   */
+  export type ProcessCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Process
+     */
+    select?: ProcessSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Process
+     */
+    omit?: ProcessOmit<ExtArgs> | null
+    /**
+     * The data used to create many Processes.
+     */
+    data: ProcessCreateManyInput | ProcessCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Process update
+   */
+  export type ProcessUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Process
+     */
+    select?: ProcessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Process
+     */
+    omit?: ProcessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Process.
+     */
+    data: XOR<ProcessUpdateInput, ProcessUncheckedUpdateInput>
+    /**
+     * Choose, which Process to update.
+     */
+    where: ProcessWhereUniqueInput
+  }
+
+  /**
+   * Process updateMany
+   */
+  export type ProcessUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Processes.
+     */
+    data: XOR<ProcessUpdateManyMutationInput, ProcessUncheckedUpdateManyInput>
+    /**
+     * Filter which Processes to update
+     */
+    where?: ProcessWhereInput
+    /**
+     * Limit how many Processes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Process updateManyAndReturn
+   */
+  export type ProcessUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Process
+     */
+    select?: ProcessSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Process
+     */
+    omit?: ProcessOmit<ExtArgs> | null
+    /**
+     * The data used to update Processes.
+     */
+    data: XOR<ProcessUpdateManyMutationInput, ProcessUncheckedUpdateManyInput>
+    /**
+     * Filter which Processes to update
+     */
+    where?: ProcessWhereInput
+    /**
+     * Limit how many Processes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Process upsert
+   */
+  export type ProcessUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Process
+     */
+    select?: ProcessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Process
+     */
+    omit?: ProcessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Process to update in case it exists.
+     */
+    where: ProcessWhereUniqueInput
+    /**
+     * In case the Process found by the `where` argument doesn't exist, create a new Process with this data.
+     */
+    create: XOR<ProcessCreateInput, ProcessUncheckedCreateInput>
+    /**
+     * In case the Process was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProcessUpdateInput, ProcessUncheckedUpdateInput>
+  }
+
+  /**
+   * Process delete
+   */
+  export type ProcessDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Process
+     */
+    select?: ProcessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Process
+     */
+    omit?: ProcessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessInclude<ExtArgs> | null
+    /**
+     * Filter which Process to delete.
+     */
+    where: ProcessWhereUniqueInput
+  }
+
+  /**
+   * Process deleteMany
+   */
+  export type ProcessDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Processes to delete
+     */
+    where?: ProcessWhereInput
+    /**
+     * Limit how many Processes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Process.steps
+   */
+  export type Process$stepsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessStep
+     */
+    select?: ProcessStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessStep
+     */
+    omit?: ProcessStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessStepInclude<ExtArgs> | null
+    where?: ProcessStepWhereInput
+    orderBy?: ProcessStepOrderByWithRelationInput | ProcessStepOrderByWithRelationInput[]
+    cursor?: ProcessStepWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProcessStepScalarFieldEnum | ProcessStepScalarFieldEnum[]
+  }
+
+  /**
+   * Process.executions
+   */
+  export type Process$executionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Execution
+     */
+    select?: ExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Execution
+     */
+    omit?: ExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExecutionInclude<ExtArgs> | null
+    where?: ExecutionWhereInput
+    orderBy?: ExecutionOrderByWithRelationInput | ExecutionOrderByWithRelationInput[]
+    cursor?: ExecutionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExecutionScalarFieldEnum | ExecutionScalarFieldEnum[]
+  }
+
+  /**
+   * Process without action
+   */
+  export type ProcessDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Process
+     */
+    select?: ProcessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Process
+     */
+    omit?: ProcessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ProcessStep
+   */
+
+  export type AggregateProcessStep = {
+    _count: ProcessStepCountAggregateOutputType | null
+    _avg: ProcessStepAvgAggregateOutputType | null
+    _sum: ProcessStepSumAggregateOutputType | null
+    _min: ProcessStepMinAggregateOutputType | null
+    _max: ProcessStepMaxAggregateOutputType | null
+  }
+
+  export type ProcessStepAvgAggregateOutputType = {
+    order: number | null
+  }
+
+  export type ProcessStepSumAggregateOutputType = {
+    order: number | null
+  }
+
+  export type ProcessStepMinAggregateOutputType = {
+    id: string | null
+    processId: string | null
+    name: string | null
+    order: number | null
+  }
+
+  export type ProcessStepMaxAggregateOutputType = {
+    id: string | null
+    processId: string | null
+    name: string | null
+    order: number | null
+  }
+
+  export type ProcessStepCountAggregateOutputType = {
+    id: number
+    processId: number
+    name: number
+    order: number
+    _all: number
+  }
+
+
+  export type ProcessStepAvgAggregateInputType = {
+    order?: true
+  }
+
+  export type ProcessStepSumAggregateInputType = {
+    order?: true
+  }
+
+  export type ProcessStepMinAggregateInputType = {
+    id?: true
+    processId?: true
+    name?: true
+    order?: true
+  }
+
+  export type ProcessStepMaxAggregateInputType = {
+    id?: true
+    processId?: true
+    name?: true
+    order?: true
+  }
+
+  export type ProcessStepCountAggregateInputType = {
+    id?: true
+    processId?: true
+    name?: true
+    order?: true
+    _all?: true
+  }
+
+  export type ProcessStepAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProcessStep to aggregate.
+     */
+    where?: ProcessStepWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProcessSteps to fetch.
+     */
+    orderBy?: ProcessStepOrderByWithRelationInput | ProcessStepOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProcessStepWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProcessSteps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProcessSteps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProcessSteps
+    **/
+    _count?: true | ProcessStepCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProcessStepAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProcessStepSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProcessStepMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProcessStepMaxAggregateInputType
+  }
+
+  export type GetProcessStepAggregateType<T extends ProcessStepAggregateArgs> = {
+        [P in keyof T & keyof AggregateProcessStep]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProcessStep[P]>
+      : GetScalarType<T[P], AggregateProcessStep[P]>
+  }
+
+
+
+
+  export type ProcessStepGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProcessStepWhereInput
+    orderBy?: ProcessStepOrderByWithAggregationInput | ProcessStepOrderByWithAggregationInput[]
+    by: ProcessStepScalarFieldEnum[] | ProcessStepScalarFieldEnum
+    having?: ProcessStepScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProcessStepCountAggregateInputType | true
+    _avg?: ProcessStepAvgAggregateInputType
+    _sum?: ProcessStepSumAggregateInputType
+    _min?: ProcessStepMinAggregateInputType
+    _max?: ProcessStepMaxAggregateInputType
+  }
+
+  export type ProcessStepGroupByOutputType = {
+    id: string
+    processId: string
+    name: string
+    order: number
+    _count: ProcessStepCountAggregateOutputType | null
+    _avg: ProcessStepAvgAggregateOutputType | null
+    _sum: ProcessStepSumAggregateOutputType | null
+    _min: ProcessStepMinAggregateOutputType | null
+    _max: ProcessStepMaxAggregateOutputType | null
+  }
+
+  type GetProcessStepGroupByPayload<T extends ProcessStepGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProcessStepGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProcessStepGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProcessStepGroupByOutputType[P]>
+            : GetScalarType<T[P], ProcessStepGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProcessStepSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    processId?: boolean
+    name?: boolean
+    order?: boolean
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["processStep"]>
+
+  export type ProcessStepSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    processId?: boolean
+    name?: boolean
+    order?: boolean
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["processStep"]>
+
+  export type ProcessStepSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    processId?: boolean
+    name?: boolean
+    order?: boolean
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["processStep"]>
+
+  export type ProcessStepSelectScalar = {
+    id?: boolean
+    processId?: boolean
+    name?: boolean
+    order?: boolean
+  }
+
+  export type ProcessStepOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "processId" | "name" | "order", ExtArgs["result"]["processStep"]>
+  export type ProcessStepInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
+  }
+  export type ProcessStepIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
+  }
+  export type ProcessStepIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
+  }
+
+  export type $ProcessStepPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProcessStep"
+    objects: {
+      process: Prisma.$ProcessPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      processId: string
+      name: string
+      order: number
+    }, ExtArgs["result"]["processStep"]>
+    composites: {}
+  }
+
+  type ProcessStepGetPayload<S extends boolean | null | undefined | ProcessStepDefaultArgs> = $Result.GetResult<Prisma.$ProcessStepPayload, S>
+
+  type ProcessStepCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProcessStepFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProcessStepCountAggregateInputType | true
+    }
+
+  export interface ProcessStepDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProcessStep'], meta: { name: 'ProcessStep' } }
+    /**
+     * Find zero or one ProcessStep that matches the filter.
+     * @param {ProcessStepFindUniqueArgs} args - Arguments to find a ProcessStep
+     * @example
+     * // Get one ProcessStep
+     * const processStep = await prisma.processStep.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProcessStepFindUniqueArgs>(args: SelectSubset<T, ProcessStepFindUniqueArgs<ExtArgs>>): Prisma__ProcessStepClient<$Result.GetResult<Prisma.$ProcessStepPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ProcessStep that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProcessStepFindUniqueOrThrowArgs} args - Arguments to find a ProcessStep
+     * @example
+     * // Get one ProcessStep
+     * const processStep = await prisma.processStep.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProcessStepFindUniqueOrThrowArgs>(args: SelectSubset<T, ProcessStepFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProcessStepClient<$Result.GetResult<Prisma.$ProcessStepPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProcessStep that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessStepFindFirstArgs} args - Arguments to find a ProcessStep
+     * @example
+     * // Get one ProcessStep
+     * const processStep = await prisma.processStep.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProcessStepFindFirstArgs>(args?: SelectSubset<T, ProcessStepFindFirstArgs<ExtArgs>>): Prisma__ProcessStepClient<$Result.GetResult<Prisma.$ProcessStepPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProcessStep that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessStepFindFirstOrThrowArgs} args - Arguments to find a ProcessStep
+     * @example
+     * // Get one ProcessStep
+     * const processStep = await prisma.processStep.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProcessStepFindFirstOrThrowArgs>(args?: SelectSubset<T, ProcessStepFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProcessStepClient<$Result.GetResult<Prisma.$ProcessStepPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ProcessSteps that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessStepFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProcessSteps
+     * const processSteps = await prisma.processStep.findMany()
+     * 
+     * // Get first 10 ProcessSteps
+     * const processSteps = await prisma.processStep.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const processStepWithIdOnly = await prisma.processStep.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProcessStepFindManyArgs>(args?: SelectSubset<T, ProcessStepFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ProcessStep.
+     * @param {ProcessStepCreateArgs} args - Arguments to create a ProcessStep.
+     * @example
+     * // Create one ProcessStep
+     * const ProcessStep = await prisma.processStep.create({
+     *   data: {
+     *     // ... data to create a ProcessStep
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProcessStepCreateArgs>(args: SelectSubset<T, ProcessStepCreateArgs<ExtArgs>>): Prisma__ProcessStepClient<$Result.GetResult<Prisma.$ProcessStepPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ProcessSteps.
+     * @param {ProcessStepCreateManyArgs} args - Arguments to create many ProcessSteps.
+     * @example
+     * // Create many ProcessSteps
+     * const processStep = await prisma.processStep.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProcessStepCreateManyArgs>(args?: SelectSubset<T, ProcessStepCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProcessSteps and returns the data saved in the database.
+     * @param {ProcessStepCreateManyAndReturnArgs} args - Arguments to create many ProcessSteps.
+     * @example
+     * // Create many ProcessSteps
+     * const processStep = await prisma.processStep.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProcessSteps and only return the `id`
+     * const processStepWithIdOnly = await prisma.processStep.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProcessStepCreateManyAndReturnArgs>(args?: SelectSubset<T, ProcessStepCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessStepPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ProcessStep.
+     * @param {ProcessStepDeleteArgs} args - Arguments to delete one ProcessStep.
+     * @example
+     * // Delete one ProcessStep
+     * const ProcessStep = await prisma.processStep.delete({
+     *   where: {
+     *     // ... filter to delete one ProcessStep
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProcessStepDeleteArgs>(args: SelectSubset<T, ProcessStepDeleteArgs<ExtArgs>>): Prisma__ProcessStepClient<$Result.GetResult<Prisma.$ProcessStepPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ProcessStep.
+     * @param {ProcessStepUpdateArgs} args - Arguments to update one ProcessStep.
+     * @example
+     * // Update one ProcessStep
+     * const processStep = await prisma.processStep.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProcessStepUpdateArgs>(args: SelectSubset<T, ProcessStepUpdateArgs<ExtArgs>>): Prisma__ProcessStepClient<$Result.GetResult<Prisma.$ProcessStepPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ProcessSteps.
+     * @param {ProcessStepDeleteManyArgs} args - Arguments to filter ProcessSteps to delete.
+     * @example
+     * // Delete a few ProcessSteps
+     * const { count } = await prisma.processStep.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProcessStepDeleteManyArgs>(args?: SelectSubset<T, ProcessStepDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProcessSteps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessStepUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProcessSteps
+     * const processStep = await prisma.processStep.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProcessStepUpdateManyArgs>(args: SelectSubset<T, ProcessStepUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProcessSteps and returns the data updated in the database.
+     * @param {ProcessStepUpdateManyAndReturnArgs} args - Arguments to update many ProcessSteps.
+     * @example
+     * // Update many ProcessSteps
+     * const processStep = await prisma.processStep.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ProcessSteps and only return the `id`
+     * const processStepWithIdOnly = await prisma.processStep.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProcessStepUpdateManyAndReturnArgs>(args: SelectSubset<T, ProcessStepUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessStepPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ProcessStep.
+     * @param {ProcessStepUpsertArgs} args - Arguments to update or create a ProcessStep.
+     * @example
+     * // Update or create a ProcessStep
+     * const processStep = await prisma.processStep.upsert({
+     *   create: {
+     *     // ... data to create a ProcessStep
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProcessStep we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProcessStepUpsertArgs>(args: SelectSubset<T, ProcessStepUpsertArgs<ExtArgs>>): Prisma__ProcessStepClient<$Result.GetResult<Prisma.$ProcessStepPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ProcessSteps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessStepCountArgs} args - Arguments to filter ProcessSteps to count.
+     * @example
+     * // Count the number of ProcessSteps
+     * const count = await prisma.processStep.count({
+     *   where: {
+     *     // ... the filter for the ProcessSteps we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProcessStepCountArgs>(
+      args?: Subset<T, ProcessStepCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProcessStepCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProcessStep.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessStepAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProcessStepAggregateArgs>(args: Subset<T, ProcessStepAggregateArgs>): Prisma.PrismaPromise<GetProcessStepAggregateType<T>>
+
+    /**
+     * Group by ProcessStep.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessStepGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProcessStepGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProcessStepGroupByArgs['orderBy'] }
+        : { orderBy?: ProcessStepGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProcessStepGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProcessStepGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProcessStep model
+   */
+  readonly fields: ProcessStepFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProcessStep.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProcessStepClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    process<T extends ProcessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProcessDefaultArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProcessStep model
+   */
+  interface ProcessStepFieldRefs {
+    readonly id: FieldRef<"ProcessStep", 'String'>
+    readonly processId: FieldRef<"ProcessStep", 'String'>
+    readonly name: FieldRef<"ProcessStep", 'String'>
+    readonly order: FieldRef<"ProcessStep", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProcessStep findUnique
+   */
+  export type ProcessStepFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessStep
+     */
+    select?: ProcessStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessStep
+     */
+    omit?: ProcessStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessStepInclude<ExtArgs> | null
+    /**
+     * Filter, which ProcessStep to fetch.
+     */
+    where: ProcessStepWhereUniqueInput
+  }
+
+  /**
+   * ProcessStep findUniqueOrThrow
+   */
+  export type ProcessStepFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessStep
+     */
+    select?: ProcessStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessStep
+     */
+    omit?: ProcessStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessStepInclude<ExtArgs> | null
+    /**
+     * Filter, which ProcessStep to fetch.
+     */
+    where: ProcessStepWhereUniqueInput
+  }
+
+  /**
+   * ProcessStep findFirst
+   */
+  export type ProcessStepFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessStep
+     */
+    select?: ProcessStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessStep
+     */
+    omit?: ProcessStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessStepInclude<ExtArgs> | null
+    /**
+     * Filter, which ProcessStep to fetch.
+     */
+    where?: ProcessStepWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProcessSteps to fetch.
+     */
+    orderBy?: ProcessStepOrderByWithRelationInput | ProcessStepOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProcessSteps.
+     */
+    cursor?: ProcessStepWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProcessSteps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProcessSteps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProcessSteps.
+     */
+    distinct?: ProcessStepScalarFieldEnum | ProcessStepScalarFieldEnum[]
+  }
+
+  /**
+   * ProcessStep findFirstOrThrow
+   */
+  export type ProcessStepFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessStep
+     */
+    select?: ProcessStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessStep
+     */
+    omit?: ProcessStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessStepInclude<ExtArgs> | null
+    /**
+     * Filter, which ProcessStep to fetch.
+     */
+    where?: ProcessStepWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProcessSteps to fetch.
+     */
+    orderBy?: ProcessStepOrderByWithRelationInput | ProcessStepOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProcessSteps.
+     */
+    cursor?: ProcessStepWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProcessSteps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProcessSteps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProcessSteps.
+     */
+    distinct?: ProcessStepScalarFieldEnum | ProcessStepScalarFieldEnum[]
+  }
+
+  /**
+   * ProcessStep findMany
+   */
+  export type ProcessStepFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessStep
+     */
+    select?: ProcessStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessStep
+     */
+    omit?: ProcessStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessStepInclude<ExtArgs> | null
+    /**
+     * Filter, which ProcessSteps to fetch.
+     */
+    where?: ProcessStepWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProcessSteps to fetch.
+     */
+    orderBy?: ProcessStepOrderByWithRelationInput | ProcessStepOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProcessSteps.
+     */
+    cursor?: ProcessStepWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProcessSteps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProcessSteps.
+     */
+    skip?: number
+    distinct?: ProcessStepScalarFieldEnum | ProcessStepScalarFieldEnum[]
+  }
+
+  /**
+   * ProcessStep create
+   */
+  export type ProcessStepCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessStep
+     */
+    select?: ProcessStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessStep
+     */
+    omit?: ProcessStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessStepInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProcessStep.
+     */
+    data: XOR<ProcessStepCreateInput, ProcessStepUncheckedCreateInput>
+  }
+
+  /**
+   * ProcessStep createMany
+   */
+  export type ProcessStepCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProcessSteps.
+     */
+    data: ProcessStepCreateManyInput | ProcessStepCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProcessStep createManyAndReturn
+   */
+  export type ProcessStepCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessStep
+     */
+    select?: ProcessStepSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessStep
+     */
+    omit?: ProcessStepOmit<ExtArgs> | null
+    /**
+     * The data used to create many ProcessSteps.
+     */
+    data: ProcessStepCreateManyInput | ProcessStepCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessStepIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProcessStep update
+   */
+  export type ProcessStepUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessStep
+     */
+    select?: ProcessStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessStep
+     */
+    omit?: ProcessStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessStepInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProcessStep.
+     */
+    data: XOR<ProcessStepUpdateInput, ProcessStepUncheckedUpdateInput>
+    /**
+     * Choose, which ProcessStep to update.
+     */
+    where: ProcessStepWhereUniqueInput
+  }
+
+  /**
+   * ProcessStep updateMany
+   */
+  export type ProcessStepUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProcessSteps.
+     */
+    data: XOR<ProcessStepUpdateManyMutationInput, ProcessStepUncheckedUpdateManyInput>
+    /**
+     * Filter which ProcessSteps to update
+     */
+    where?: ProcessStepWhereInput
+    /**
+     * Limit how many ProcessSteps to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProcessStep updateManyAndReturn
+   */
+  export type ProcessStepUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessStep
+     */
+    select?: ProcessStepSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessStep
+     */
+    omit?: ProcessStepOmit<ExtArgs> | null
+    /**
+     * The data used to update ProcessSteps.
+     */
+    data: XOR<ProcessStepUpdateManyMutationInput, ProcessStepUncheckedUpdateManyInput>
+    /**
+     * Filter which ProcessSteps to update
+     */
+    where?: ProcessStepWhereInput
+    /**
+     * Limit how many ProcessSteps to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessStepIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProcessStep upsert
+   */
+  export type ProcessStepUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessStep
+     */
+    select?: ProcessStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessStep
+     */
+    omit?: ProcessStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessStepInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProcessStep to update in case it exists.
+     */
+    where: ProcessStepWhereUniqueInput
+    /**
+     * In case the ProcessStep found by the `where` argument doesn't exist, create a new ProcessStep with this data.
+     */
+    create: XOR<ProcessStepCreateInput, ProcessStepUncheckedCreateInput>
+    /**
+     * In case the ProcessStep was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProcessStepUpdateInput, ProcessStepUncheckedUpdateInput>
+  }
+
+  /**
+   * ProcessStep delete
+   */
+  export type ProcessStepDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessStep
+     */
+    select?: ProcessStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessStep
+     */
+    omit?: ProcessStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessStepInclude<ExtArgs> | null
+    /**
+     * Filter which ProcessStep to delete.
+     */
+    where: ProcessStepWhereUniqueInput
+  }
+
+  /**
+   * ProcessStep deleteMany
+   */
+  export type ProcessStepDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProcessSteps to delete
+     */
+    where?: ProcessStepWhereInput
+    /**
+     * Limit how many ProcessSteps to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProcessStep without action
+   */
+  export type ProcessStepDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessStep
+     */
+    select?: ProcessStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessStep
+     */
+    omit?: ProcessStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessStepInclude<ExtArgs> | null
+  }
+
 
   /**
    * Model Execution
@@ -1178,18 +4800,24 @@ export namespace Prisma {
     id: string | null
     processId: string | null
     status: string | null
+    startedAt: Date | null
+    finishedAt: Date | null
   }
 
   export type ExecutionMaxAggregateOutputType = {
     id: string | null
     processId: string | null
     status: string | null
+    startedAt: Date | null
+    finishedAt: Date | null
   }
 
   export type ExecutionCountAggregateOutputType = {
     id: number
     processId: number
     status: number
+    startedAt: number
+    finishedAt: number
     _all: number
   }
 
@@ -1198,18 +4826,24 @@ export namespace Prisma {
     id?: true
     processId?: true
     status?: true
+    startedAt?: true
+    finishedAt?: true
   }
 
   export type ExecutionMaxAggregateInputType = {
     id?: true
     processId?: true
     status?: true
+    startedAt?: true
+    finishedAt?: true
   }
 
   export type ExecutionCountAggregateInputType = {
     id?: true
     processId?: true
     status?: true
+    startedAt?: true
+    finishedAt?: true
     _all?: true
   }
 
@@ -1289,6 +4923,8 @@ export namespace Prisma {
     id: string
     processId: string
     status: string
+    startedAt: Date
+    finishedAt: Date | null
     _count: ExecutionCountAggregateOutputType | null
     _min: ExecutionMinAggregateOutputType | null
     _max: ExecutionMaxAggregateOutputType | null
@@ -1312,7 +4948,10 @@ export namespace Prisma {
     id?: boolean
     processId?: boolean
     status?: boolean
-    steps?: boolean | Execution$stepsArgs<ExtArgs>
+    startedAt?: boolean
+    finishedAt?: boolean
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
+    stepResults?: boolean | Execution$stepResultsArgs<ExtArgs>
     _count?: boolean | ExecutionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["execution"]>
 
@@ -1320,37 +4959,53 @@ export namespace Prisma {
     id?: boolean
     processId?: boolean
     status?: boolean
+    startedAt?: boolean
+    finishedAt?: boolean
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["execution"]>
 
   export type ExecutionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     processId?: boolean
     status?: boolean
+    startedAt?: boolean
+    finishedAt?: boolean
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["execution"]>
 
   export type ExecutionSelectScalar = {
     id?: boolean
     processId?: boolean
     status?: boolean
+    startedAt?: boolean
+    finishedAt?: boolean
   }
 
-  export type ExecutionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "processId" | "status", ExtArgs["result"]["execution"]>
+  export type ExecutionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "processId" | "status" | "startedAt" | "finishedAt", ExtArgs["result"]["execution"]>
   export type ExecutionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    steps?: boolean | Execution$stepsArgs<ExtArgs>
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
+    stepResults?: boolean | Execution$stepResultsArgs<ExtArgs>
     _count?: boolean | ExecutionCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type ExecutionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type ExecutionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ExecutionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
+  }
+  export type ExecutionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
+  }
 
   export type $ExecutionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Execution"
     objects: {
-      steps: Prisma.$ExecutionStepPayload<ExtArgs>[]
+      process: Prisma.$ProcessPayload<ExtArgs>
+      stepResults: Prisma.$ExecutionStepPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       processId: string
       status: string
+      startedAt: Date
+      finishedAt: Date | null
     }, ExtArgs["result"]["execution"]>
     composites: {}
   }
@@ -1745,7 +5400,8 @@ export namespace Prisma {
    */
   export interface Prisma__ExecutionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    steps<T extends Execution$stepsArgs<ExtArgs> = {}>(args?: Subset<T, Execution$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExecutionStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    process<T extends ProcessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProcessDefaultArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    stepResults<T extends Execution$stepResultsArgs<ExtArgs> = {}>(args?: Subset<T, Execution$stepResultsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExecutionStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1778,6 +5434,8 @@ export namespace Prisma {
     readonly id: FieldRef<"Execution", 'String'>
     readonly processId: FieldRef<"Execution", 'String'>
     readonly status: FieldRef<"Execution", 'String'>
+    readonly startedAt: FieldRef<"Execution", 'DateTime'>
+    readonly finishedAt: FieldRef<"Execution", 'DateTime'>
   }
     
 
@@ -2027,6 +5685,10 @@ export namespace Prisma {
      */
     data: ExecutionCreateManyInput | ExecutionCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExecutionIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2097,6 +5759,10 @@ export namespace Prisma {
      * Limit how many Executions to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExecutionIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2166,9 +5832,9 @@ export namespace Prisma {
   }
 
   /**
-   * Execution.steps
+   * Execution.stepResults
    */
-  export type Execution$stepsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Execution$stepResultsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the ExecutionStep
      */
@@ -3254,7 +6920,7 @@ export namespace Prisma {
 
 
   /**
-   * Model auditLog
+   * Model AuditLog
    */
 
   export type AggregateAuditLog = {
@@ -3265,86 +6931,90 @@ export namespace Prisma {
 
   export type AuditLogMinAggregateOutputType = {
     id: string | null
-    eventId: string | null
+    organizationId: string | null
+    userId: string | null
     eventName: string | null
     occurredOn: Date | null
   }
 
   export type AuditLogMaxAggregateOutputType = {
     id: string | null
-    eventId: string | null
+    organizationId: string | null
+    userId: string | null
     eventName: string | null
     occurredOn: Date | null
   }
 
   export type AuditLogCountAggregateOutputType = {
     id: number
-    eventId: number
+    organizationId: number
+    userId: number
     eventName: number
-    eventData: number
-    occurredOn: number
     payload: number
+    occurredOn: number
     _all: number
   }
 
 
   export type AuditLogMinAggregateInputType = {
     id?: true
-    eventId?: true
+    organizationId?: true
+    userId?: true
     eventName?: true
     occurredOn?: true
   }
 
   export type AuditLogMaxAggregateInputType = {
     id?: true
-    eventId?: true
+    organizationId?: true
+    userId?: true
     eventName?: true
     occurredOn?: true
   }
 
   export type AuditLogCountAggregateInputType = {
     id?: true
-    eventId?: true
+    organizationId?: true
+    userId?: true
     eventName?: true
-    eventData?: true
-    occurredOn?: true
     payload?: true
+    occurredOn?: true
     _all?: true
   }
 
   export type AuditLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which auditLog to aggregate.
+     * Filter which AuditLog to aggregate.
      */
-    where?: auditLogWhereInput
+    where?: AuditLogWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of auditLogs to fetch.
+     * Determine the order of AuditLogs to fetch.
      */
-    orderBy?: auditLogOrderByWithRelationInput | auditLogOrderByWithRelationInput[]
+    orderBy?: AuditLogOrderByWithRelationInput | AuditLogOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: auditLogWhereUniqueInput
+    cursor?: AuditLogWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` auditLogs from the position of the cursor.
+     * Take `±n` AuditLogs from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` auditLogs.
+     * Skip the first `n` AuditLogs.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned auditLogs
+     * Count returned AuditLogs
     **/
     _count?: true | AuditLogCountAggregateInputType
     /**
@@ -3372,11 +7042,11 @@ export namespace Prisma {
 
 
 
-  export type auditLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: auditLogWhereInput
-    orderBy?: auditLogOrderByWithAggregationInput | auditLogOrderByWithAggregationInput[]
+  export type AuditLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AuditLogWhereInput
+    orderBy?: AuditLogOrderByWithAggregationInput | AuditLogOrderByWithAggregationInput[]
     by: AuditLogScalarFieldEnum[] | AuditLogScalarFieldEnum
-    having?: auditLogScalarWhereWithAggregatesInput
+    having?: AuditLogScalarWhereWithAggregatesInput
     take?: number
     skip?: number
     _count?: AuditLogCountAggregateInputType | true
@@ -3386,17 +7056,17 @@ export namespace Prisma {
 
   export type AuditLogGroupByOutputType = {
     id: string
-    eventId: string
+    organizationId: string | null
+    userId: string | null
     eventName: string
-    eventData: JsonValue
-    occurredOn: Date
     payload: JsonValue
+    occurredOn: Date
     _count: AuditLogCountAggregateOutputType | null
     _min: AuditLogMinAggregateOutputType | null
     _max: AuditLogMaxAggregateOutputType | null
   }
 
-  type GetAuditLogGroupByPayload<T extends auditLogGroupByArgs> = Prisma.PrismaPromise<
+  type GetAuditLogGroupByPayload<T extends AuditLogGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickEnumerable<AuditLogGroupByOutputType, T['by']> &
         {
@@ -3410,70 +7080,70 @@ export namespace Prisma {
     >
 
 
-  export type auditLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type AuditLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    eventId?: boolean
+    organizationId?: boolean
+    userId?: boolean
     eventName?: boolean
-    eventData?: boolean
-    occurredOn?: boolean
     payload?: boolean
+    occurredOn?: boolean
   }, ExtArgs["result"]["auditLog"]>
 
-  export type auditLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type AuditLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    eventId?: boolean
+    organizationId?: boolean
+    userId?: boolean
     eventName?: boolean
-    eventData?: boolean
-    occurredOn?: boolean
     payload?: boolean
+    occurredOn?: boolean
   }, ExtArgs["result"]["auditLog"]>
 
-  export type auditLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type AuditLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    eventId?: boolean
+    organizationId?: boolean
+    userId?: boolean
     eventName?: boolean
-    eventData?: boolean
-    occurredOn?: boolean
     payload?: boolean
+    occurredOn?: boolean
   }, ExtArgs["result"]["auditLog"]>
 
-  export type auditLogSelectScalar = {
+  export type AuditLogSelectScalar = {
     id?: boolean
-    eventId?: boolean
+    organizationId?: boolean
+    userId?: boolean
     eventName?: boolean
-    eventData?: boolean
-    occurredOn?: boolean
     payload?: boolean
+    occurredOn?: boolean
   }
 
-  export type auditLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventId" | "eventName" | "eventData" | "occurredOn" | "payload", ExtArgs["result"]["auditLog"]>
+  export type AuditLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "userId" | "eventName" | "payload" | "occurredOn", ExtArgs["result"]["auditLog"]>
 
-  export type $auditLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "auditLog"
+  export type $AuditLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AuditLog"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      eventId: string
+      organizationId: string | null
+      userId: string | null
       eventName: string
-      eventData: Prisma.JsonValue
-      occurredOn: Date
       payload: Prisma.JsonValue
+      occurredOn: Date
     }, ExtArgs["result"]["auditLog"]>
     composites: {}
   }
 
-  type auditLogGetPayload<S extends boolean | null | undefined | auditLogDefaultArgs> = $Result.GetResult<Prisma.$auditLogPayload, S>
+  type AuditLogGetPayload<S extends boolean | null | undefined | AuditLogDefaultArgs> = $Result.GetResult<Prisma.$AuditLogPayload, S>
 
-  type auditLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<auditLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+  type AuditLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AuditLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
       select?: AuditLogCountAggregateInputType | true
     }
 
-  export interface auditLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['auditLog'], meta: { name: 'auditLog' } }
+  export interface AuditLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AuditLog'], meta: { name: 'AuditLog' } }
     /**
      * Find zero or one AuditLog that matches the filter.
-     * @param {auditLogFindUniqueArgs} args - Arguments to find a AuditLog
+     * @param {AuditLogFindUniqueArgs} args - Arguments to find a AuditLog
      * @example
      * // Get one AuditLog
      * const auditLog = await prisma.auditLog.findUnique({
@@ -3482,12 +7152,12 @@ export namespace Prisma {
      *   }
      * })
      */
-    findUnique<T extends auditLogFindUniqueArgs>(args: SelectSubset<T, auditLogFindUniqueArgs<ExtArgs>>): Prisma__auditLogClient<$Result.GetResult<Prisma.$auditLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends AuditLogFindUniqueArgs>(args: SelectSubset<T, AuditLogFindUniqueArgs<ExtArgs>>): Prisma__AuditLogClient<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
      * Find one AuditLog that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {auditLogFindUniqueOrThrowArgs} args - Arguments to find a AuditLog
+     * @param {AuditLogFindUniqueOrThrowArgs} args - Arguments to find a AuditLog
      * @example
      * // Get one AuditLog
      * const auditLog = await prisma.auditLog.findUniqueOrThrow({
@@ -3496,13 +7166,13 @@ export namespace Prisma {
      *   }
      * })
      */
-    findUniqueOrThrow<T extends auditLogFindUniqueOrThrowArgs>(args: SelectSubset<T, auditLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__auditLogClient<$Result.GetResult<Prisma.$auditLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends AuditLogFindUniqueOrThrowArgs>(args: SelectSubset<T, AuditLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AuditLogClient<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
      * Find the first AuditLog that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {auditLogFindFirstArgs} args - Arguments to find a AuditLog
+     * @param {AuditLogFindFirstArgs} args - Arguments to find a AuditLog
      * @example
      * // Get one AuditLog
      * const auditLog = await prisma.auditLog.findFirst({
@@ -3511,14 +7181,14 @@ export namespace Prisma {
      *   }
      * })
      */
-    findFirst<T extends auditLogFindFirstArgs>(args?: SelectSubset<T, auditLogFindFirstArgs<ExtArgs>>): Prisma__auditLogClient<$Result.GetResult<Prisma.$auditLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends AuditLogFindFirstArgs>(args?: SelectSubset<T, AuditLogFindFirstArgs<ExtArgs>>): Prisma__AuditLogClient<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
      * Find the first AuditLog that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {auditLogFindFirstOrThrowArgs} args - Arguments to find a AuditLog
+     * @param {AuditLogFindFirstOrThrowArgs} args - Arguments to find a AuditLog
      * @example
      * // Get one AuditLog
      * const auditLog = await prisma.auditLog.findFirstOrThrow({
@@ -3527,13 +7197,13 @@ export namespace Prisma {
      *   }
      * })
      */
-    findFirstOrThrow<T extends auditLogFindFirstOrThrowArgs>(args?: SelectSubset<T, auditLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__auditLogClient<$Result.GetResult<Prisma.$auditLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends AuditLogFindFirstOrThrowArgs>(args?: SelectSubset<T, AuditLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__AuditLogClient<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
      * Find zero or more AuditLogs that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {auditLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {AuditLogFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all AuditLogs
      * const auditLogs = await prisma.auditLog.findMany()
@@ -3545,11 +7215,11 @@ export namespace Prisma {
      * const auditLogWithIdOnly = await prisma.auditLog.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends auditLogFindManyArgs>(args?: SelectSubset<T, auditLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$auditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends AuditLogFindManyArgs>(args?: SelectSubset<T, AuditLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
      * Create a AuditLog.
-     * @param {auditLogCreateArgs} args - Arguments to create a AuditLog.
+     * @param {AuditLogCreateArgs} args - Arguments to create a AuditLog.
      * @example
      * // Create one AuditLog
      * const AuditLog = await prisma.auditLog.create({
@@ -3559,11 +7229,11 @@ export namespace Prisma {
      * })
      * 
      */
-    create<T extends auditLogCreateArgs>(args: SelectSubset<T, auditLogCreateArgs<ExtArgs>>): Prisma__auditLogClient<$Result.GetResult<Prisma.$auditLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends AuditLogCreateArgs>(args: SelectSubset<T, AuditLogCreateArgs<ExtArgs>>): Prisma__AuditLogClient<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
      * Create many AuditLogs.
-     * @param {auditLogCreateManyArgs} args - Arguments to create many AuditLogs.
+     * @param {AuditLogCreateManyArgs} args - Arguments to create many AuditLogs.
      * @example
      * // Create many AuditLogs
      * const auditLog = await prisma.auditLog.createMany({
@@ -3573,11 +7243,11 @@ export namespace Prisma {
      * })
      *     
      */
-    createMany<T extends auditLogCreateManyArgs>(args?: SelectSubset<T, auditLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends AuditLogCreateManyArgs>(args?: SelectSubset<T, AuditLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create many AuditLogs and returns the data saved in the database.
-     * @param {auditLogCreateManyAndReturnArgs} args - Arguments to create many AuditLogs.
+     * @param {AuditLogCreateManyAndReturnArgs} args - Arguments to create many AuditLogs.
      * @example
      * // Create many AuditLogs
      * const auditLog = await prisma.auditLog.createManyAndReturn({
@@ -3597,11 +7267,11 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends auditLogCreateManyAndReturnArgs>(args?: SelectSubset<T, auditLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$auditLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends AuditLogCreateManyAndReturnArgs>(args?: SelectSubset<T, AuditLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
      * Delete a AuditLog.
-     * @param {auditLogDeleteArgs} args - Arguments to delete one AuditLog.
+     * @param {AuditLogDeleteArgs} args - Arguments to delete one AuditLog.
      * @example
      * // Delete one AuditLog
      * const AuditLog = await prisma.auditLog.delete({
@@ -3611,11 +7281,11 @@ export namespace Prisma {
      * })
      * 
      */
-    delete<T extends auditLogDeleteArgs>(args: SelectSubset<T, auditLogDeleteArgs<ExtArgs>>): Prisma__auditLogClient<$Result.GetResult<Prisma.$auditLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends AuditLogDeleteArgs>(args: SelectSubset<T, AuditLogDeleteArgs<ExtArgs>>): Prisma__AuditLogClient<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
      * Update one AuditLog.
-     * @param {auditLogUpdateArgs} args - Arguments to update one AuditLog.
+     * @param {AuditLogUpdateArgs} args - Arguments to update one AuditLog.
      * @example
      * // Update one AuditLog
      * const auditLog = await prisma.auditLog.update({
@@ -3628,11 +7298,11 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends auditLogUpdateArgs>(args: SelectSubset<T, auditLogUpdateArgs<ExtArgs>>): Prisma__auditLogClient<$Result.GetResult<Prisma.$auditLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends AuditLogUpdateArgs>(args: SelectSubset<T, AuditLogUpdateArgs<ExtArgs>>): Prisma__AuditLogClient<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
      * Delete zero or more AuditLogs.
-     * @param {auditLogDeleteManyArgs} args - Arguments to filter AuditLogs to delete.
+     * @param {AuditLogDeleteManyArgs} args - Arguments to filter AuditLogs to delete.
      * @example
      * // Delete a few AuditLogs
      * const { count } = await prisma.auditLog.deleteMany({
@@ -3642,13 +7312,13 @@ export namespace Prisma {
      * })
      * 
      */
-    deleteMany<T extends auditLogDeleteManyArgs>(args?: SelectSubset<T, auditLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends AuditLogDeleteManyArgs>(args?: SelectSubset<T, AuditLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more AuditLogs.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {auditLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {AuditLogUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
      * // Update many AuditLogs
      * const auditLog = await prisma.auditLog.updateMany({
@@ -3661,11 +7331,11 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends auditLogUpdateManyArgs>(args: SelectSubset<T, auditLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends AuditLogUpdateManyArgs>(args: SelectSubset<T, AuditLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more AuditLogs and returns the data updated in the database.
-     * @param {auditLogUpdateManyAndReturnArgs} args - Arguments to update many AuditLogs.
+     * @param {AuditLogUpdateManyAndReturnArgs} args - Arguments to update many AuditLogs.
      * @example
      * // Update many AuditLogs
      * const auditLog = await prisma.auditLog.updateManyAndReturn({
@@ -3691,11 +7361,11 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends auditLogUpdateManyAndReturnArgs>(args: SelectSubset<T, auditLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$auditLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends AuditLogUpdateManyAndReturnArgs>(args: SelectSubset<T, AuditLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
      * Create or update one AuditLog.
-     * @param {auditLogUpsertArgs} args - Arguments to update or create a AuditLog.
+     * @param {AuditLogUpsertArgs} args - Arguments to update or create a AuditLog.
      * @example
      * // Update or create a AuditLog
      * const auditLog = await prisma.auditLog.upsert({
@@ -3710,14 +7380,14 @@ export namespace Prisma {
      *   }
      * })
      */
-    upsert<T extends auditLogUpsertArgs>(args: SelectSubset<T, auditLogUpsertArgs<ExtArgs>>): Prisma__auditLogClient<$Result.GetResult<Prisma.$auditLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends AuditLogUpsertArgs>(args: SelectSubset<T, AuditLogUpsertArgs<ExtArgs>>): Prisma__AuditLogClient<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
      * Count the number of AuditLogs.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {auditLogCountArgs} args - Arguments to filter AuditLogs to count.
+     * @param {AuditLogCountArgs} args - Arguments to filter AuditLogs to count.
      * @example
      * // Count the number of AuditLogs
      * const count = await prisma.auditLog.count({
@@ -3726,8 +7396,8 @@ export namespace Prisma {
      *   }
      * })
     **/
-    count<T extends auditLogCountArgs>(
-      args?: Subset<T, auditLogCountArgs>,
+    count<T extends AuditLogCountArgs>(
+      args?: Subset<T, AuditLogCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
@@ -3766,7 +7436,7 @@ export namespace Prisma {
      * Group by AuditLog.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {auditLogGroupByArgs} args - Group by arguments.
+     * @param {AuditLogGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -3781,14 +7451,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends auditLogGroupByArgs,
+      T extends AuditLogGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: auditLogGroupByArgs['orderBy'] }
-        : { orderBy?: auditLogGroupByArgs['orderBy'] },
+        ? { orderBy: AuditLogGroupByArgs['orderBy'] }
+        : { orderBy?: AuditLogGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -3837,20 +7507,20 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, auditLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAuditLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, AuditLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAuditLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the auditLog model
+   * Fields of the AuditLog model
    */
-  readonly fields: auditLogFieldRefs;
+  readonly fields: AuditLogFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for auditLog.
+   * The delegate class that acts as a "Promise-like" for AuditLog.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__auditLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__AuditLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3878,378 +7548,378 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the auditLog model
+   * Fields of the AuditLog model
    */
-  interface auditLogFieldRefs {
-    readonly id: FieldRef<"auditLog", 'String'>
-    readonly eventId: FieldRef<"auditLog", 'String'>
-    readonly eventName: FieldRef<"auditLog", 'String'>
-    readonly eventData: FieldRef<"auditLog", 'Json'>
-    readonly occurredOn: FieldRef<"auditLog", 'DateTime'>
-    readonly payload: FieldRef<"auditLog", 'Json'>
+  interface AuditLogFieldRefs {
+    readonly id: FieldRef<"AuditLog", 'String'>
+    readonly organizationId: FieldRef<"AuditLog", 'String'>
+    readonly userId: FieldRef<"AuditLog", 'String'>
+    readonly eventName: FieldRef<"AuditLog", 'String'>
+    readonly payload: FieldRef<"AuditLog", 'Json'>
+    readonly occurredOn: FieldRef<"AuditLog", 'DateTime'>
   }
     
 
   // Custom InputTypes
   /**
-   * auditLog findUnique
+   * AuditLog findUnique
    */
-  export type auditLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AuditLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the auditLog
+     * Select specific fields to fetch from the AuditLog
      */
-    select?: auditLogSelect<ExtArgs> | null
+    select?: AuditLogSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the auditLog
+     * Omit specific fields from the AuditLog
      */
-    omit?: auditLogOmit<ExtArgs> | null
+    omit?: AuditLogOmit<ExtArgs> | null
     /**
-     * Filter, which auditLog to fetch.
+     * Filter, which AuditLog to fetch.
      */
-    where: auditLogWhereUniqueInput
+    where: AuditLogWhereUniqueInput
   }
 
   /**
-   * auditLog findUniqueOrThrow
+   * AuditLog findUniqueOrThrow
    */
-  export type auditLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AuditLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the auditLog
+     * Select specific fields to fetch from the AuditLog
      */
-    select?: auditLogSelect<ExtArgs> | null
+    select?: AuditLogSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the auditLog
+     * Omit specific fields from the AuditLog
      */
-    omit?: auditLogOmit<ExtArgs> | null
+    omit?: AuditLogOmit<ExtArgs> | null
     /**
-     * Filter, which auditLog to fetch.
+     * Filter, which AuditLog to fetch.
      */
-    where: auditLogWhereUniqueInput
+    where: AuditLogWhereUniqueInput
   }
 
   /**
-   * auditLog findFirst
+   * AuditLog findFirst
    */
-  export type auditLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AuditLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the auditLog
+     * Select specific fields to fetch from the AuditLog
      */
-    select?: auditLogSelect<ExtArgs> | null
+    select?: AuditLogSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the auditLog
+     * Omit specific fields from the AuditLog
      */
-    omit?: auditLogOmit<ExtArgs> | null
+    omit?: AuditLogOmit<ExtArgs> | null
     /**
-     * Filter, which auditLog to fetch.
+     * Filter, which AuditLog to fetch.
      */
-    where?: auditLogWhereInput
+    where?: AuditLogWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of auditLogs to fetch.
+     * Determine the order of AuditLogs to fetch.
      */
-    orderBy?: auditLogOrderByWithRelationInput | auditLogOrderByWithRelationInput[]
+    orderBy?: AuditLogOrderByWithRelationInput | AuditLogOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for auditLogs.
+     * Sets the position for searching for AuditLogs.
      */
-    cursor?: auditLogWhereUniqueInput
+    cursor?: AuditLogWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` auditLogs from the position of the cursor.
+     * Take `±n` AuditLogs from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` auditLogs.
+     * Skip the first `n` AuditLogs.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of auditLogs.
+     * Filter by unique combinations of AuditLogs.
      */
     distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
   }
 
   /**
-   * auditLog findFirstOrThrow
+   * AuditLog findFirstOrThrow
    */
-  export type auditLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AuditLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the auditLog
+     * Select specific fields to fetch from the AuditLog
      */
-    select?: auditLogSelect<ExtArgs> | null
+    select?: AuditLogSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the auditLog
+     * Omit specific fields from the AuditLog
      */
-    omit?: auditLogOmit<ExtArgs> | null
+    omit?: AuditLogOmit<ExtArgs> | null
     /**
-     * Filter, which auditLog to fetch.
+     * Filter, which AuditLog to fetch.
      */
-    where?: auditLogWhereInput
+    where?: AuditLogWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of auditLogs to fetch.
+     * Determine the order of AuditLogs to fetch.
      */
-    orderBy?: auditLogOrderByWithRelationInput | auditLogOrderByWithRelationInput[]
+    orderBy?: AuditLogOrderByWithRelationInput | AuditLogOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for auditLogs.
+     * Sets the position for searching for AuditLogs.
      */
-    cursor?: auditLogWhereUniqueInput
+    cursor?: AuditLogWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` auditLogs from the position of the cursor.
+     * Take `±n` AuditLogs from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` auditLogs.
+     * Skip the first `n` AuditLogs.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of auditLogs.
+     * Filter by unique combinations of AuditLogs.
      */
     distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
   }
 
   /**
-   * auditLog findMany
+   * AuditLog findMany
    */
-  export type auditLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AuditLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the auditLog
+     * Select specific fields to fetch from the AuditLog
      */
-    select?: auditLogSelect<ExtArgs> | null
+    select?: AuditLogSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the auditLog
+     * Omit specific fields from the AuditLog
      */
-    omit?: auditLogOmit<ExtArgs> | null
+    omit?: AuditLogOmit<ExtArgs> | null
     /**
-     * Filter, which auditLogs to fetch.
+     * Filter, which AuditLogs to fetch.
      */
-    where?: auditLogWhereInput
+    where?: AuditLogWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of auditLogs to fetch.
+     * Determine the order of AuditLogs to fetch.
      */
-    orderBy?: auditLogOrderByWithRelationInput | auditLogOrderByWithRelationInput[]
+    orderBy?: AuditLogOrderByWithRelationInput | AuditLogOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing auditLogs.
+     * Sets the position for listing AuditLogs.
      */
-    cursor?: auditLogWhereUniqueInput
+    cursor?: AuditLogWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` auditLogs from the position of the cursor.
+     * Take `±n` AuditLogs from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` auditLogs.
+     * Skip the first `n` AuditLogs.
      */
     skip?: number
     distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
   }
 
   /**
-   * auditLog create
+   * AuditLog create
    */
-  export type auditLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AuditLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the auditLog
+     * Select specific fields to fetch from the AuditLog
      */
-    select?: auditLogSelect<ExtArgs> | null
+    select?: AuditLogSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the auditLog
+     * Omit specific fields from the AuditLog
      */
-    omit?: auditLogOmit<ExtArgs> | null
+    omit?: AuditLogOmit<ExtArgs> | null
     /**
-     * The data needed to create a auditLog.
+     * The data needed to create a AuditLog.
      */
-    data: XOR<auditLogCreateInput, auditLogUncheckedCreateInput>
+    data: XOR<AuditLogCreateInput, AuditLogUncheckedCreateInput>
   }
 
   /**
-   * auditLog createMany
+   * AuditLog createMany
    */
-  export type auditLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AuditLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many auditLogs.
+     * The data used to create many AuditLogs.
      */
-    data: auditLogCreateManyInput | auditLogCreateManyInput[]
+    data: AuditLogCreateManyInput | AuditLogCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * auditLog createManyAndReturn
+   * AuditLog createManyAndReturn
    */
-  export type auditLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AuditLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the auditLog
+     * Select specific fields to fetch from the AuditLog
      */
-    select?: auditLogSelectCreateManyAndReturn<ExtArgs> | null
+    select?: AuditLogSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the auditLog
+     * Omit specific fields from the AuditLog
      */
-    omit?: auditLogOmit<ExtArgs> | null
+    omit?: AuditLogOmit<ExtArgs> | null
     /**
-     * The data used to create many auditLogs.
+     * The data used to create many AuditLogs.
      */
-    data: auditLogCreateManyInput | auditLogCreateManyInput[]
+    data: AuditLogCreateManyInput | AuditLogCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * auditLog update
+   * AuditLog update
    */
-  export type auditLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AuditLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the auditLog
+     * Select specific fields to fetch from the AuditLog
      */
-    select?: auditLogSelect<ExtArgs> | null
+    select?: AuditLogSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the auditLog
+     * Omit specific fields from the AuditLog
      */
-    omit?: auditLogOmit<ExtArgs> | null
+    omit?: AuditLogOmit<ExtArgs> | null
     /**
-     * The data needed to update a auditLog.
+     * The data needed to update a AuditLog.
      */
-    data: XOR<auditLogUpdateInput, auditLogUncheckedUpdateInput>
+    data: XOR<AuditLogUpdateInput, AuditLogUncheckedUpdateInput>
     /**
-     * Choose, which auditLog to update.
+     * Choose, which AuditLog to update.
      */
-    where: auditLogWhereUniqueInput
+    where: AuditLogWhereUniqueInput
   }
 
   /**
-   * auditLog updateMany
+   * AuditLog updateMany
    */
-  export type auditLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AuditLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update auditLogs.
+     * The data used to update AuditLogs.
      */
-    data: XOR<auditLogUpdateManyMutationInput, auditLogUncheckedUpdateManyInput>
+    data: XOR<AuditLogUpdateManyMutationInput, AuditLogUncheckedUpdateManyInput>
     /**
-     * Filter which auditLogs to update
+     * Filter which AuditLogs to update
      */
-    where?: auditLogWhereInput
+    where?: AuditLogWhereInput
     /**
-     * Limit how many auditLogs to update.
+     * Limit how many AuditLogs to update.
      */
     limit?: number
   }
 
   /**
-   * auditLog updateManyAndReturn
+   * AuditLog updateManyAndReturn
    */
-  export type auditLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AuditLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the auditLog
+     * Select specific fields to fetch from the AuditLog
      */
-    select?: auditLogSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: AuditLogSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the auditLog
+     * Omit specific fields from the AuditLog
      */
-    omit?: auditLogOmit<ExtArgs> | null
+    omit?: AuditLogOmit<ExtArgs> | null
     /**
-     * The data used to update auditLogs.
+     * The data used to update AuditLogs.
      */
-    data: XOR<auditLogUpdateManyMutationInput, auditLogUncheckedUpdateManyInput>
+    data: XOR<AuditLogUpdateManyMutationInput, AuditLogUncheckedUpdateManyInput>
     /**
-     * Filter which auditLogs to update
+     * Filter which AuditLogs to update
      */
-    where?: auditLogWhereInput
+    where?: AuditLogWhereInput
     /**
-     * Limit how many auditLogs to update.
+     * Limit how many AuditLogs to update.
      */
     limit?: number
   }
 
   /**
-   * auditLog upsert
+   * AuditLog upsert
    */
-  export type auditLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AuditLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the auditLog
+     * Select specific fields to fetch from the AuditLog
      */
-    select?: auditLogSelect<ExtArgs> | null
+    select?: AuditLogSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the auditLog
+     * Omit specific fields from the AuditLog
      */
-    omit?: auditLogOmit<ExtArgs> | null
+    omit?: AuditLogOmit<ExtArgs> | null
     /**
-     * The filter to search for the auditLog to update in case it exists.
+     * The filter to search for the AuditLog to update in case it exists.
      */
-    where: auditLogWhereUniqueInput
+    where: AuditLogWhereUniqueInput
     /**
-     * In case the auditLog found by the `where` argument doesn't exist, create a new auditLog with this data.
+     * In case the AuditLog found by the `where` argument doesn't exist, create a new AuditLog with this data.
      */
-    create: XOR<auditLogCreateInput, auditLogUncheckedCreateInput>
+    create: XOR<AuditLogCreateInput, AuditLogUncheckedCreateInput>
     /**
-     * In case the auditLog was found with the provided `where` argument, update it with this data.
+     * In case the AuditLog was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<auditLogUpdateInput, auditLogUncheckedUpdateInput>
+    update: XOR<AuditLogUpdateInput, AuditLogUncheckedUpdateInput>
   }
 
   /**
-   * auditLog delete
+   * AuditLog delete
    */
-  export type auditLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AuditLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the auditLog
+     * Select specific fields to fetch from the AuditLog
      */
-    select?: auditLogSelect<ExtArgs> | null
+    select?: AuditLogSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the auditLog
+     * Omit specific fields from the AuditLog
      */
-    omit?: auditLogOmit<ExtArgs> | null
+    omit?: AuditLogOmit<ExtArgs> | null
     /**
-     * Filter which auditLog to delete.
+     * Filter which AuditLog to delete.
      */
-    where: auditLogWhereUniqueInput
+    where: AuditLogWhereUniqueInput
   }
 
   /**
-   * auditLog deleteMany
+   * AuditLog deleteMany
    */
-  export type auditLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AuditLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which auditLogs to delete
+     * Filter which AuditLogs to delete
      */
-    where?: auditLogWhereInput
+    where?: AuditLogWhereInput
     /**
-     * Limit how many auditLogs to delete.
+     * Limit how many AuditLogs to delete.
      */
     limit?: number
   }
 
   /**
-   * auditLog without action
+   * AuditLog without action
    */
-  export type auditLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AuditLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the auditLog
+     * Select specific fields to fetch from the AuditLog
      */
-    select?: auditLogSelect<ExtArgs> | null
+    select?: AuditLogSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the auditLog
+     * Omit specific fields from the AuditLog
      */
-    omit?: auditLogOmit<ExtArgs> | null
+    omit?: AuditLogOmit<ExtArgs> | null
   }
 
 
@@ -4266,29 +7936,23 @@ export namespace Prisma {
   export type OutboxMinAggregateOutputType = {
     id: string | null
     eventName: string | null
-    occurredOn: Date | null
     published: boolean | null
-    createdAt: Date | null
-    updatedAt: Date | null
+    occurredOn: Date | null
   }
 
   export type OutboxMaxAggregateOutputType = {
     id: string | null
     eventName: string | null
-    occurredOn: Date | null
     published: boolean | null
-    createdAt: Date | null
-    updatedAt: Date | null
+    occurredOn: Date | null
   }
 
   export type OutboxCountAggregateOutputType = {
     id: number
     eventName: number
     payload: number
-    occurredOn: number
     published: number
-    createdAt: number
-    updatedAt: number
+    occurredOn: number
     _all: number
   }
 
@@ -4296,29 +7960,23 @@ export namespace Prisma {
   export type OutboxMinAggregateInputType = {
     id?: true
     eventName?: true
-    occurredOn?: true
     published?: true
-    createdAt?: true
-    updatedAt?: true
+    occurredOn?: true
   }
 
   export type OutboxMaxAggregateInputType = {
     id?: true
     eventName?: true
-    occurredOn?: true
     published?: true
-    createdAt?: true
-    updatedAt?: true
+    occurredOn?: true
   }
 
   export type OutboxCountAggregateInputType = {
     id?: true
     eventName?: true
     payload?: true
-    occurredOn?: true
     published?: true
-    createdAt?: true
-    updatedAt?: true
+    occurredOn?: true
     _all?: true
   }
 
@@ -4398,10 +8056,8 @@ export namespace Prisma {
     id: string
     eventName: string
     payload: JsonValue
-    occurredOn: Date
     published: boolean
-    createdAt: Date
-    updatedAt: Date
+    occurredOn: Date
     _count: OutboxCountAggregateOutputType | null
     _min: OutboxMinAggregateOutputType | null
     _max: OutboxMaxAggregateOutputType | null
@@ -4425,43 +8081,35 @@ export namespace Prisma {
     id?: boolean
     eventName?: boolean
     payload?: boolean
-    occurredOn?: boolean
     published?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
+    occurredOn?: boolean
   }, ExtArgs["result"]["outbox"]>
 
   export type OutboxSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     eventName?: boolean
     payload?: boolean
-    occurredOn?: boolean
     published?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
+    occurredOn?: boolean
   }, ExtArgs["result"]["outbox"]>
 
   export type OutboxSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     eventName?: boolean
     payload?: boolean
-    occurredOn?: boolean
     published?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
+    occurredOn?: boolean
   }, ExtArgs["result"]["outbox"]>
 
   export type OutboxSelectScalar = {
     id?: boolean
     eventName?: boolean
     payload?: boolean
-    occurredOn?: boolean
     published?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
+    occurredOn?: boolean
   }
 
-  export type OutboxOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventName" | "payload" | "occurredOn" | "published" | "createdAt" | "updatedAt", ExtArgs["result"]["outbox"]>
+  export type OutboxOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventName" | "payload" | "published" | "occurredOn", ExtArgs["result"]["outbox"]>
 
   export type $OutboxPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Outbox"
@@ -4470,10 +8118,8 @@ export namespace Prisma {
       id: string
       eventName: string
       payload: Prisma.JsonValue
-      occurredOn: Date
       published: boolean
-      createdAt: Date
-      updatedAt: Date
+      occurredOn: Date
     }, ExtArgs["result"]["outbox"]>
     composites: {}
   }
@@ -4900,10 +8546,8 @@ export namespace Prisma {
     readonly id: FieldRef<"Outbox", 'String'>
     readonly eventName: FieldRef<"Outbox", 'String'>
     readonly payload: FieldRef<"Outbox", 'Json'>
-    readonly occurredOn: FieldRef<"Outbox", 'DateTime'>
     readonly published: FieldRef<"Outbox", 'Boolean'>
-    readonly createdAt: FieldRef<"Outbox", 'DateTime'>
-    readonly updatedAt: FieldRef<"Outbox", 'DateTime'>
+    readonly occurredOn: FieldRef<"Outbox", 'DateTime'>
   }
     
 
@@ -5284,10 +8928,45 @@ export namespace Prisma {
   export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+  export const OrganizationScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    status: 'status',
+    plan: 'plan',
+    createdAt: 'createdAt'
+  };
+
+  export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
+
+
+  export const ProcessScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    status: 'status',
+    organizationId: 'organizationId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProcessScalarFieldEnum = (typeof ProcessScalarFieldEnum)[keyof typeof ProcessScalarFieldEnum]
+
+
+  export const ProcessStepScalarFieldEnum: {
+    id: 'id',
+    processId: 'processId',
+    name: 'name',
+    order: 'order'
+  };
+
+  export type ProcessStepScalarFieldEnum = (typeof ProcessStepScalarFieldEnum)[keyof typeof ProcessStepScalarFieldEnum]
+
+
   export const ExecutionScalarFieldEnum: {
     id: 'id',
     processId: 'processId',
-    status: 'status'
+    status: 'status',
+    startedAt: 'startedAt',
+    finishedAt: 'finishedAt'
   };
 
   export type ExecutionScalarFieldEnum = (typeof ExecutionScalarFieldEnum)[keyof typeof ExecutionScalarFieldEnum]
@@ -5305,11 +8984,11 @@ export namespace Prisma {
 
   export const AuditLogScalarFieldEnum: {
     id: 'id',
-    eventId: 'eventId',
+    organizationId: 'organizationId',
+    userId: 'userId',
     eventName: 'eventName',
-    eventData: 'eventData',
-    occurredOn: 'occurredOn',
-    payload: 'payload'
+    payload: 'payload',
+    occurredOn: 'occurredOn'
   };
 
   export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
@@ -5319,10 +8998,8 @@ export namespace Prisma {
     id: 'id',
     eventName: 'eventName',
     payload: 'payload',
-    occurredOn: 'occurredOn',
     published: 'published',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    occurredOn: 'occurredOn'
   };
 
   export type OutboxScalarFieldEnum = (typeof OutboxScalarFieldEnum)[keyof typeof OutboxScalarFieldEnum]
@@ -5349,6 +9026,14 @@ export namespace Prisma {
   };
 
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
   export const JsonNullValueFilter: {
@@ -5380,20 +9065,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
-   * Reference to a field of type 'QueryMode'
-   */
-  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -5404,13 +9075,6 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -5426,10 +9090,218 @@ export namespace Prisma {
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
   /**
    * Deep Input Types
    */
 
+
+  export type OrganizationWhereInput = {
+    AND?: OrganizationWhereInput | OrganizationWhereInput[]
+    OR?: OrganizationWhereInput[]
+    NOT?: OrganizationWhereInput | OrganizationWhereInput[]
+    id?: StringFilter<"Organization"> | string
+    name?: StringFilter<"Organization"> | string
+    status?: StringFilter<"Organization"> | string
+    plan?: StringFilter<"Organization"> | string
+    createdAt?: DateTimeFilter<"Organization"> | Date | string
+    processes?: ProcessListRelationFilter
+  }
+
+  export type OrganizationOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    status?: SortOrder
+    plan?: SortOrder
+    createdAt?: SortOrder
+    processes?: ProcessOrderByRelationAggregateInput
+  }
+
+  export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: OrganizationWhereInput | OrganizationWhereInput[]
+    OR?: OrganizationWhereInput[]
+    NOT?: OrganizationWhereInput | OrganizationWhereInput[]
+    name?: StringFilter<"Organization"> | string
+    status?: StringFilter<"Organization"> | string
+    plan?: StringFilter<"Organization"> | string
+    createdAt?: DateTimeFilter<"Organization"> | Date | string
+    processes?: ProcessListRelationFilter
+  }, "id">
+
+  export type OrganizationOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    status?: SortOrder
+    plan?: SortOrder
+    createdAt?: SortOrder
+    _count?: OrganizationCountOrderByAggregateInput
+    _max?: OrganizationMaxOrderByAggregateInput
+    _min?: OrganizationMinOrderByAggregateInput
+  }
+
+  export type OrganizationScalarWhereWithAggregatesInput = {
+    AND?: OrganizationScalarWhereWithAggregatesInput | OrganizationScalarWhereWithAggregatesInput[]
+    OR?: OrganizationScalarWhereWithAggregatesInput[]
+    NOT?: OrganizationScalarWhereWithAggregatesInput | OrganizationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Organization"> | string
+    name?: StringWithAggregatesFilter<"Organization"> | string
+    status?: StringWithAggregatesFilter<"Organization"> | string
+    plan?: StringWithAggregatesFilter<"Organization"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Organization"> | Date | string
+  }
+
+  export type ProcessWhereInput = {
+    AND?: ProcessWhereInput | ProcessWhereInput[]
+    OR?: ProcessWhereInput[]
+    NOT?: ProcessWhereInput | ProcessWhereInput[]
+    id?: StringFilter<"Process"> | string
+    name?: StringFilter<"Process"> | string
+    status?: StringFilter<"Process"> | string
+    organizationId?: StringFilter<"Process"> | string
+    createdAt?: DateTimeFilter<"Process"> | Date | string
+    updatedAt?: DateTimeFilter<"Process"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    steps?: ProcessStepListRelationFilter
+    executions?: ExecutionListRelationFilter
+  }
+
+  export type ProcessOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    status?: SortOrder
+    organizationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    steps?: ProcessStepOrderByRelationAggregateInput
+    executions?: ExecutionOrderByRelationAggregateInput
+  }
+
+  export type ProcessWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ProcessWhereInput | ProcessWhereInput[]
+    OR?: ProcessWhereInput[]
+    NOT?: ProcessWhereInput | ProcessWhereInput[]
+    name?: StringFilter<"Process"> | string
+    status?: StringFilter<"Process"> | string
+    organizationId?: StringFilter<"Process"> | string
+    createdAt?: DateTimeFilter<"Process"> | Date | string
+    updatedAt?: DateTimeFilter<"Process"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    steps?: ProcessStepListRelationFilter
+    executions?: ExecutionListRelationFilter
+  }, "id">
+
+  export type ProcessOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    status?: SortOrder
+    organizationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProcessCountOrderByAggregateInput
+    _max?: ProcessMaxOrderByAggregateInput
+    _min?: ProcessMinOrderByAggregateInput
+  }
+
+  export type ProcessScalarWhereWithAggregatesInput = {
+    AND?: ProcessScalarWhereWithAggregatesInput | ProcessScalarWhereWithAggregatesInput[]
+    OR?: ProcessScalarWhereWithAggregatesInput[]
+    NOT?: ProcessScalarWhereWithAggregatesInput | ProcessScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Process"> | string
+    name?: StringWithAggregatesFilter<"Process"> | string
+    status?: StringWithAggregatesFilter<"Process"> | string
+    organizationId?: StringWithAggregatesFilter<"Process"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Process"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Process"> | Date | string
+  }
+
+  export type ProcessStepWhereInput = {
+    AND?: ProcessStepWhereInput | ProcessStepWhereInput[]
+    OR?: ProcessStepWhereInput[]
+    NOT?: ProcessStepWhereInput | ProcessStepWhereInput[]
+    id?: StringFilter<"ProcessStep"> | string
+    processId?: StringFilter<"ProcessStep"> | string
+    name?: StringFilter<"ProcessStep"> | string
+    order?: IntFilter<"ProcessStep"> | number
+    process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
+  }
+
+  export type ProcessStepOrderByWithRelationInput = {
+    id?: SortOrder
+    processId?: SortOrder
+    name?: SortOrder
+    order?: SortOrder
+    process?: ProcessOrderByWithRelationInput
+  }
+
+  export type ProcessStepWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ProcessStepWhereInput | ProcessStepWhereInput[]
+    OR?: ProcessStepWhereInput[]
+    NOT?: ProcessStepWhereInput | ProcessStepWhereInput[]
+    processId?: StringFilter<"ProcessStep"> | string
+    name?: StringFilter<"ProcessStep"> | string
+    order?: IntFilter<"ProcessStep"> | number
+    process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
+  }, "id">
+
+  export type ProcessStepOrderByWithAggregationInput = {
+    id?: SortOrder
+    processId?: SortOrder
+    name?: SortOrder
+    order?: SortOrder
+    _count?: ProcessStepCountOrderByAggregateInput
+    _avg?: ProcessStepAvgOrderByAggregateInput
+    _max?: ProcessStepMaxOrderByAggregateInput
+    _min?: ProcessStepMinOrderByAggregateInput
+    _sum?: ProcessStepSumOrderByAggregateInput
+  }
+
+  export type ProcessStepScalarWhereWithAggregatesInput = {
+    AND?: ProcessStepScalarWhereWithAggregatesInput | ProcessStepScalarWhereWithAggregatesInput[]
+    OR?: ProcessStepScalarWhereWithAggregatesInput[]
+    NOT?: ProcessStepScalarWhereWithAggregatesInput | ProcessStepScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ProcessStep"> | string
+    processId?: StringWithAggregatesFilter<"ProcessStep"> | string
+    name?: StringWithAggregatesFilter<"ProcessStep"> | string
+    order?: IntWithAggregatesFilter<"ProcessStep"> | number
+  }
 
   export type ExecutionWhereInput = {
     AND?: ExecutionWhereInput | ExecutionWhereInput[]
@@ -5438,14 +9310,20 @@ export namespace Prisma {
     id?: StringFilter<"Execution"> | string
     processId?: StringFilter<"Execution"> | string
     status?: StringFilter<"Execution"> | string
-    steps?: ExecutionStepListRelationFilter
+    startedAt?: DateTimeFilter<"Execution"> | Date | string
+    finishedAt?: DateTimeNullableFilter<"Execution"> | Date | string | null
+    process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
+    stepResults?: ExecutionStepListRelationFilter
   }
 
   export type ExecutionOrderByWithRelationInput = {
     id?: SortOrder
     processId?: SortOrder
     status?: SortOrder
-    steps?: ExecutionStepOrderByRelationAggregateInput
+    startedAt?: SortOrder
+    finishedAt?: SortOrderInput | SortOrder
+    process?: ProcessOrderByWithRelationInput
+    stepResults?: ExecutionStepOrderByRelationAggregateInput
   }
 
   export type ExecutionWhereUniqueInput = Prisma.AtLeast<{
@@ -5455,13 +9333,18 @@ export namespace Prisma {
     NOT?: ExecutionWhereInput | ExecutionWhereInput[]
     processId?: StringFilter<"Execution"> | string
     status?: StringFilter<"Execution"> | string
-    steps?: ExecutionStepListRelationFilter
+    startedAt?: DateTimeFilter<"Execution"> | Date | string
+    finishedAt?: DateTimeNullableFilter<"Execution"> | Date | string | null
+    process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
+    stepResults?: ExecutionStepListRelationFilter
   }, "id">
 
   export type ExecutionOrderByWithAggregationInput = {
     id?: SortOrder
     processId?: SortOrder
     status?: SortOrder
+    startedAt?: SortOrder
+    finishedAt?: SortOrderInput | SortOrder
     _count?: ExecutionCountOrderByAggregateInput
     _max?: ExecutionMaxOrderByAggregateInput
     _min?: ExecutionMinOrderByAggregateInput
@@ -5474,6 +9357,8 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Execution"> | string
     processId?: StringWithAggregatesFilter<"Execution"> | string
     status?: StringWithAggregatesFilter<"Execution"> | string
+    startedAt?: DateTimeWithAggregatesFilter<"Execution"> | Date | string
+    finishedAt?: DateTimeNullableWithAggregatesFilter<"Execution"> | Date | string | null
   }
 
   export type ExecutionStepWhereInput = {
@@ -5526,61 +9411,61 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"ExecutionStep"> | string
   }
 
-  export type auditLogWhereInput = {
-    AND?: auditLogWhereInput | auditLogWhereInput[]
-    OR?: auditLogWhereInput[]
-    NOT?: auditLogWhereInput | auditLogWhereInput[]
-    id?: StringFilter<"auditLog"> | string
-    eventId?: StringFilter<"auditLog"> | string
-    eventName?: StringFilter<"auditLog"> | string
-    eventData?: JsonFilter<"auditLog">
-    occurredOn?: DateTimeFilter<"auditLog"> | Date | string
-    payload?: JsonFilter<"auditLog">
+  export type AuditLogWhereInput = {
+    AND?: AuditLogWhereInput | AuditLogWhereInput[]
+    OR?: AuditLogWhereInput[]
+    NOT?: AuditLogWhereInput | AuditLogWhereInput[]
+    id?: StringFilter<"AuditLog"> | string
+    organizationId?: StringNullableFilter<"AuditLog"> | string | null
+    userId?: StringNullableFilter<"AuditLog"> | string | null
+    eventName?: StringFilter<"AuditLog"> | string
+    payload?: JsonFilter<"AuditLog">
+    occurredOn?: DateTimeFilter<"AuditLog"> | Date | string
   }
 
-  export type auditLogOrderByWithRelationInput = {
+  export type AuditLogOrderByWithRelationInput = {
     id?: SortOrder
-    eventId?: SortOrder
+    organizationId?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
     eventName?: SortOrder
-    eventData?: SortOrder
-    occurredOn?: SortOrder
     payload?: SortOrder
+    occurredOn?: SortOrder
   }
 
-  export type auditLogWhereUniqueInput = Prisma.AtLeast<{
+  export type AuditLogWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    AND?: auditLogWhereInput | auditLogWhereInput[]
-    OR?: auditLogWhereInput[]
-    NOT?: auditLogWhereInput | auditLogWhereInput[]
-    eventId?: StringFilter<"auditLog"> | string
-    eventName?: StringFilter<"auditLog"> | string
-    eventData?: JsonFilter<"auditLog">
-    occurredOn?: DateTimeFilter<"auditLog"> | Date | string
-    payload?: JsonFilter<"auditLog">
+    AND?: AuditLogWhereInput | AuditLogWhereInput[]
+    OR?: AuditLogWhereInput[]
+    NOT?: AuditLogWhereInput | AuditLogWhereInput[]
+    organizationId?: StringNullableFilter<"AuditLog"> | string | null
+    userId?: StringNullableFilter<"AuditLog"> | string | null
+    eventName?: StringFilter<"AuditLog"> | string
+    payload?: JsonFilter<"AuditLog">
+    occurredOn?: DateTimeFilter<"AuditLog"> | Date | string
   }, "id">
 
-  export type auditLogOrderByWithAggregationInput = {
+  export type AuditLogOrderByWithAggregationInput = {
     id?: SortOrder
-    eventId?: SortOrder
+    organizationId?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
     eventName?: SortOrder
-    eventData?: SortOrder
-    occurredOn?: SortOrder
     payload?: SortOrder
-    _count?: auditLogCountOrderByAggregateInput
-    _max?: auditLogMaxOrderByAggregateInput
-    _min?: auditLogMinOrderByAggregateInput
+    occurredOn?: SortOrder
+    _count?: AuditLogCountOrderByAggregateInput
+    _max?: AuditLogMaxOrderByAggregateInput
+    _min?: AuditLogMinOrderByAggregateInput
   }
 
-  export type auditLogScalarWhereWithAggregatesInput = {
-    AND?: auditLogScalarWhereWithAggregatesInput | auditLogScalarWhereWithAggregatesInput[]
-    OR?: auditLogScalarWhereWithAggregatesInput[]
-    NOT?: auditLogScalarWhereWithAggregatesInput | auditLogScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"auditLog"> | string
-    eventId?: StringWithAggregatesFilter<"auditLog"> | string
-    eventName?: StringWithAggregatesFilter<"auditLog"> | string
-    eventData?: JsonWithAggregatesFilter<"auditLog">
-    occurredOn?: DateTimeWithAggregatesFilter<"auditLog"> | Date | string
-    payload?: JsonWithAggregatesFilter<"auditLog">
+  export type AuditLogScalarWhereWithAggregatesInput = {
+    AND?: AuditLogScalarWhereWithAggregatesInput | AuditLogScalarWhereWithAggregatesInput[]
+    OR?: AuditLogScalarWhereWithAggregatesInput[]
+    NOT?: AuditLogScalarWhereWithAggregatesInput | AuditLogScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AuditLog"> | string
+    organizationId?: StringNullableWithAggregatesFilter<"AuditLog"> | string | null
+    userId?: StringNullableWithAggregatesFilter<"AuditLog"> | string | null
+    eventName?: StringWithAggregatesFilter<"AuditLog"> | string
+    payload?: JsonWithAggregatesFilter<"AuditLog">
+    occurredOn?: DateTimeWithAggregatesFilter<"AuditLog"> | Date | string
   }
 
   export type OutboxWhereInput = {
@@ -5590,20 +9475,16 @@ export namespace Prisma {
     id?: StringFilter<"Outbox"> | string
     eventName?: StringFilter<"Outbox"> | string
     payload?: JsonFilter<"Outbox">
-    occurredOn?: DateTimeFilter<"Outbox"> | Date | string
     published?: BoolFilter<"Outbox"> | boolean
-    createdAt?: DateTimeFilter<"Outbox"> | Date | string
-    updatedAt?: DateTimeFilter<"Outbox"> | Date | string
+    occurredOn?: DateTimeFilter<"Outbox"> | Date | string
   }
 
   export type OutboxOrderByWithRelationInput = {
     id?: SortOrder
     eventName?: SortOrder
     payload?: SortOrder
-    occurredOn?: SortOrder
     published?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    occurredOn?: SortOrder
   }
 
   export type OutboxWhereUniqueInput = Prisma.AtLeast<{
@@ -5613,20 +9494,16 @@ export namespace Prisma {
     NOT?: OutboxWhereInput | OutboxWhereInput[]
     eventName?: StringFilter<"Outbox"> | string
     payload?: JsonFilter<"Outbox">
-    occurredOn?: DateTimeFilter<"Outbox"> | Date | string
     published?: BoolFilter<"Outbox"> | boolean
-    createdAt?: DateTimeFilter<"Outbox"> | Date | string
-    updatedAt?: DateTimeFilter<"Outbox"> | Date | string
+    occurredOn?: DateTimeFilter<"Outbox"> | Date | string
   }, "id">
 
   export type OutboxOrderByWithAggregationInput = {
     id?: SortOrder
     eventName?: SortOrder
     payload?: SortOrder
-    occurredOn?: SortOrder
     published?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    occurredOn?: SortOrder
     _count?: OutboxCountOrderByAggregateInput
     _max?: OutboxMaxOrderByAggregateInput
     _min?: OutboxMinOrderByAggregateInput
@@ -5639,63 +9516,252 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Outbox"> | string
     eventName?: StringWithAggregatesFilter<"Outbox"> | string
     payload?: JsonWithAggregatesFilter<"Outbox">
-    occurredOn?: DateTimeWithAggregatesFilter<"Outbox"> | Date | string
     published?: BoolWithAggregatesFilter<"Outbox"> | boolean
-    createdAt?: DateTimeWithAggregatesFilter<"Outbox"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Outbox"> | Date | string
+    occurredOn?: DateTimeWithAggregatesFilter<"Outbox"> | Date | string
+  }
+
+  export type OrganizationCreateInput = {
+    id?: string
+    name: string
+    status: string
+    plan: string
+    createdAt?: Date | string
+    processes?: ProcessCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateInput = {
+    id?: string
+    name: string
+    status: string
+    plan: string
+    createdAt?: Date | string
+    processes?: ProcessUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processes?: ProcessUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processes?: ProcessUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationCreateManyInput = {
+    id?: string
+    name: string
+    status: string
+    plan: string
+    createdAt?: Date | string
+  }
+
+  export type OrganizationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrganizationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessCreateInput = {
+    id?: string
+    name: string
+    status: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutProcessesInput
+    steps?: ProcessStepCreateNestedManyWithoutProcessInput
+    executions?: ExecutionCreateNestedManyWithoutProcessInput
+  }
+
+  export type ProcessUncheckedCreateInput = {
+    id?: string
+    name: string
+    status: string
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    steps?: ProcessStepUncheckedCreateNestedManyWithoutProcessInput
+    executions?: ExecutionUncheckedCreateNestedManyWithoutProcessInput
+  }
+
+  export type ProcessUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutProcessesNestedInput
+    steps?: ProcessStepUpdateManyWithoutProcessNestedInput
+    executions?: ExecutionUpdateManyWithoutProcessNestedInput
+  }
+
+  export type ProcessUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    steps?: ProcessStepUncheckedUpdateManyWithoutProcessNestedInput
+    executions?: ExecutionUncheckedUpdateManyWithoutProcessNestedInput
+  }
+
+  export type ProcessCreateManyInput = {
+    id?: string
+    name: string
+    status: string
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProcessUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessStepCreateInput = {
+    id?: string
+    name: string
+    order: number
+    process: ProcessCreateNestedOneWithoutStepsInput
+  }
+
+  export type ProcessStepUncheckedCreateInput = {
+    id?: string
+    processId: string
+    name: string
+    order: number
+  }
+
+  export type ProcessStepUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    process?: ProcessUpdateOneRequiredWithoutStepsNestedInput
+  }
+
+  export type ProcessStepUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    processId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ProcessStepCreateManyInput = {
+    id?: string
+    processId: string
+    name: string
+    order: number
+  }
+
+  export type ProcessStepUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ProcessStepUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    processId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
   }
 
   export type ExecutionCreateInput = {
-    id: string
-    processId: string
+    id?: string
     status: string
-    steps?: ExecutionStepCreateNestedManyWithoutExecutionInput
+    startedAt?: Date | string
+    finishedAt?: Date | string | null
+    process: ProcessCreateNestedOneWithoutExecutionsInput
+    stepResults?: ExecutionStepCreateNestedManyWithoutExecutionInput
   }
 
   export type ExecutionUncheckedCreateInput = {
-    id: string
+    id?: string
     processId: string
     status: string
-    steps?: ExecutionStepUncheckedCreateNestedManyWithoutExecutionInput
+    startedAt?: Date | string
+    finishedAt?: Date | string | null
+    stepResults?: ExecutionStepUncheckedCreateNestedManyWithoutExecutionInput
   }
 
   export type ExecutionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    processId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
-    steps?: ExecutionStepUpdateManyWithoutExecutionNestedInput
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    process?: ProcessUpdateOneRequiredWithoutExecutionsNestedInput
+    stepResults?: ExecutionStepUpdateManyWithoutExecutionNestedInput
   }
 
   export type ExecutionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     processId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
-    steps?: ExecutionStepUncheckedUpdateManyWithoutExecutionNestedInput
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    stepResults?: ExecutionStepUncheckedUpdateManyWithoutExecutionNestedInput
   }
 
   export type ExecutionCreateManyInput = {
-    id: string
+    id?: string
     processId: string
     status: string
+    startedAt?: Date | string
+    finishedAt?: Date | string | null
   }
 
   export type ExecutionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    processId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ExecutionUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     processId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ExecutionStepCreateInput = {
     id?: string
     stepId: string
     status: string
-    execution: ExecutionCreateNestedOneWithoutStepsInput
+    execution: ExecutionCreateNestedOneWithoutStepResultsInput
   }
 
   export type ExecutionStepUncheckedCreateInput = {
@@ -5709,7 +9775,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     stepId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
-    execution?: ExecutionUpdateOneRequiredWithoutStepsNestedInput
+    execution?: ExecutionUpdateOneRequiredWithoutStepResultsNestedInput
   }
 
   export type ExecutionStepUncheckedUpdateInput = {
@@ -5739,137 +9805,123 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
   }
 
-  export type auditLogCreateInput = {
+  export type AuditLogCreateInput = {
     id?: string
-    eventId: string
+    organizationId?: string | null
+    userId?: string | null
     eventName: string
-    eventData: JsonNullValueInput | InputJsonValue
-    occurredOn: Date | string
     payload: JsonNullValueInput | InputJsonValue
+    occurredOn?: Date | string
   }
 
-  export type auditLogUncheckedCreateInput = {
+  export type AuditLogUncheckedCreateInput = {
     id?: string
-    eventId: string
+    organizationId?: string | null
+    userId?: string | null
     eventName: string
-    eventData: JsonNullValueInput | InputJsonValue
-    occurredOn: Date | string
     payload: JsonNullValueInput | InputJsonValue
+    occurredOn?: Date | string
   }
 
-  export type auditLogUpdateInput = {
+  export type AuditLogUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    eventId?: StringFieldUpdateOperationsInput | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     eventName?: StringFieldUpdateOperationsInput | string
-    eventData?: JsonNullValueInput | InputJsonValue
-    occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
     payload?: JsonNullValueInput | InputJsonValue
+    occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type auditLogUncheckedUpdateInput = {
+  export type AuditLogUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    eventId?: StringFieldUpdateOperationsInput | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     eventName?: StringFieldUpdateOperationsInput | string
-    eventData?: JsonNullValueInput | InputJsonValue
-    occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
     payload?: JsonNullValueInput | InputJsonValue
+    occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type auditLogCreateManyInput = {
+  export type AuditLogCreateManyInput = {
     id?: string
-    eventId: string
+    organizationId?: string | null
+    userId?: string | null
     eventName: string
-    eventData: JsonNullValueInput | InputJsonValue
-    occurredOn: Date | string
     payload: JsonNullValueInput | InputJsonValue
+    occurredOn?: Date | string
   }
 
-  export type auditLogUpdateManyMutationInput = {
+  export type AuditLogUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    eventId?: StringFieldUpdateOperationsInput | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     eventName?: StringFieldUpdateOperationsInput | string
-    eventData?: JsonNullValueInput | InputJsonValue
-    occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
     payload?: JsonNullValueInput | InputJsonValue
+    occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type auditLogUncheckedUpdateManyInput = {
+  export type AuditLogUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    eventId?: StringFieldUpdateOperationsInput | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     eventName?: StringFieldUpdateOperationsInput | string
-    eventData?: JsonNullValueInput | InputJsonValue
-    occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
     payload?: JsonNullValueInput | InputJsonValue
+    occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OutboxCreateInput = {
     id?: string
     eventName: string
     payload: JsonNullValueInput | InputJsonValue
-    occurredOn: Date | string
     published?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    occurredOn?: Date | string
   }
 
   export type OutboxUncheckedCreateInput = {
     id?: string
     eventName: string
     payload: JsonNullValueInput | InputJsonValue
-    occurredOn: Date | string
     published?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    occurredOn?: Date | string
   }
 
   export type OutboxUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     eventName?: StringFieldUpdateOperationsInput | string
     payload?: JsonNullValueInput | InputJsonValue
-    occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
     published?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OutboxUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     eventName?: StringFieldUpdateOperationsInput | string
     payload?: JsonNullValueInput | InputJsonValue
-    occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
     published?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OutboxCreateManyInput = {
     id?: string
     eventName: string
     payload: JsonNullValueInput | InputJsonValue
-    occurredOn: Date | string
     published?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    occurredOn?: Date | string
   }
 
   export type OutboxUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     eventName?: StringFieldUpdateOperationsInput | string
     payload?: JsonNullValueInput | InputJsonValue
-    occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
     published?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OutboxUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     eventName?: StringFieldUpdateOperationsInput | string
     payload?: JsonNullValueInput | InputJsonValue
-    occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
     published?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -5887,32 +9939,49 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type ExecutionStepListRelationFilter = {
-    every?: ExecutionStepWhereInput
-    some?: ExecutionStepWhereInput
-    none?: ExecutionStepWhereInput
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type ExecutionStepOrderByRelationAggregateInput = {
+  export type ProcessListRelationFilter = {
+    every?: ProcessWhereInput
+    some?: ProcessWhereInput
+    none?: ProcessWhereInput
+  }
+
+  export type ProcessOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type ExecutionCountOrderByAggregateInput = {
+  export type OrganizationCountOrderByAggregateInput = {
     id?: SortOrder
-    processId?: SortOrder
+    name?: SortOrder
     status?: SortOrder
+    plan?: SortOrder
+    createdAt?: SortOrder
   }
 
-  export type ExecutionMaxOrderByAggregateInput = {
+  export type OrganizationMaxOrderByAggregateInput = {
     id?: SortOrder
-    processId?: SortOrder
+    name?: SortOrder
     status?: SortOrder
+    plan?: SortOrder
+    createdAt?: SortOrder
   }
 
-  export type ExecutionMinOrderByAggregateInput = {
+  export type OrganizationMinOrderByAggregateInput = {
     id?: SortOrder
-    processId?: SortOrder
+    name?: SortOrder
     status?: SortOrder
+    plan?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -5931,6 +10000,197 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type OrganizationScalarRelationFilter = {
+    is?: OrganizationWhereInput
+    isNot?: OrganizationWhereInput
+  }
+
+  export type ProcessStepListRelationFilter = {
+    every?: ProcessStepWhereInput
+    some?: ProcessStepWhereInput
+    none?: ProcessStepWhereInput
+  }
+
+  export type ExecutionListRelationFilter = {
+    every?: ExecutionWhereInput
+    some?: ExecutionWhereInput
+    none?: ExecutionWhereInput
+  }
+
+  export type ProcessStepOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ExecutionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProcessCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    status?: SortOrder
+    organizationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProcessMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    status?: SortOrder
+    organizationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProcessMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    status?: SortOrder
+    organizationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type ProcessScalarRelationFilter = {
+    is?: ProcessWhereInput
+    isNot?: ProcessWhereInput
+  }
+
+  export type ProcessStepCountOrderByAggregateInput = {
+    id?: SortOrder
+    processId?: SortOrder
+    name?: SortOrder
+    order?: SortOrder
+  }
+
+  export type ProcessStepAvgOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type ProcessStepMaxOrderByAggregateInput = {
+    id?: SortOrder
+    processId?: SortOrder
+    name?: SortOrder
+    order?: SortOrder
+  }
+
+  export type ProcessStepMinOrderByAggregateInput = {
+    id?: SortOrder
+    processId?: SortOrder
+    name?: SortOrder
+    order?: SortOrder
+  }
+
+  export type ProcessStepSumOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type ExecutionStepListRelationFilter = {
+    every?: ExecutionStepWhereInput
+    some?: ExecutionStepWhereInput
+    none?: ExecutionStepWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
+  export type ExecutionStepOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ExecutionCountOrderByAggregateInput = {
+    id?: SortOrder
+    processId?: SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    finishedAt?: SortOrder
+  }
+
+  export type ExecutionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    processId?: SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    finishedAt?: SortOrder
+  }
+
+  export type ExecutionMinOrderByAggregateInput = {
+    id?: SortOrder
+    processId?: SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    finishedAt?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type ExecutionScalarRelationFilter = {
@@ -5958,6 +10218,21 @@ export namespace Prisma {
     stepId?: SortOrder
     status?: SortOrder
   }
+
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -5982,38 +10257,47 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
-  export type auditLogCountOrderByAggregateInput = {
+  export type AuditLogCountOrderByAggregateInput = {
     id?: SortOrder
-    eventId?: SortOrder
+    organizationId?: SortOrder
+    userId?: SortOrder
     eventName?: SortOrder
-    eventData?: SortOrder
-    occurredOn?: SortOrder
     payload?: SortOrder
+    occurredOn?: SortOrder
   }
 
-  export type auditLogMaxOrderByAggregateInput = {
+  export type AuditLogMaxOrderByAggregateInput = {
     id?: SortOrder
-    eventId?: SortOrder
+    organizationId?: SortOrder
+    userId?: SortOrder
     eventName?: SortOrder
     occurredOn?: SortOrder
   }
 
-  export type auditLogMinOrderByAggregateInput = {
+  export type AuditLogMinOrderByAggregateInput = {
     id?: SortOrder
-    eventId?: SortOrder
+    organizationId?: SortOrder
+    userId?: SortOrder
     eventName?: SortOrder
     occurredOn?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
   export type JsonWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -6042,20 +10326,6 @@ export namespace Prisma {
     _max?: NestedJsonFilter<$PrismaModel>
   }
 
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -6065,28 +10335,22 @@ export namespace Prisma {
     id?: SortOrder
     eventName?: SortOrder
     payload?: SortOrder
-    occurredOn?: SortOrder
     published?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    occurredOn?: SortOrder
   }
 
   export type OutboxMaxOrderByAggregateInput = {
     id?: SortOrder
     eventName?: SortOrder
-    occurredOn?: SortOrder
     published?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    occurredOn?: SortOrder
   }
 
   export type OutboxMinOrderByAggregateInput = {
     id?: SortOrder
     eventName?: SortOrder
-    occurredOn?: SortOrder
     published?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    occurredOn?: SortOrder
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -6095,6 +10359,182 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type ProcessCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<ProcessCreateWithoutOrganizationInput, ProcessUncheckedCreateWithoutOrganizationInput> | ProcessCreateWithoutOrganizationInput[] | ProcessUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ProcessCreateOrConnectWithoutOrganizationInput | ProcessCreateOrConnectWithoutOrganizationInput[]
+    createMany?: ProcessCreateManyOrganizationInputEnvelope
+    connect?: ProcessWhereUniqueInput | ProcessWhereUniqueInput[]
+  }
+
+  export type ProcessUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<ProcessCreateWithoutOrganizationInput, ProcessUncheckedCreateWithoutOrganizationInput> | ProcessCreateWithoutOrganizationInput[] | ProcessUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ProcessCreateOrConnectWithoutOrganizationInput | ProcessCreateOrConnectWithoutOrganizationInput[]
+    createMany?: ProcessCreateManyOrganizationInputEnvelope
+    connect?: ProcessWhereUniqueInput | ProcessWhereUniqueInput[]
+  }
+
+  export type StringFieldUpdateOperationsInput = {
+    set?: string
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
+  export type ProcessUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<ProcessCreateWithoutOrganizationInput, ProcessUncheckedCreateWithoutOrganizationInput> | ProcessCreateWithoutOrganizationInput[] | ProcessUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ProcessCreateOrConnectWithoutOrganizationInput | ProcessCreateOrConnectWithoutOrganizationInput[]
+    upsert?: ProcessUpsertWithWhereUniqueWithoutOrganizationInput | ProcessUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: ProcessCreateManyOrganizationInputEnvelope
+    set?: ProcessWhereUniqueInput | ProcessWhereUniqueInput[]
+    disconnect?: ProcessWhereUniqueInput | ProcessWhereUniqueInput[]
+    delete?: ProcessWhereUniqueInput | ProcessWhereUniqueInput[]
+    connect?: ProcessWhereUniqueInput | ProcessWhereUniqueInput[]
+    update?: ProcessUpdateWithWhereUniqueWithoutOrganizationInput | ProcessUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: ProcessUpdateManyWithWhereWithoutOrganizationInput | ProcessUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: ProcessScalarWhereInput | ProcessScalarWhereInput[]
+  }
+
+  export type ProcessUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<ProcessCreateWithoutOrganizationInput, ProcessUncheckedCreateWithoutOrganizationInput> | ProcessCreateWithoutOrganizationInput[] | ProcessUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ProcessCreateOrConnectWithoutOrganizationInput | ProcessCreateOrConnectWithoutOrganizationInput[]
+    upsert?: ProcessUpsertWithWhereUniqueWithoutOrganizationInput | ProcessUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: ProcessCreateManyOrganizationInputEnvelope
+    set?: ProcessWhereUniqueInput | ProcessWhereUniqueInput[]
+    disconnect?: ProcessWhereUniqueInput | ProcessWhereUniqueInput[]
+    delete?: ProcessWhereUniqueInput | ProcessWhereUniqueInput[]
+    connect?: ProcessWhereUniqueInput | ProcessWhereUniqueInput[]
+    update?: ProcessUpdateWithWhereUniqueWithoutOrganizationInput | ProcessUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: ProcessUpdateManyWithWhereWithoutOrganizationInput | ProcessUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: ProcessScalarWhereInput | ProcessScalarWhereInput[]
+  }
+
+  export type OrganizationCreateNestedOneWithoutProcessesInput = {
+    create?: XOR<OrganizationCreateWithoutProcessesInput, OrganizationUncheckedCreateWithoutProcessesInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutProcessesInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type ProcessStepCreateNestedManyWithoutProcessInput = {
+    create?: XOR<ProcessStepCreateWithoutProcessInput, ProcessStepUncheckedCreateWithoutProcessInput> | ProcessStepCreateWithoutProcessInput[] | ProcessStepUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ProcessStepCreateOrConnectWithoutProcessInput | ProcessStepCreateOrConnectWithoutProcessInput[]
+    createMany?: ProcessStepCreateManyProcessInputEnvelope
+    connect?: ProcessStepWhereUniqueInput | ProcessStepWhereUniqueInput[]
+  }
+
+  export type ExecutionCreateNestedManyWithoutProcessInput = {
+    create?: XOR<ExecutionCreateWithoutProcessInput, ExecutionUncheckedCreateWithoutProcessInput> | ExecutionCreateWithoutProcessInput[] | ExecutionUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ExecutionCreateOrConnectWithoutProcessInput | ExecutionCreateOrConnectWithoutProcessInput[]
+    createMany?: ExecutionCreateManyProcessInputEnvelope
+    connect?: ExecutionWhereUniqueInput | ExecutionWhereUniqueInput[]
+  }
+
+  export type ProcessStepUncheckedCreateNestedManyWithoutProcessInput = {
+    create?: XOR<ProcessStepCreateWithoutProcessInput, ProcessStepUncheckedCreateWithoutProcessInput> | ProcessStepCreateWithoutProcessInput[] | ProcessStepUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ProcessStepCreateOrConnectWithoutProcessInput | ProcessStepCreateOrConnectWithoutProcessInput[]
+    createMany?: ProcessStepCreateManyProcessInputEnvelope
+    connect?: ProcessStepWhereUniqueInput | ProcessStepWhereUniqueInput[]
+  }
+
+  export type ExecutionUncheckedCreateNestedManyWithoutProcessInput = {
+    create?: XOR<ExecutionCreateWithoutProcessInput, ExecutionUncheckedCreateWithoutProcessInput> | ExecutionCreateWithoutProcessInput[] | ExecutionUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ExecutionCreateOrConnectWithoutProcessInput | ExecutionCreateOrConnectWithoutProcessInput[]
+    createMany?: ExecutionCreateManyProcessInputEnvelope
+    connect?: ExecutionWhereUniqueInput | ExecutionWhereUniqueInput[]
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutProcessesNestedInput = {
+    create?: XOR<OrganizationCreateWithoutProcessesInput, OrganizationUncheckedCreateWithoutProcessesInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutProcessesInput
+    upsert?: OrganizationUpsertWithoutProcessesInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutProcessesInput, OrganizationUpdateWithoutProcessesInput>, OrganizationUncheckedUpdateWithoutProcessesInput>
+  }
+
+  export type ProcessStepUpdateManyWithoutProcessNestedInput = {
+    create?: XOR<ProcessStepCreateWithoutProcessInput, ProcessStepUncheckedCreateWithoutProcessInput> | ProcessStepCreateWithoutProcessInput[] | ProcessStepUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ProcessStepCreateOrConnectWithoutProcessInput | ProcessStepCreateOrConnectWithoutProcessInput[]
+    upsert?: ProcessStepUpsertWithWhereUniqueWithoutProcessInput | ProcessStepUpsertWithWhereUniqueWithoutProcessInput[]
+    createMany?: ProcessStepCreateManyProcessInputEnvelope
+    set?: ProcessStepWhereUniqueInput | ProcessStepWhereUniqueInput[]
+    disconnect?: ProcessStepWhereUniqueInput | ProcessStepWhereUniqueInput[]
+    delete?: ProcessStepWhereUniqueInput | ProcessStepWhereUniqueInput[]
+    connect?: ProcessStepWhereUniqueInput | ProcessStepWhereUniqueInput[]
+    update?: ProcessStepUpdateWithWhereUniqueWithoutProcessInput | ProcessStepUpdateWithWhereUniqueWithoutProcessInput[]
+    updateMany?: ProcessStepUpdateManyWithWhereWithoutProcessInput | ProcessStepUpdateManyWithWhereWithoutProcessInput[]
+    deleteMany?: ProcessStepScalarWhereInput | ProcessStepScalarWhereInput[]
+  }
+
+  export type ExecutionUpdateManyWithoutProcessNestedInput = {
+    create?: XOR<ExecutionCreateWithoutProcessInput, ExecutionUncheckedCreateWithoutProcessInput> | ExecutionCreateWithoutProcessInput[] | ExecutionUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ExecutionCreateOrConnectWithoutProcessInput | ExecutionCreateOrConnectWithoutProcessInput[]
+    upsert?: ExecutionUpsertWithWhereUniqueWithoutProcessInput | ExecutionUpsertWithWhereUniqueWithoutProcessInput[]
+    createMany?: ExecutionCreateManyProcessInputEnvelope
+    set?: ExecutionWhereUniqueInput | ExecutionWhereUniqueInput[]
+    disconnect?: ExecutionWhereUniqueInput | ExecutionWhereUniqueInput[]
+    delete?: ExecutionWhereUniqueInput | ExecutionWhereUniqueInput[]
+    connect?: ExecutionWhereUniqueInput | ExecutionWhereUniqueInput[]
+    update?: ExecutionUpdateWithWhereUniqueWithoutProcessInput | ExecutionUpdateWithWhereUniqueWithoutProcessInput[]
+    updateMany?: ExecutionUpdateManyWithWhereWithoutProcessInput | ExecutionUpdateManyWithWhereWithoutProcessInput[]
+    deleteMany?: ExecutionScalarWhereInput | ExecutionScalarWhereInput[]
+  }
+
+  export type ProcessStepUncheckedUpdateManyWithoutProcessNestedInput = {
+    create?: XOR<ProcessStepCreateWithoutProcessInput, ProcessStepUncheckedCreateWithoutProcessInput> | ProcessStepCreateWithoutProcessInput[] | ProcessStepUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ProcessStepCreateOrConnectWithoutProcessInput | ProcessStepCreateOrConnectWithoutProcessInput[]
+    upsert?: ProcessStepUpsertWithWhereUniqueWithoutProcessInput | ProcessStepUpsertWithWhereUniqueWithoutProcessInput[]
+    createMany?: ProcessStepCreateManyProcessInputEnvelope
+    set?: ProcessStepWhereUniqueInput | ProcessStepWhereUniqueInput[]
+    disconnect?: ProcessStepWhereUniqueInput | ProcessStepWhereUniqueInput[]
+    delete?: ProcessStepWhereUniqueInput | ProcessStepWhereUniqueInput[]
+    connect?: ProcessStepWhereUniqueInput | ProcessStepWhereUniqueInput[]
+    update?: ProcessStepUpdateWithWhereUniqueWithoutProcessInput | ProcessStepUpdateWithWhereUniqueWithoutProcessInput[]
+    updateMany?: ProcessStepUpdateManyWithWhereWithoutProcessInput | ProcessStepUpdateManyWithWhereWithoutProcessInput[]
+    deleteMany?: ProcessStepScalarWhereInput | ProcessStepScalarWhereInput[]
+  }
+
+  export type ExecutionUncheckedUpdateManyWithoutProcessNestedInput = {
+    create?: XOR<ExecutionCreateWithoutProcessInput, ExecutionUncheckedCreateWithoutProcessInput> | ExecutionCreateWithoutProcessInput[] | ExecutionUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ExecutionCreateOrConnectWithoutProcessInput | ExecutionCreateOrConnectWithoutProcessInput[]
+    upsert?: ExecutionUpsertWithWhereUniqueWithoutProcessInput | ExecutionUpsertWithWhereUniqueWithoutProcessInput[]
+    createMany?: ExecutionCreateManyProcessInputEnvelope
+    set?: ExecutionWhereUniqueInput | ExecutionWhereUniqueInput[]
+    disconnect?: ExecutionWhereUniqueInput | ExecutionWhereUniqueInput[]
+    delete?: ExecutionWhereUniqueInput | ExecutionWhereUniqueInput[]
+    connect?: ExecutionWhereUniqueInput | ExecutionWhereUniqueInput[]
+    update?: ExecutionUpdateWithWhereUniqueWithoutProcessInput | ExecutionUpdateWithWhereUniqueWithoutProcessInput[]
+    updateMany?: ExecutionUpdateManyWithWhereWithoutProcessInput | ExecutionUpdateManyWithWhereWithoutProcessInput[]
+    deleteMany?: ExecutionScalarWhereInput | ExecutionScalarWhereInput[]
+  }
+
+  export type ProcessCreateNestedOneWithoutStepsInput = {
+    create?: XOR<ProcessCreateWithoutStepsInput, ProcessUncheckedCreateWithoutStepsInput>
+    connectOrCreate?: ProcessCreateOrConnectWithoutStepsInput
+    connect?: ProcessWhereUniqueInput
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type ProcessUpdateOneRequiredWithoutStepsNestedInput = {
+    create?: XOR<ProcessCreateWithoutStepsInput, ProcessUncheckedCreateWithoutStepsInput>
+    connectOrCreate?: ProcessCreateOrConnectWithoutStepsInput
+    upsert?: ProcessUpsertWithoutStepsInput
+    connect?: ProcessWhereUniqueInput
+    update?: XOR<XOR<ProcessUpdateToOneWithWhereWithoutStepsInput, ProcessUpdateWithoutStepsInput>, ProcessUncheckedUpdateWithoutStepsInput>
+  }
+
+  export type ProcessCreateNestedOneWithoutExecutionsInput = {
+    create?: XOR<ProcessCreateWithoutExecutionsInput, ProcessUncheckedCreateWithoutExecutionsInput>
+    connectOrCreate?: ProcessCreateOrConnectWithoutExecutionsInput
+    connect?: ProcessWhereUniqueInput
   }
 
   export type ExecutionStepCreateNestedManyWithoutExecutionInput = {
@@ -6111,8 +10551,16 @@ export namespace Prisma {
     connect?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
   }
 
-  export type StringFieldUpdateOperationsInput = {
-    set?: string
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type ProcessUpdateOneRequiredWithoutExecutionsNestedInput = {
+    create?: XOR<ProcessCreateWithoutExecutionsInput, ProcessUncheckedCreateWithoutExecutionsInput>
+    connectOrCreate?: ProcessCreateOrConnectWithoutExecutionsInput
+    upsert?: ProcessUpsertWithoutExecutionsInput
+    connect?: ProcessWhereUniqueInput
+    update?: XOR<XOR<ProcessUpdateToOneWithWhereWithoutExecutionsInput, ProcessUpdateWithoutExecutionsInput>, ProcessUncheckedUpdateWithoutExecutionsInput>
   }
 
   export type ExecutionStepUpdateManyWithoutExecutionNestedInput = {
@@ -6143,22 +10591,22 @@ export namespace Prisma {
     deleteMany?: ExecutionStepScalarWhereInput | ExecutionStepScalarWhereInput[]
   }
 
-  export type ExecutionCreateNestedOneWithoutStepsInput = {
-    create?: XOR<ExecutionCreateWithoutStepsInput, ExecutionUncheckedCreateWithoutStepsInput>
-    connectOrCreate?: ExecutionCreateOrConnectWithoutStepsInput
+  export type ExecutionCreateNestedOneWithoutStepResultsInput = {
+    create?: XOR<ExecutionCreateWithoutStepResultsInput, ExecutionUncheckedCreateWithoutStepResultsInput>
+    connectOrCreate?: ExecutionCreateOrConnectWithoutStepResultsInput
     connect?: ExecutionWhereUniqueInput
   }
 
-  export type ExecutionUpdateOneRequiredWithoutStepsNestedInput = {
-    create?: XOR<ExecutionCreateWithoutStepsInput, ExecutionUncheckedCreateWithoutStepsInput>
-    connectOrCreate?: ExecutionCreateOrConnectWithoutStepsInput
-    upsert?: ExecutionUpsertWithoutStepsInput
+  export type ExecutionUpdateOneRequiredWithoutStepResultsNestedInput = {
+    create?: XOR<ExecutionCreateWithoutStepResultsInput, ExecutionUncheckedCreateWithoutStepResultsInput>
+    connectOrCreate?: ExecutionCreateOrConnectWithoutStepResultsInput
+    upsert?: ExecutionUpsertWithoutStepResultsInput
     connect?: ExecutionWhereUniqueInput
-    update?: XOR<XOR<ExecutionUpdateToOneWithWhereWithoutStepsInput, ExecutionUpdateWithoutStepsInput>, ExecutionUncheckedUpdateWithoutStepsInput>
+    update?: XOR<XOR<ExecutionUpdateToOneWithWhereWithoutStepResultsInput, ExecutionUpdateWithoutStepResultsInput>, ExecutionUncheckedUpdateWithoutStepResultsInput>
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -6177,6 +10625,17 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringFilter<$PrismaModel> | string
+  }
+
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -6207,7 +10666,7 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -6215,7 +10674,104 @@ export namespace Prisma {
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -6241,20 +10797,6 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -6266,6 +10808,294 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type ProcessCreateWithoutOrganizationInput = {
+    id?: string
+    name: string
+    status: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    steps?: ProcessStepCreateNestedManyWithoutProcessInput
+    executions?: ExecutionCreateNestedManyWithoutProcessInput
+  }
+
+  export type ProcessUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    name: string
+    status: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    steps?: ProcessStepUncheckedCreateNestedManyWithoutProcessInput
+    executions?: ExecutionUncheckedCreateNestedManyWithoutProcessInput
+  }
+
+  export type ProcessCreateOrConnectWithoutOrganizationInput = {
+    where: ProcessWhereUniqueInput
+    create: XOR<ProcessCreateWithoutOrganizationInput, ProcessUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type ProcessCreateManyOrganizationInputEnvelope = {
+    data: ProcessCreateManyOrganizationInput | ProcessCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProcessUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: ProcessWhereUniqueInput
+    update: XOR<ProcessUpdateWithoutOrganizationInput, ProcessUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<ProcessCreateWithoutOrganizationInput, ProcessUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type ProcessUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: ProcessWhereUniqueInput
+    data: XOR<ProcessUpdateWithoutOrganizationInput, ProcessUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type ProcessUpdateManyWithWhereWithoutOrganizationInput = {
+    where: ProcessScalarWhereInput
+    data: XOR<ProcessUpdateManyMutationInput, ProcessUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type ProcessScalarWhereInput = {
+    AND?: ProcessScalarWhereInput | ProcessScalarWhereInput[]
+    OR?: ProcessScalarWhereInput[]
+    NOT?: ProcessScalarWhereInput | ProcessScalarWhereInput[]
+    id?: StringFilter<"Process"> | string
+    name?: StringFilter<"Process"> | string
+    status?: StringFilter<"Process"> | string
+    organizationId?: StringFilter<"Process"> | string
+    createdAt?: DateTimeFilter<"Process"> | Date | string
+    updatedAt?: DateTimeFilter<"Process"> | Date | string
+  }
+
+  export type OrganizationCreateWithoutProcessesInput = {
+    id?: string
+    name: string
+    status: string
+    plan: string
+    createdAt?: Date | string
+  }
+
+  export type OrganizationUncheckedCreateWithoutProcessesInput = {
+    id?: string
+    name: string
+    status: string
+    plan: string
+    createdAt?: Date | string
+  }
+
+  export type OrganizationCreateOrConnectWithoutProcessesInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutProcessesInput, OrganizationUncheckedCreateWithoutProcessesInput>
+  }
+
+  export type ProcessStepCreateWithoutProcessInput = {
+    id?: string
+    name: string
+    order: number
+  }
+
+  export type ProcessStepUncheckedCreateWithoutProcessInput = {
+    id?: string
+    name: string
+    order: number
+  }
+
+  export type ProcessStepCreateOrConnectWithoutProcessInput = {
+    where: ProcessStepWhereUniqueInput
+    create: XOR<ProcessStepCreateWithoutProcessInput, ProcessStepUncheckedCreateWithoutProcessInput>
+  }
+
+  export type ProcessStepCreateManyProcessInputEnvelope = {
+    data: ProcessStepCreateManyProcessInput | ProcessStepCreateManyProcessInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ExecutionCreateWithoutProcessInput = {
+    id?: string
+    status: string
+    startedAt?: Date | string
+    finishedAt?: Date | string | null
+    stepResults?: ExecutionStepCreateNestedManyWithoutExecutionInput
+  }
+
+  export type ExecutionUncheckedCreateWithoutProcessInput = {
+    id?: string
+    status: string
+    startedAt?: Date | string
+    finishedAt?: Date | string | null
+    stepResults?: ExecutionStepUncheckedCreateNestedManyWithoutExecutionInput
+  }
+
+  export type ExecutionCreateOrConnectWithoutProcessInput = {
+    where: ExecutionWhereUniqueInput
+    create: XOR<ExecutionCreateWithoutProcessInput, ExecutionUncheckedCreateWithoutProcessInput>
+  }
+
+  export type ExecutionCreateManyProcessInputEnvelope = {
+    data: ExecutionCreateManyProcessInput | ExecutionCreateManyProcessInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrganizationUpsertWithoutProcessesInput = {
+    update: XOR<OrganizationUpdateWithoutProcessesInput, OrganizationUncheckedUpdateWithoutProcessesInput>
+    create: XOR<OrganizationCreateWithoutProcessesInput, OrganizationUncheckedCreateWithoutProcessesInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutProcessesInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutProcessesInput, OrganizationUncheckedUpdateWithoutProcessesInput>
+  }
+
+  export type OrganizationUpdateWithoutProcessesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrganizationUncheckedUpdateWithoutProcessesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessStepUpsertWithWhereUniqueWithoutProcessInput = {
+    where: ProcessStepWhereUniqueInput
+    update: XOR<ProcessStepUpdateWithoutProcessInput, ProcessStepUncheckedUpdateWithoutProcessInput>
+    create: XOR<ProcessStepCreateWithoutProcessInput, ProcessStepUncheckedCreateWithoutProcessInput>
+  }
+
+  export type ProcessStepUpdateWithWhereUniqueWithoutProcessInput = {
+    where: ProcessStepWhereUniqueInput
+    data: XOR<ProcessStepUpdateWithoutProcessInput, ProcessStepUncheckedUpdateWithoutProcessInput>
+  }
+
+  export type ProcessStepUpdateManyWithWhereWithoutProcessInput = {
+    where: ProcessStepScalarWhereInput
+    data: XOR<ProcessStepUpdateManyMutationInput, ProcessStepUncheckedUpdateManyWithoutProcessInput>
+  }
+
+  export type ProcessStepScalarWhereInput = {
+    AND?: ProcessStepScalarWhereInput | ProcessStepScalarWhereInput[]
+    OR?: ProcessStepScalarWhereInput[]
+    NOT?: ProcessStepScalarWhereInput | ProcessStepScalarWhereInput[]
+    id?: StringFilter<"ProcessStep"> | string
+    processId?: StringFilter<"ProcessStep"> | string
+    name?: StringFilter<"ProcessStep"> | string
+    order?: IntFilter<"ProcessStep"> | number
+  }
+
+  export type ExecutionUpsertWithWhereUniqueWithoutProcessInput = {
+    where: ExecutionWhereUniqueInput
+    update: XOR<ExecutionUpdateWithoutProcessInput, ExecutionUncheckedUpdateWithoutProcessInput>
+    create: XOR<ExecutionCreateWithoutProcessInput, ExecutionUncheckedCreateWithoutProcessInput>
+  }
+
+  export type ExecutionUpdateWithWhereUniqueWithoutProcessInput = {
+    where: ExecutionWhereUniqueInput
+    data: XOR<ExecutionUpdateWithoutProcessInput, ExecutionUncheckedUpdateWithoutProcessInput>
+  }
+
+  export type ExecutionUpdateManyWithWhereWithoutProcessInput = {
+    where: ExecutionScalarWhereInput
+    data: XOR<ExecutionUpdateManyMutationInput, ExecutionUncheckedUpdateManyWithoutProcessInput>
+  }
+
+  export type ExecutionScalarWhereInput = {
+    AND?: ExecutionScalarWhereInput | ExecutionScalarWhereInput[]
+    OR?: ExecutionScalarWhereInput[]
+    NOT?: ExecutionScalarWhereInput | ExecutionScalarWhereInput[]
+    id?: StringFilter<"Execution"> | string
+    processId?: StringFilter<"Execution"> | string
+    status?: StringFilter<"Execution"> | string
+    startedAt?: DateTimeFilter<"Execution"> | Date | string
+    finishedAt?: DateTimeNullableFilter<"Execution"> | Date | string | null
+  }
+
+  export type ProcessCreateWithoutStepsInput = {
+    id?: string
+    name: string
+    status: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutProcessesInput
+    executions?: ExecutionCreateNestedManyWithoutProcessInput
+  }
+
+  export type ProcessUncheckedCreateWithoutStepsInput = {
+    id?: string
+    name: string
+    status: string
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    executions?: ExecutionUncheckedCreateNestedManyWithoutProcessInput
+  }
+
+  export type ProcessCreateOrConnectWithoutStepsInput = {
+    where: ProcessWhereUniqueInput
+    create: XOR<ProcessCreateWithoutStepsInput, ProcessUncheckedCreateWithoutStepsInput>
+  }
+
+  export type ProcessUpsertWithoutStepsInput = {
+    update: XOR<ProcessUpdateWithoutStepsInput, ProcessUncheckedUpdateWithoutStepsInput>
+    create: XOR<ProcessCreateWithoutStepsInput, ProcessUncheckedCreateWithoutStepsInput>
+    where?: ProcessWhereInput
+  }
+
+  export type ProcessUpdateToOneWithWhereWithoutStepsInput = {
+    where?: ProcessWhereInput
+    data: XOR<ProcessUpdateWithoutStepsInput, ProcessUncheckedUpdateWithoutStepsInput>
+  }
+
+  export type ProcessUpdateWithoutStepsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutProcessesNestedInput
+    executions?: ExecutionUpdateManyWithoutProcessNestedInput
+  }
+
+  export type ProcessUncheckedUpdateWithoutStepsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    executions?: ExecutionUncheckedUpdateManyWithoutProcessNestedInput
+  }
+
+  export type ProcessCreateWithoutExecutionsInput = {
+    id?: string
+    name: string
+    status: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutProcessesInput
+    steps?: ProcessStepCreateNestedManyWithoutProcessInput
+  }
+
+  export type ProcessUncheckedCreateWithoutExecutionsInput = {
+    id?: string
+    name: string
+    status: string
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    steps?: ProcessStepUncheckedCreateNestedManyWithoutProcessInput
+  }
+
+  export type ProcessCreateOrConnectWithoutExecutionsInput = {
+    where: ProcessWhereUniqueInput
+    create: XOR<ProcessCreateWithoutExecutionsInput, ProcessUncheckedCreateWithoutExecutionsInput>
   }
 
   export type ExecutionStepCreateWithoutExecutionInput = {
@@ -6288,6 +11118,37 @@ export namespace Prisma {
   export type ExecutionStepCreateManyExecutionInputEnvelope = {
     data: ExecutionStepCreateManyExecutionInput | ExecutionStepCreateManyExecutionInput[]
     skipDuplicates?: boolean
+  }
+
+  export type ProcessUpsertWithoutExecutionsInput = {
+    update: XOR<ProcessUpdateWithoutExecutionsInput, ProcessUncheckedUpdateWithoutExecutionsInput>
+    create: XOR<ProcessCreateWithoutExecutionsInput, ProcessUncheckedCreateWithoutExecutionsInput>
+    where?: ProcessWhereInput
+  }
+
+  export type ProcessUpdateToOneWithWhereWithoutExecutionsInput = {
+    where?: ProcessWhereInput
+    data: XOR<ProcessUpdateWithoutExecutionsInput, ProcessUncheckedUpdateWithoutExecutionsInput>
+  }
+
+  export type ProcessUpdateWithoutExecutionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutProcessesNestedInput
+    steps?: ProcessStepUpdateManyWithoutProcessNestedInput
+  }
+
+  export type ProcessUncheckedUpdateWithoutExecutionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    steps?: ProcessStepUncheckedUpdateManyWithoutProcessNestedInput
   }
 
   export type ExecutionStepUpsertWithWhereUniqueWithoutExecutionInput = {
@@ -6316,44 +11177,142 @@ export namespace Prisma {
     status?: StringFilter<"ExecutionStep"> | string
   }
 
-  export type ExecutionCreateWithoutStepsInput = {
-    id: string
-    processId: string
+  export type ExecutionCreateWithoutStepResultsInput = {
+    id?: string
     status: string
+    startedAt?: Date | string
+    finishedAt?: Date | string | null
+    process: ProcessCreateNestedOneWithoutExecutionsInput
   }
 
-  export type ExecutionUncheckedCreateWithoutStepsInput = {
-    id: string
+  export type ExecutionUncheckedCreateWithoutStepResultsInput = {
+    id?: string
     processId: string
     status: string
+    startedAt?: Date | string
+    finishedAt?: Date | string | null
   }
 
-  export type ExecutionCreateOrConnectWithoutStepsInput = {
+  export type ExecutionCreateOrConnectWithoutStepResultsInput = {
     where: ExecutionWhereUniqueInput
-    create: XOR<ExecutionCreateWithoutStepsInput, ExecutionUncheckedCreateWithoutStepsInput>
+    create: XOR<ExecutionCreateWithoutStepResultsInput, ExecutionUncheckedCreateWithoutStepResultsInput>
   }
 
-  export type ExecutionUpsertWithoutStepsInput = {
-    update: XOR<ExecutionUpdateWithoutStepsInput, ExecutionUncheckedUpdateWithoutStepsInput>
-    create: XOR<ExecutionCreateWithoutStepsInput, ExecutionUncheckedCreateWithoutStepsInput>
+  export type ExecutionUpsertWithoutStepResultsInput = {
+    update: XOR<ExecutionUpdateWithoutStepResultsInput, ExecutionUncheckedUpdateWithoutStepResultsInput>
+    create: XOR<ExecutionCreateWithoutStepResultsInput, ExecutionUncheckedCreateWithoutStepResultsInput>
     where?: ExecutionWhereInput
   }
 
-  export type ExecutionUpdateToOneWithWhereWithoutStepsInput = {
+  export type ExecutionUpdateToOneWithWhereWithoutStepResultsInput = {
     where?: ExecutionWhereInput
-    data: XOR<ExecutionUpdateWithoutStepsInput, ExecutionUncheckedUpdateWithoutStepsInput>
+    data: XOR<ExecutionUpdateWithoutStepResultsInput, ExecutionUncheckedUpdateWithoutStepResultsInput>
   }
 
-  export type ExecutionUpdateWithoutStepsInput = {
+  export type ExecutionUpdateWithoutStepResultsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    process?: ProcessUpdateOneRequiredWithoutExecutionsNestedInput
+  }
+
+  export type ExecutionUncheckedUpdateWithoutStepResultsInput = {
     id?: StringFieldUpdateOperationsInput | string
     processId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type ExecutionUncheckedUpdateWithoutStepsInput = {
+  export type ProcessCreateManyOrganizationInput = {
+    id?: string
+    name: string
+    status: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProcessUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    processId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    steps?: ProcessStepUpdateManyWithoutProcessNestedInput
+    executions?: ExecutionUpdateManyWithoutProcessNestedInput
+  }
+
+  export type ProcessUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    steps?: ProcessStepUncheckedUpdateManyWithoutProcessNestedInput
+    executions?: ExecutionUncheckedUpdateManyWithoutProcessNestedInput
+  }
+
+  export type ProcessUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessStepCreateManyProcessInput = {
+    id?: string
+    name: string
+    order: number
+  }
+
+  export type ExecutionCreateManyProcessInput = {
+    id?: string
+    status: string
+    startedAt?: Date | string
+    finishedAt?: Date | string | null
+  }
+
+  export type ProcessStepUpdateWithoutProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ProcessStepUncheckedUpdateWithoutProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ProcessStepUncheckedUpdateManyWithoutProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ExecutionUpdateWithoutProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    stepResults?: ExecutionStepUpdateManyWithoutExecutionNestedInput
+  }
+
+  export type ExecutionUncheckedUpdateWithoutProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    stepResults?: ExecutionStepUncheckedUpdateManyWithoutExecutionNestedInput
+  }
+
+  export type ExecutionUncheckedUpdateManyWithoutProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ExecutionStepCreateManyExecutionInput = {

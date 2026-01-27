@@ -6,8 +6,8 @@ import {
 
 export class ProcessStep {
     private readonly id: string;
-    private name: string;
-    private order: number;
+    private readonly name: string;
+    private readonly order: number;
     private status: ProcessStepStatus;
 
     constructor(params: { id: string; name: string; order: number }) {
@@ -18,7 +18,9 @@ export class ProcessStep {
         if (params.order < 0) {
             throw new InvalidStepOrderError();
         }
-
+        if (!params.id.trim()) {
+            throw new InvalidStepOrderError();
+        }   
         this.id = params.id;
         this.name = params.name;
         this.order = params.order;
@@ -29,10 +31,13 @@ export class ProcessStep {
         return this.id;
     }
 
+
+    getName(): string {
+        return this.name;
+    }
     getOrder(): number {
         return this.order;
     }
-
     isActive(): boolean {
         return this.status === ProcessStepStatus.ACTIVE;
     }

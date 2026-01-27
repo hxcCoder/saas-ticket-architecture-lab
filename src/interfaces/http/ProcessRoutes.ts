@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ProcessController } from './ProcessController';
-import { container } from '../../infraestructure/config/container';
+import { container } from '../../infrastructure/config/container';
 
 export class ProcessRoutes {
   public router: Router;

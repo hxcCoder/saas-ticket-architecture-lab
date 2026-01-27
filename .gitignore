@@ -17,6 +17,9 @@ prisma/dev.db
 prisma/*.db
 prisma/*.db-journal
 
+# Generated Prisma Client (IMPORTANTE: Esto evita subir los .dll y .wasm)
+src/generated/
+
 # OS
 .DS_Store
 Thumbs.db

@@ -121,10 +121,36 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.OrganizationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  status: 'status',
+  plan: 'plan',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ProcessScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  status: 'status',
+  organizationId: 'organizationId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ProcessStepScalarFieldEnum = {
+  id: 'id',
+  processId: 'processId',
+  name: 'name',
+  order: 'order'
+};
+
 exports.Prisma.ExecutionScalarFieldEnum = {
   id: 'id',
   processId: 'processId',
-  status: 'status'
+  status: 'status',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt'
 };
 
 exports.Prisma.ExecutionStepScalarFieldEnum = {
@@ -136,21 +162,19 @@ exports.Prisma.ExecutionStepScalarFieldEnum = {
 
 exports.Prisma.AuditLogScalarFieldEnum = {
   id: 'id',
-  eventId: 'eventId',
+  organizationId: 'organizationId',
+  userId: 'userId',
   eventName: 'eventName',
-  eventData: 'eventData',
-  occurredOn: 'occurredOn',
-  payload: 'payload'
+  payload: 'payload',
+  occurredOn: 'occurredOn'
 };
 
 exports.Prisma.OutboxScalarFieldEnum = {
   id: 'id',
   eventName: 'eventName',
   payload: 'payload',
-  occurredOn: 'occurredOn',
   published: 'published',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  occurredOn: 'occurredOn'
 };
 
 exports.Prisma.SortOrder = {
@@ -167,6 +191,11 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
@@ -175,9 +204,12 @@ exports.Prisma.JsonNullValueFilter = {
 
 
 exports.Prisma.ModelName = {
+  Organization: 'Organization',
+  Process: 'Process',
+  ProcessStep: 'ProcessStep',
   Execution: 'Execution',
   ExecutionStep: 'ExecutionStep',
-  auditLog: 'auditLog',
+  AuditLog: 'AuditLog',
   Outbox: 'Outbox'
 };
 

@@ -1,10 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import { container } from './infraestructure/config/container';
-import { logger } from './infraestructure/config/logger';
+import { container } from './infrastructure/config/container';
+import { logger } from './infrastructure/config/logger';
 import { ProcessRoutes } from './interfaces/http/ProcessRoutes';
-import { getPrismaClient } from './infraestructure/persistence/prisma/PrismaClient';
+import { getPrismaClient } from './infrastructure/persistence/prisma/PrismaClient';
 
 // Stream para Morgan -> Winston
 const stream = {
@@ -35,4 +35,6 @@ getPrismaClient()
     logger.info('Prisma connected');
     app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
   })
-  .catch((err) => logger.error('Prisma connection failed', err));
+  .catch((err: unknown) => {
+  logger.error('Prisma connection failed', err);
+});

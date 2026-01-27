@@ -1,4 +1,6 @@
 {
+  "name": "process-compliance-saas",
+  "version": "1.0.0",
   "scripts": {
     "dev": "ts-node src/index.ts",
     "build": "tsc",
@@ -12,6 +14,7 @@
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
+    "@prisma/client": "6.19", 
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "cors": "^2.8.5",
@@ -24,7 +27,6 @@
     "zod": "^4.3.5"
   },
   "devDependencies": {
-    "@prisma/client": "6.19",
     "@types/cors": "^2.8.19",
     "@types/jest": "^30.0.0",
     "@types/morgan": "^1.9.10",

@@ -12,22 +12,43 @@ import { ProcessActivated } from "./events/ProcessActivated";
 export class Process {
     private readonly id: string;
     private name: string;
+    private readonly organizationId: string;
     private status: ProcessStatus;
     private steps: ProcessStep[] = [];
     private domainEvents: DomainEvent[] = [];
 
-private constructor(id: string, name: string) {
-    this.id = id;
-    this.name = name;
-    this.status = ProcessStatus.DRAFT;
+private constructor(id: string, name: string, organizationId: string) {
+        this.id = id;
+        this.name = name;
+        this.organizationId = organizationId;
+        this.status = ProcessStatus.DRAFT;
+        this.record(new ProcessCreated(id, name));
+    }
 
-    this.record(new ProcessCreated(id, name));
-
+static create(id: string, name: string, organizationId: string): Process {
+        return new Process(id, name, organizationId);
+    }
+static rehydrate(data: {
+    id: string;
+    name: string;
+    organizationId: string;
+    status: ProcessStatus;
+    steps: { id: string; name: string; order: number }[]; // Añadimos id aquí
+}): Process {
+    const process = new Process(data.id, data.name, data.organizationId);
+    process.status = data.status;
+    
+    process.steps = data.steps.map(s => new ProcessStep({ 
+        id: s.id, 
+        name: s.name, 
+        order: s.order 
+    }));
+    
+    process.pullDomainEvents(); 
+    return process;
 }
 
-static create(id: string, name: string): Process {
-    return new Process(id, name);
-}
+getOrganizationId(): string { return this.organizationId; }
 
 addStep(step: ProcessStep): void {
     if (this.status !== ProcessStatus.DRAFT) {
@@ -67,15 +88,17 @@ pullDomainEvents(): DomainEvent[] {
 private record(event: DomainEvent): void {
     this.domainEvents.push(event);
 }
-getId(): string {
+public getId(): string {
     return this.id;
 }
-
-getSteps(): readonly ProcessStep[] {
+public getName(): string {
+    return this.name;
+}
+public getSteps(): readonly ProcessStep[] {
     return this.steps;
 }
 
-getStatus(): ProcessStatus {
+public getStatus(): ProcessStatus {
     return this.status;
 }
 

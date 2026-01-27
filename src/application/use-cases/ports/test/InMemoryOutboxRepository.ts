@@ -1,4 +1,4 @@
-import { OutboxRepository } from '../../../../infraestructure/persistence/prisma/PrismaOutboxRepository';
+import { OutboxRepository } from '../../../../infrastructure/persistence/prisma/PrismaOutboxRepository';
 
 export class InMemoryOutboxRepository implements OutboxRepository {
   private events: any[] = [];

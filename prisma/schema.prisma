@@ -1,6 +1,7 @@
+// datasource y generator se mantienen igual
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")  // obligatorio
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -8,37 +9,73 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
-// Tablas existentes
-model Execution {
-  id        String          @id
-  processId String
-  status    String
-  steps     ExecutionStep[]
+// 1. ORGANIZACIÓN (Tenant)
+model Organization {
+  id          String   @id @default(uuid())
+  name        String
+  status      String   // ACTIVA, SUSPENDIDA
+  plan        String   // TRIAL, PREMIUM, etc.
+  processes   Process[]
+  createdAt   DateTime @default(now())
 }
 
+// 2. PROCESO (Aggregate Root)
+model Process {
+  id             String         @id @default(uuid())
+  name           String
+  status         String         // DRAFT, ACTIVE, ARCHIVED
+  organizationId String
+  organization   Organization   @relation(fields: [organizationId], references: [id])
+  steps          ProcessStep[]
+  executions     Execution[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+// 3. PASOS DEL PROCESO (Definición estática)
+model ProcessStep {
+  id        String   @id @default(uuid())
+  processId String
+  name      String
+  order     Int
+  process   Process  @relation(fields: [processId], references: [id], onDelete: Cascade)
+}
+
+// 4. EJECUCIÓN (Instancia de un proceso)
+model Execution {
+  id          String          @id @default(uuid())
+  processId   String
+  process     Process         @relation(fields: [processId], references: [id])
+  status      String          // PENDING, IN_PROGRESS, COMPLETED, FAILED
+  startedAt   DateTime        @default(now())
+  finishedAt  DateTime?
+  stepResults ExecutionStep[]
+}
+
+// 5. ESTADO DE CADA PASO EN LA EJECUCIÓN
 model ExecutionStep {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   executionId String
   stepId      String
-  status      String
-  execution   Execution @relation(fields: [executionId], references: [id])
+  status      String    // PENDING, COMPLETED
+  execution   Execution @relation(fields: [executionId], references: [id], onDelete: Cascade)
 }
 
-model auditLog {
-  id         String   @id @default(uuid())
-  eventId    String
-  eventName  String
-  eventData  Json
-  occurredOn DateTime
-  payload    Json
+// 6. AUDITORÍA (Inmutable y detallada)
+model AuditLog {
+  id             String   @id @default(uuid())
+  organizationId String?
+  userId         String?
+  eventName      String
+  payload        Json     // Datos del evento
+  occurredOn     DateTime @default(now())
 }
 
+// 7. OUTBOX (Para asegurar que los eventos se envíen)
 model Outbox {
-  id         String   @id @default(cuid())
-  eventName  String
-  payload    Json
-  occurredOn DateTime
-  published  Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String   @id @default(cuid())
+  eventName   String
+  payload     Json
+  published   Boolean  @default(false)
+  occurredOn  DateTime @default(now())
 }

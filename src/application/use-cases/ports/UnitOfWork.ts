@@ -1,7 +1,10 @@
 // src/application/use-cases/ports/UnitOfWork.ts
 import { PrismaClient } from '../../../generated/prisma/client';
-import { OutboxRepository } from '../../../infraestructure/persistence/prisma/PrismaOutboxRepository';
+import { OutboxRepository } from '../../../infrastructure/persistence/prisma/PrismaOutboxRepository';
 
+export interface UnitOfWork {
+    run<T>(work: () => Promise<T>): Promise<T>;
+}
 export class PrismaUnitOfWork {
   constructor(
     private readonly prisma: PrismaClient,
@@ -19,5 +22,7 @@ export class PrismaUnitOfWork {
       const prismaTx = tx as unknown as PrismaClient;
       return fn(prismaTx);
     });
+    
   }
+  
 }
