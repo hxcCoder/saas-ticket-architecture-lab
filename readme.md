@@ -7,7 +7,6 @@
 [![Coverage Status](https://codecov.io/gh/hxcCoder/saas-ticket-backend/branch/main/graph/badge.svg)](https://codecov.io/gh/hxcCoder/saas-ticket-backend)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://www.docker.com/)
 
----
 
 ## Table of Contents
 
@@ -70,9 +69,11 @@ flowchart TD
   F --> G[Create Execution & ExecutionSteps]
   G --> H[ExecuteProcessUseCase]
   H --> I[CompleteExecutionUseCase]
+
 ```
 
 ## Domain UML:
+
 ```mermaid
 classDiagram
   class Process {
@@ -160,7 +161,7 @@ Create Process
 
 POST /processes
 Content-Type: application/json
-```bash
+```json
 {
   "name": "Invoice Approval",
   "steps": [
@@ -180,7 +181,7 @@ Response:
   ]
 }
 ```
-```bash
+```json
 Activate Process
 
 PATCH /processes/process_123/activate
@@ -201,7 +202,7 @@ Response:
   "status": "EXECUTING"
 }
 ```
-```bash
+```json
 Complete Execution
 
 PATCH /executions/execution_456/complete
