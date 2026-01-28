@@ -3,8 +3,6 @@
 [![License: MIT](https://img.shields.io/github/license/hxcCoder/saas-ticket-backend)](https://github.com/hxcCoder/saas-ticket-backend/blob/main/LICENSE)
 [![Node.js Version](https://img.shields.io/badge/Node.js-v18+-brightgreen)](https://nodejs.org/)
 [![TypeScript Version](https://img.shields.io/badge/TypeScript-4.9-blue)](https://www.typescriptlang.org/)
-[![Build Status](https://github.com/hxcCoder/saas-ticket-backend/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/hxcCoder/saas-ticket-backend/actions/workflows/ci.yml)
-[![Coverage Status](https://codecov.io/gh/hxcCoder/saas-ticket-backend/branch/main/graph/badge.svg)](https://codecov.io/gh/hxcCoder/saas-ticket-backend)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://www.docker.com/)
 
 ## Table of Contents
