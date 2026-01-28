@@ -70,16 +70,47 @@ flowchart TD
   F --> G[Create Execution & ExecutionSteps]
   G --> H[ExecuteProcessUseCase]
   H --> I[CompleteExecutionUseCase]
-UML Class Diagram:
+Domain UML:
 
 classDiagram
+  class Process {
+    +id: string
+    +name: string
+    +status: string
+  }
+
+  class ProcessStep {
+    +id: string
+    +name: string
+    +status: string
+  }
+
+  class Execution {
+    +id: string
+    +processId: string
+    +status: string
+  }
+
+  class ExecutionStep {
+    +id: string
+    +executionId: string
+    +status: string
+  }
+
+  class User {
+    +id: string
+    +name: string
+    +email: string
+  }
+
   Process --> ProcessStep
   Process "1" --> "many" Execution
   Execution --> ExecutionStep
   User "1" --> "many" Execution
 ```
 
-Project Structure
+# Project Structure
+```text
 src/
 ├── domain/           # Entities, value objects, domain rules
 ├── application/      # Use Cases / Application logic
@@ -87,7 +118,8 @@ src/
 ├── interfaces/       # HTTP controllers, routes, DTOs
 ├── tests/            # Unit & integration tests
 ├── prisma/           # Schema & migrations
-Installation
+```
+# Installation
 Clone the repository:
 
 git clone https://github.com/hxcCoder/saas-ticket-backend.git
