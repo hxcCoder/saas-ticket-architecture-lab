@@ -73,7 +73,7 @@ flowchart TD
 ```
 
 ## Domain UML:
-```code
+```mermaid
 classDiagram
   class Process {
     +id: string
