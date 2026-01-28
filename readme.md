@@ -58,7 +58,7 @@ It allows creation, activation, execution, and completion of processes with step
 - **Infrastructure**: Repositories (Prisma)  
 - **Interfaces**: HTTP Controllers, Routes, DTOs  
 
-**Execution Flow:**
+**Execution Flow**:
 
 ```mermaid
 flowchart TD
@@ -70,8 +70,10 @@ flowchart TD
   F --> G[Create Execution & ExecutionSteps]
   G --> H[ExecuteProcessUseCase]
   H --> I[CompleteExecutionUseCase]
-Domain UML:
+```
 
+## Domain UML:
+```code
 classDiagram
   class Process {
     +id: string
@@ -108,7 +110,6 @@ classDiagram
   Execution --> ExecutionStep
   User "1" --> "many" Execution
 ```
-
 # Project Structure
 ```text
 src/
@@ -121,24 +122,30 @@ src/
 ```
 # Installation
 Clone the repository:
-
+```bash
 git clone https://github.com/hxcCoder/saas-ticket-backend.git
 cd saas-ticket-backend
 npm install
-Environment Variables
-Copy .env.example to .env and fill the values:
+```
 
+*Environment Variables*
+
+Copy .env.example to .env and fill the values:
+```bash
 DATABASE_URL=postgresql://user:pass@localhost:5432/dbname
 Database Setup
 npx prisma migrate dev
 npx prisma generate
 Start Server
 npm run dev
+```
 Or using Docker Compose:
-
+```bash
 docker-compose up -d
-Usage
+```
+## Usage
 API Endpoints
+
 Create Process: POST /processes
 
 Activate Process: PATCH /processes/:id/activate
@@ -147,12 +154,13 @@ Execute Step: PATCH /executions/:id/execute-step/:stepId
 
 Complete Execution: PATCH /executions/:id/complete
 
-Examples
+## Examples
+
 Create Process
 
 POST /processes
 Content-Type: application/json
-
+```bash
 {
   "name": "Invoice Approval",
   "steps": [
@@ -171,6 +179,8 @@ Response:
     {"id": "step_2", "name": "Manager review", "status": "PENDING"}
   ]
 }
+```
+```bash
 Activate Process
 
 PATCH /processes/process_123/activate
@@ -190,6 +200,8 @@ Response:
   "stepId": "step_1",
   "status": "EXECUTING"
 }
+```
+```bash
 Complete Execution
 
 PATCH /executions/execution_456/complete
@@ -199,21 +211,28 @@ Response:
   "executionId": "execution_456",
   "status": "COMPLETED"
 }
-Testing
+```
+## Testing
+
 Run all tests:
-
+```bash
 npm test
+```
 Watch mode:
-
+```bash
 npm run test:watch
-Coverage report:
+```
 
+Coverage report:
+```bash
 npm run coverage
+```
+
 Unit tests: domain logic & use cases
 
 Integration tests: full workflows from create → activate → execute → complete
 
-Contributing
+## Contributing
 Contributions are welcome!
 
 Fork the repository
@@ -228,6 +247,6 @@ Open a Pull Request
 
 Please follow the project code style and naming conventions.
 
-License
+# License
 This project is licensed under the MIT License — see the LICENSE file for details.
 © 2026 Benjamin Millalonco
