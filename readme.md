@@ -1,258 +1,224 @@
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+# SaaS Ticket Backend
+
+[![License: MIT](https://img.shields.io/github/license/hxcCoder/saas-ticket-backend)](./LICENSE)
 [![Node.js Version](https://img.shields.io/badge/node-v18+-brightgreen)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-4.9-blue)](https://www.typescriptlang.org/)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](#) 
-[![Coverage Status](https://img.shields.io/badge/coverage-100%25-brightgreen)](#)
-
-# Workflow Execution System
-
-Backend system for modeling, executing, and auditing business processes with **strict domain rules** and **controlled state transitions**.  
-Focused on **business correctness, traceability, and long-term maintainability** rather than rapid prototyping.
+[![Build Status](https://github.com/hxcCoder/saas-ticket-backend/actions/workflows/ci.yml/badge.svg)](https://github.com/hxcCoder/saas-ticket-backend/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/codecov/c/github/hxcCoder/saas-ticket-backend)](https://codecov.io/gh/hxcCoder/saas-ticket-backend)
 
 ---
 
-## 🚀 Overview
+## Table of Contents
 
-Many organizations struggle with operational processes that:
-
-- depend on informal knowledge  
-- are executed inconsistently  
-- lack explicit rules  
-- cannot be audited reliably  
-
-This system provides:
-
-- structured **process definitions**  
-- **rule-driven executions**  
-- controlled **lifecycle states**  
-- immutable **audit logs**  
-
-Resulting in operational clarity and **compliance-ready process management**.
+- [About](#about)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [API Endpoints](#api-endpoints)
+  - [Examples](#examples)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
-## 🧩 Core Domain
+## About
 
-### Organization
-- Represents a company using the system  
-- Controls operational state, users, and subscription limits
+This backend provides a **robust workflow execution engine** with:
 
-### User & Role
-- Users act within an organization  
-- Access restricted by explicit permissions
+- Strong **domain rules** using DDD
+- State transitions control (`CREATED` → `ACTIVE` → `EXECUTING` → `COMPLETED`)
+- Immutable **audit logging**
+- Clean Architecture: Domain, Application, Infrastructure, Interfaces
 
-### Process (Aggregate Root)
-- Defines a workflow composed of **ordered steps**  
-- Owns lifecycle transitions and business validation
-
-### Process Step
-- Atomic unit inside a process  
-- Exists only within its parent process
-
-### Execution
-- Concrete instance of a process run  
-- Tracks progress, errors, and completion
-
-### Execution Step
-- Represents execution of a process step  
-- Tracks status: `PENDING`, `DONE`, `FAILED`
-
-### Audit Log
-- Immutable record of relevant system actions
-
-### Subscription & Plan
-- Enforces operational limits: active processes and executions
+It allows creation, activation, execution, and completion of processes with steps, including execution tracking per user.
 
 ---
 
-## 🔄 Process Lifecycle
-**Key rules:**
+## Tech Stack
 
-- Only draft processes can be activated  
-- Active processes cannot be modified directly  
-- Suspended organizations cannot execute processes  
-- Subscription plan limits restrict activations and executions  
-- All relevant actions generate an **audit event**
+- Node.js 18+
+- TypeScript 4.9+
+- PostgreSQL
+- Prisma ORM
+- Express.js
+- Clean Architecture + DDD
+- Jest (Unit & Integration tests)
+- Docker & Docker Compose
 
 ---
 
-## 📈 Example Flow: Create and Activate Process
+## Architecture
+
+- **Domain Layer**: Entities, Value Objects, Domain Services  
+- **Application Layer**: Use Cases  
+- **Infrastructure**: Repositories (Prisma)  
+- **Interfaces**: HTTP Controllers, Routes, DTOs  
+
+**Execution Flow:**
 
 ```mermaid
 flowchart TD
-    A[Validate User Permissions] --> B[Validate Organization State]
-    B --> C[Create Process in DRAFT]
-    C --> D[Validate Steps & Ordering]
-    D --> E[Enforce Subscription Limits]
-    E --> F[Transition Process to ACTIVE]
-    F --> G[Register Audit Event]
+  A[POST /processes] --> B[CreateProcessUseCase]
+  B --> C[Validate Steps]
+  C --> D[Persist Process in PrismaProcessRepository]
+  D --> E[Response with ProcessDTO]
+  E --> F[ActivateProcessUseCase]
+  F --> G[Create Execution & ExecutionSteps]
+  G --> H[ExecuteProcessUseCase]
+  H --> I[CompleteExecutionUseCase]
+UML Class Diagram:
+
+classDiagram
+  Process --> ProcessStep
+  Process "1" --> "many" Execution
+  Execution --> ExecutionStep
+  User "1" --> "many" Execution
 ```
 
-All business rules are enforced in the domain layer. Controllers only orchestrate use cases.
+## Project Structure
+```text
+src/
+├── domain/           # Entities, value objects, domain rules
+├── application/      # Use Cases / Application logic
+├── infrastructure/   # Repositories (Prisma), services
+├── interfaces/       # HTTP controllers, routes, DTOs
+├── tests/            # Unit & integration tests
+├── prisma/           # Schema & migrations
+```
 
-## Architecture
-Clean Architecture + Domain-Driven Design
+## Installation
+Clone the repository:
 
-interfaces/  → HTTP API layer
-application/ → Use cases and orchestration
-domain/      → Entities, rules, states, events
-infrastructure/ → Database and external services
-
-Persistence is accessed only through interfaces (ports) defined in the application layer.
-This prevents business logic from depending on frameworks or databases.
-
-## Entity & Repository Flow
-flowchart TB
-  Process[Process]
-  ProcessStep[ProcessStep]
-  Execution[Execution]
-  ExecutionStep[ExecutionStep]
-  DomainEvent[DomainEvent]
-
-  PrismaProcessRepository --> Process
-  PrismaExecutionRepository --> Execution
-  PrismaUnitOfWork --> PrismaProcessRepository
-  PrismaUnitOfWork --> PrismaExecutionRepository
-  PrismaUnitOfWork --> OutboxRepository
-## Technology Stack
-- *TypeScript / Node.js*
-
-- *PostgreSQL + Prisma ORM*
-
-- *Domain-Driven Design*
-
-- *Clean Architecture*
-
-- *Automated unit & integration tests*
-
-## Running Locally
-Requirements
-- *Node.js 18+*
-
-- *PostgreSQL*
-
-- *npm or yarn*
-
-## Setup
 ```bash
-git clone <repo-url>
-cd <project-folder>
+git clone https://github.com/hxcCoder/saas-ticket-backend.git
+cd saas-ticket-backend
 npm install
 ```
 
-## Environment
-Create .env file:
-
-- DATABASE_URL=postgresql://user:password@localhost:5432/workflow_system
-
-## Database Migration
+## Environment Variables
+Copy .env.example to .env and fill the values:
 ```bash
+DATABASE_URL=postgresql://user:pass@localhost:5432/dbname
+Database Setup
 npx prisma migrate dev
-```
-## Start Server
-```bash
+npx prisma generate
+Start Server
 npm run dev
 ```
-## Example API Request
-Create and activate a process:
+Or using Docker Compose:
+```bash
+docker-compose up -d
+```
+
+## Usage
+*API Endpoints*
+- *Create Process:* POST /processes
+
+- *Activate Process:* PATCH /processes/:id/activate
+
+- *Execute Step: PATCH* /executions/:id/execute-step/:stepId
+
+- *Complete Execution:* PATCH /executions/:id/complete
+
+## Examples
+
+*Create Process*
 
 POST /processes
 Content-Type: application/json
-```bash
+```code
 {
   "name": "Invoice Approval",
   "steps": [
-    { "name": "Submit invoice" },
-    { "name": "Manager review" },
-    { "name": "Finance approval" }
+    {"name": "Submit invoice"},
+    {"name": "Manager review"}
+  ]
+}
+Response:
+
+{
+  "id": "process_123",
+  "name": "Invoice Approval",
+  "status": "CREATED",
+  "steps": [
+    {"id": "step_1", "name": "Submit invoice", "status": "PENDING"},
+    {"id": "step_2", "name": "Manager review", "status": "PENDING"}
   ]
 }
 ```
+```code
+Activate Process
+
+PATCH /processes/process_123/activate
 Response:
 
 {
   "id": "process_123",
   "status": "ACTIVE"
 }
-## Testing Approach
-- *Domain entities tested for invariants and state transitions*
-
-- *Use cases tested with in-memory repositories*
-
-- *Domain events validated for traceability*
-
-*Focus*: business correctness before infrastructure behavior
-
-##Project Structure
-```text
-
-src/
-├── application/           # Use Cases and Ports
-│   ├── use-cases/
-│   └── ports/
-├── domain/                # Entities, Value Objects, Domain Events
-│   ├── entities/
-│   │   ├── audit/
-│   │   ├── execution/
-│   │   ├── organization/
-│   │   └── process/
-│   └── shared/
-├── infrastructure/        # ORM, services, UnitOfWork
-│   ├── config/
-│   └── persistence/
-│       ├── prisma/
-│       └── services/
-├── interfaces/            # Controllers, HTTP routes
-│   └── http/
-└── generated/             # Prisma Client
 ```
-## Design Principles
-- *Business rules live in the domain layer*
+```code
+Execute Step
 
-- *State transitions are explicit*
+PATCH /executions/execution_456/execute-step/step_1
+Response:
 
-- *No hidden side effects*
+{
+  "executionId": "execution_456",
+  "stepId": "step_1",
+  "status": "EXECUTING"
+}
+```
+```code
+Complete Execution
 
-- *Auditability is mandatory*
+PATCH /executions/execution_456/complete
+Response:
 
-- *Infrastructure never drives domain behavior*
+{
+  "executionId": "execution_456",
+  "status": "COMPLETED"
+}
+ ```
 
-## Technical Decisions
-- *Domain-Driven Design:* keeps business rules explicit
-- *Clean Architecture:* prevents frameworks from dictating logic
-- *Prisma + PostgreSQL:* reliable relational data, type-safe ORM
-- *Domain Events:* ensure traceability and future integrations
+## Testing
+Run all tests:
+```bash
+npm test
+```
 
-## Current MVP Scope
-*Organization management*
+Watch mode:
+```bash
+npm run test:watch
+```
+Coverage report:
+```bash
+npm run coverage
+```
+Unit tests: domain logic & use cases
 
-*Users and roles*
+Integration tests: full workflows from create → activate → execute → complete
 
-*Process definition & activation*
+## Contributing
+Contributions are welcome!
 
-*Execution engine*
+- Fork the repository
 
-*Audit logging*
+- Create a feature branch (git checkout -b feature/xyz)
 
-*Subscription limits*
+- Commit your changes (git commit -m 'Add feature')
 
-## Planned Improvements
+- Push to the branch (git push origin feature/xyz)
 
-- Process designer UI
+- Open a Pull Request
 
-- Execution monitoring dashboard
+Please follow the project code style and naming conventions.
 
-- Advanced audit reports
-
-- SaaS billing system
-
-- Visual automation layer
-
-- Cloud deployment
-
-## Author
-Benjamin Millalonco
-Backend developer focused on domain modeling, automation, and scalable systems
+License
+This project is licensed under the MIT License — see the LICENSE file for details.
 
 ## License
 MIT License © 2026 Benjamin Millalonco
