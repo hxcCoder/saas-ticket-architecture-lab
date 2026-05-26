@@ -1,0 +1,6 @@
+# Prisma generated
+src/generated/** linguist-generated=true
+
+# Config files
+*.cjs linguist-detectable=false
+jest.config.js linguist-detectable=false
