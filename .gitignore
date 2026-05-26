@@ -16,6 +16,7 @@ yarn-error.log*
 prisma/dev.db
 prisma/*.db
 prisma/*.db-journal
+src/generated/
 
 # Generated Prisma Client (IMPORTANTE: Esto evita subir los .dll y .wasm)
 src/generated/
