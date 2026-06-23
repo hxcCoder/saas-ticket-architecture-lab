@@ -1,15 +1,21 @@
-import { PrismaClient } from "../../../generated/prisma";
-import { getPrismaClient } from "./PrismaClient";
+import { PrismaClient } from "../../../generated/prisma/index.js";
+import { getPrismaClient } from "./PrismaClient.js";
+import { transactionStorage } from "./PrismaContext.js";
 import {
   OutboxRepository,
   OutboxEvent
-} from "../../../application/use-cases/ports/OutBoxRepository";
+} from "../../../application/use-cases/ports/OutBoxRepository.js";
 
 export class PrismaOutboxRepository implements OutboxRepository {
-  private prisma: PrismaClient = getPrismaClient();
+  private readonly prisma: PrismaClient = getPrismaClient();
+
+  private get db() {
+    const tx = transactionStorage.getStore();
+    return tx ? tx : this.prisma;
+  }
 
   async save(event: OutboxEvent): Promise<void> {
-    await this.prisma.outbox.create({
+    await this.db.outbox.create({
       data: {
         id: event.id,
         eventName: event.eventName,
@@ -21,12 +27,12 @@ export class PrismaOutboxRepository implements OutboxRepository {
   }
 
   async findPending(limit = 100): Promise<OutboxEvent[]> {
-    const rows = await this.prisma.outbox.findMany({
+    const rows = await this.db.outbox.findMany({
       where: { published: false },
       take: limit,
     });
 
-    return rows.map(r => ({
+    return rows.map((r: any) => ({
       id: r.id,
       eventName: r.eventName,
       payload: r.payload,
@@ -36,7 +42,7 @@ export class PrismaOutboxRepository implements OutboxRepository {
   }
 
   async markAsPublished(id: string): Promise<void> {
-    await this.prisma.outbox.update({
+    await this.db.outbox.update({
       where: { id },
       data: { published: true },
     });

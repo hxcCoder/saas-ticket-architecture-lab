@@ -1,39 +1,44 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
 }
 
 /* =========================
    ORGANIZATION
 ========================= */
 model Organization {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
   status    String
   plan      String
   processes Process[]
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 }
 
 /* =========================
    PROCESS
 ========================= */
 model Process {
-  id             String        @id @default(uuid())
+  id             String       @id @default(uuid())
   name           String
   status         String
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  steps      ProcessStep[]
-  executions Execution[]
+  steps          ProcessStep[]
+  executions     Execution[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  // Índice para rendimiento en búsquedas por Organización
+  @@index([organizationId])
 }
 
 /* =========================
@@ -49,6 +54,9 @@ model ProcessStep {
   executions ExecutionStep[] @relation("ProcessStepExecutions")
 
   @@unique([processId, order])
+  
+  // Índice explícito para la relación con Process
+  @@index([processId])
 }
 
 /* =========================
@@ -60,23 +68,29 @@ model Execution {
   status    String
   startedAt DateTime @default(now())
 
-  process Process @relation(fields: [processId], references: [id])
+  process Process         @relation(fields: [processId], references: [id])
   steps   ExecutionStep[] @relation("ExecutionSteps")
+
+  // Índice para rendimiento en búsquedas por Proceso
+  @@index([processId])
 }
 
 /* =========================
    EXECUTION STEP
 ========================= */
 model ExecutionStep {
-  id          String   @id @default(uuid())
+  id          String     @id @default(uuid())
   executionId String
   stepId      String
   status      StepStatus
 
-  execution   Execution    @relation(fields: [executionId], references: [id], name: "ExecutionSteps")
-  processStep ProcessStep  @relation(fields: [stepId], references: [id], name: "ProcessStepExecutions")
+  execution   Execution   @relation(fields: [executionId], references: [id], name: "ExecutionSteps")
+  processStep ProcessStep @relation(fields: [stepId], references: [id], name: "ProcessStepExecutions")
 
   @@unique([executionId, stepId])
+  
+  // El índice de stepId es necesario porque el @@unique ya cubre el executionId al inicio
+  @@index([stepId])
 }
 
 /* =========================
@@ -90,6 +104,50 @@ model Outbox {
   occurredOn DateTime
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+/* =========================
+   AUDIT LOG
+========================= */
+model AuditLog {
+  id         String   @id @default(uuid())
+  eventId    String   
+  eventName  String   
+  eventData  Json     
+  payload    Json
+  occurredOn DateTime 
+  createdAt  DateTime @default(now()) 
+}
+
+/* =========================
+   PLAN
+========================= */
+model Plan {
+  id                 String         @id @default(uuid())
+  name               String
+  maxActiveProcesses Int            @map("max_active_processes")
+  
+  subscriptions      Subscription[]
+
+  @@map("plans")
+}
+
+/* =========================
+   SUBSCRIPTION
+========================= */
+model Subscription {
+  id             String   @id @default(uuid())
+  organizationId String   @unique @map("organization_id")
+  status         String
+  
+  // Agregamos la relación con Plan
+  planId         String   @map("plan_id")
+  plan           Plan     @relation(fields: [planId], references: [id])
+  
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("subscriptions")
 }
 
 /* =========================

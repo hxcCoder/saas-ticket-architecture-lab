@@ -1,8 +1,8 @@
-    import { ProcessStepStatus } from "./ProcessStepStatus";
+    import { ProcessStepStatus } from "./ProcessStepStatus.js";
     import {
         EmptyStepNameError,
         InvalidStepOrderError,
-    } from "./ProcessStepErrors";
+    } from "./ProcessStepErrors.js";
 
     export class ProcessStep {
         private readonly id: string;

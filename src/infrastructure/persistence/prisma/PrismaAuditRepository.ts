@@ -1,19 +1,25 @@
-import { AuditRepository } from "../../../application/use-cases/ports/AuditRepository";
-import { DomainEvent } from "../../../domain/entities/audit/shared/DomainEvent";
-import { getPrismaClient } from "./PrismaClient";
-import { Prisma } from "../../../generated/prisma";
+import { AuditRepository } from "../../../application/use-cases/ports/AuditRepository.js";
+import { DomainEvent } from "../../../domain/entities/audit/shared/DomainEvent.js";
+import { getPrismaClient } from "./PrismaClient.js";
+import { Prisma } from "../../../generated/prisma/index.js";
+import { transactionStorage } from "./PrismaContext.js";
 
 export class PrismaAuditRepository implements AuditRepository {
-  private prisma = getPrismaClient();
+  private readonly prisma = getPrismaClient();
+
+  private get db() {
+    const tx = transactionStorage.getStore();
+    return tx ? tx : this.prisma;
+  }
 
   async saveEvents(events: DomainEvent[]): Promise<void> {
     try {
       for (const event of events) {
         const primitives = event.toPrimitives();
 
-        await this.prisma.auditLog.create({
+        await this.db.auditLog.create({
           data: {
-            eventId: event.eventId, // ✅ FIX
+            eventId: event.eventId,
             eventName: event.getEventName(),
             eventData: primitives as Prisma.InputJsonValue,
             payload: primitives as Prisma.InputJsonValue,

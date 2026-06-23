@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
-import { StartExecution } from '../../application/use-cases/StartExecution';
-import { CreateAndActivateProcess } from '../../application/use-cases/CreateAndActivateProcess';
+import crypto from 'crypto';
 import { z } from 'zod';
-import { DomainError } from "../../domain/entities/audit/shared/DomainError";
+import { injectable, inject } from 'inversify';
 
+// SOLUCIÓN A LOS ERRORES: Añadimos .js al final de las rutas locales
+import { StartExecution } from '../../application/use-cases/StartExecution.js';
+import { CreateAndActivateProcess } from '../../application/use-cases/CreateAndActivateProcess.js';
+import { DomainError } from "../../domain/entities/audit/shared/DomainError.js";
 
 // Esquemas de validación
 const startExecutionSchema = z.object({
@@ -21,11 +24,12 @@ const createProcessSchema = z.object({
   })).min(1)
 });
 
+@injectable()
 export class ProcessController {
   // Inyectamos ambos casos de uso
   constructor(
-    private startExecUseCase: StartExecution,
-    private createProcessUseCase: CreateAndActivateProcess
+    @inject(StartExecution) private startExecUseCase: StartExecution,
+    @inject(CreateAndActivateProcess) private createProcessUseCase: CreateAndActivateProcess
   ) {}
 
   // MÉTODO EXISTENTE: Ejecutar
@@ -33,7 +37,7 @@ export class ProcessController {
     try {
       const { processId, executionId } = startExecutionSchema.parse(req.body);
       await this.startExecUseCase.execute(processId, executionId);
-      res.status(201).send();
+      res.status(201).json({ executionId });;
     } catch (error) {
       this.handleError(res, error);
     }
@@ -60,16 +64,18 @@ export class ProcessController {
 
   // Helper para no repetir código de errores
   private handleError(res: Response, error: unknown) {
-  if (error instanceof z.ZodError) {
-    res.status(400).json({ error: "Invalid input", details: error.issues });
-    return;
-  }
+    if (error instanceof z.ZodError) {
+      res.status(400).json({ error: "Invalid input", details: error.issues });
+      return;
+    }
 
-  if (error instanceof DomainError) {
-    res.status(422).json({ error: error.message });
-    return;
-  }
+    if (error instanceof DomainError) {
+      res.status(422).json({ error: error.message });
+      return;
+    }
 
-  res.status(500).json({ error: "Internal server error" });
-}
+    
+    console.error("🔥 Error crítico en ProcessController:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 }

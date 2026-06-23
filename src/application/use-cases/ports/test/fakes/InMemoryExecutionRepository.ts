@@ -1,5 +1,5 @@
-import { Execution } from '../../../../../domain/entities/execution/Execution';
-import { ExecutionStep } from '../../../../../domain/entities/execution/ExecutionStep';
+import { Execution } from '../../../../../domain/entities/execution/Execution.js';
+import { ExecutionStep } from '../../../../../domain/entities/execution/ExecutionStep.js';
 
 export class InMemoryExecutionRepository {
   private store = new Map<string, Execution>();

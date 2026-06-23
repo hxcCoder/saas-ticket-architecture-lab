@@ -1,13 +1,13 @@
-// src/infrastructure/persistence/prisma/PrismaExecutionRepository.ts
-import { PrismaClient, StepStatus } from "../../../generated/prisma";
-import { getPrismaClient } from "./PrismaClient";
-import { ExecutionRepository } from "../../../application/use-cases/ports/ExecutionRepository";
-import { OutboxRepository } from "../../../application/use-cases/ports/OutBoxRepository";
-import { Execution } from "../../../domain/entities/execution/Execution";
-import { ExecutionStep } from "../../../domain/entities/execution/ExecutionStep";
-import { ExecutionStatus } from "../../../domain/entities/execution/ExecutionStatus";
-import { ExecutionStepStatus } from "../../../domain/entities/execution/ExecutionStep";
-import { toJsonValue } from "./Json";
+import { injectable, inject } from 'inversify';
+import { PrismaClient, StepStatus } from "../../../generated/prisma/index.js";
+import { getPrismaClient } from "./PrismaClient.js";
+import { transactionStorage } from "./PrismaContext.js"; // 🌟 Importamos el storage
+import { ExecutionRepository } from "../../../application/use-cases/ports/ExecutionRepository.js";
+import { OutboxRepository } from "../../../application/use-cases/ports/OutBoxRepository.js";
+import { Execution } from "../../../domain/entities/execution/Execution.js";
+import { ExecutionStep, ExecutionStepStatus } from "../../../domain/entities/execution/ExecutionStep.js";
+import { ExecutionStatus } from "../../../domain/entities/execution/ExecutionStatus.js";
+import { toJsonValue } from "./Json.js";
 
 type DbExecutionStep = {
   stepId: string;
@@ -24,56 +24,66 @@ type DbExecution = {
 const toPrismaStepStatus = (status: ExecutionStepStatus): StepStatus =>
   status as unknown as StepStatus;
 
+@injectable()
 export class PrismaExecutionRepository implements ExecutionRepository {
   private prisma: PrismaClient = getPrismaClient();
 
-  constructor(private readonly outboxRepo: OutboxRepository) {}
+  //  Interceptor de transacción silencioso
+  private get db() {
+    const tx = transactionStorage.getStore();
+    return tx ? tx : this.prisma;
+  }
+
+  constructor(
+    @inject('OutBoxRepository') private readonly outboxRepo: OutboxRepository
+  ) {}
 
   async save(execution: Execution): Promise<void> {
     const events = execution.pullDomainEvents();
 
-    await this.prisma.$transaction(async tx => {
-      await tx.execution.upsert({
-        where: { id: execution.getId() },
-        update: { status: execution.getStatus() as ExecutionStatus },
-        create: {
-          id: execution.getId(),
-          processId: execution.getProcessId(),
-          status: execution.getStatus() as ExecutionStatus,
-        },
-      });
+  
+    await this.db.execution.upsert({
+      where: { id: execution.getId() },
+      update: { status: execution.getStatus() as ExecutionStatus },
+      create: {
+        id: execution.getId(),
+        processId: execution.getProcessId(),
+        status: execution.getStatus() as ExecutionStatus,
+      },
+    });
 
-      for (const step of execution.getSteps()) {
-        await tx.executionStep.upsert({
-          where: {
-            executionId_stepId: {
-              executionId: execution.getId(),
-              stepId: step.getStepId(),
-            },
-          },
-          update: { status: toPrismaStepStatus(step.getStatus()) },
-          create: {
+    for (const step of execution.getSteps()) {
+      await this.db.executionStep.upsert({
+        where: {
+          executionId_stepId: {
             executionId: execution.getId(),
             stepId: step.getStepId(),
-            status: toPrismaStepStatus(step.getStatus()),
           },
-        });
-      }
+        },
+        update: { status: toPrismaStepStatus(step.getStatus()) },
+        create: {
+          executionId: execution.getId(),
+          stepId: step.getStepId(),
+          status: toPrismaStepStatus(step.getStatus()),
+        },
+      });
+    }
 
-      for (const event of events) {
-        await this.outboxRepo.save({
-          id: event.eventId,
-          eventName: event.getEventName(),
-          payload: toJsonValue(event.toPrimitives()),
-          occurredOn: event.occurredOn,
-          published: false,
-        });
-      }
-    });
+    // El outboxRepo internamente también usará 'this.db' gracias a Inversify y el Storage
+    for (const event of events) {
+      await this.outboxRepo.save({
+        id: event.eventId,
+        eventName: event.getEventName(),
+        payload: toJsonValue(event.toPrimitives()),
+        occurredOn: event.occurredOn,
+        published: false,
+      });
+    }
   }
 
   async findById(id: string): Promise<Execution | null> {
-    const row = await this.prisma.execution.findUnique({
+  
+    const row = await this.db.execution.findUnique({
       where: { id },
       include: { steps: true },
     });

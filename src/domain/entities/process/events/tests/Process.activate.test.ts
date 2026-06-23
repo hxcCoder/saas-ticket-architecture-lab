@@ -1,6 +1,6 @@
-import { Process } from "../../Process";
-import { ProcessStep } from "../../ProcessStep";
-import { ProcessStatus } from "../../ProcessStatus";
+import { Process } from "../../Process.js";
+import { ProcessStep } from "../../ProcessStep.js";
+import { ProcessStatus } from "../../ProcessStatus.js";
 
 describe("Process.activate", () => {
     it("activates a process with steps", () => {

@@ -1,4 +1,4 @@
-import { OutboxRepository } from '../../../../infrastructure/persistence/prisma/PrismaOutboxRepository';
+import { OutboxRepository } from '../OutBoxRepository.js'; // O la ruta correcta a tu port
 
 export class InMemoryOutboxRepository implements OutboxRepository {
   private events: any[] = [];

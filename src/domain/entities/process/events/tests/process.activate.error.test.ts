@@ -1,5 +1,5 @@
-import { Process } from "../../Process";
-import { ProcessHasNoStepsError } from "../../ProcessErrors";
+import { Process } from "../../Process.js";
+import { ProcessHasNoStepsError } from "../../ProcessErrors.js";
 
 describe("Process.activate errors", () => {
     it("throws if process has no steps", () => {

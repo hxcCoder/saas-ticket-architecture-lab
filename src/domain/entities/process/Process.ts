@@ -1,13 +1,13 @@
-import { ProcessStatus } from "./ProcessStatus";
-import { ProcessStep } from "./ProcessStep";
+import { ProcessStatus } from "./ProcessStatus.js";
+import { ProcessStep } from "./ProcessStep.js";
 import {
     ProcessAlreadyActiveError,
     ProcessHasNoStepsError,
     InvalidProcessStateError,
-} from "./ProcessErrors";
-import { DomainEvent } from "../audit/shared/DomainEvent";
-import { ProcessCreated } from "./events/ProcessCreated";
-import { ProcessActivated } from "./events/ProcessActivated";
+} from "./ProcessErrors.js";
+import { DomainEvent } from "../audit/shared/DomainEvent.js";
+import { ProcessCreated } from "./events/ProcessCreated.js";
+import { ProcessActivated } from "./events/ProcessActivated.js";
 
 export class Process {
     private readonly id: string;

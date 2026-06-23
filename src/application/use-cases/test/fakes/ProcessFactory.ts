@@ -1,5 +1,5 @@
-import { Process } from "../../../../domain/entities/process/Process";
-import { ProcessStep } from "../../../../domain/entities/process/ProcessStep";
+import { Process } from "../../../../domain/entities/process/Process.js";
+import { ProcessStep } from "../../../../domain/entities/process/ProcessStep.js";
 
 export class ProcessFactory {
   static create(id: string, name: string, organizationId: string): Process {

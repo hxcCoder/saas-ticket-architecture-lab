@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import { ProcessController } from './ProcessController';
-import { container } from '../../infrastructure/config/container';
+// 🚀 SOLUCIÓN A LOS ERRORES: Añadimos .js al final de las rutas locales
+import { ProcessController } from './ProcessController.js';
+import { container } from '../../infrastructure/config/container.js';
 
 export class ProcessRoutes {
   public router: Router;
@@ -13,10 +14,10 @@ export class ProcessRoutes {
   }
 
   private initRoutes(): void {
-  // Ruta para crear (POST /)
-  this.router.post('/', this.controller.create.bind(this.controller));
-  
-  // Ruta para ejecutar (POST /start-execution)
-  this.router.post('/start-execution', this.controller.startExecution.bind(this.controller));
-}
+    // Paso 2 del Dashboard: Procesa el POST /api/processes
+    this.router.post('/', this.controller.create.bind(this.controller));
+    
+    // Paso 3 del Dashboard: Procesa las ejecuciones
+    this.router.post('/start-execution', this.controller.startExecution.bind(this.controller));
+  }
 }

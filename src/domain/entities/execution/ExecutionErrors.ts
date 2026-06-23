@@ -1,4 +1,4 @@
-import { DomainError } from "../audit/shared/DomainError";
+import { DomainError } from "../audit/shared/DomainError.js";
 
 export class InvalidExecutionStatusError extends DomainError {
     constructor(status: string) {

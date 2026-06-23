@@ -1,12 +1,12 @@
 // src/domain/entities/execution/Execution.ts
-import { Process } from "../process/Process";
-import { ExecutionStatus } from "./ExecutionStatus";
-import { ExecutionStep, ExecutionStepStatus } from "./ExecutionStep";
-import { DomainEvent } from "../audit/shared/DomainEvent";
-import { ExecutionStarted } from "./events/ExecutionStarted";
-import { ExecutionStepCompleted } from "./events/ExecutionStepCompleted";
-import { ExecutionCompleted } from "./events/ExecutionCompleted";
-import { InvalidProcessStateError } from "../process/ProcessErrors";
+import { Process } from "../process/Process.js";
+import { ExecutionStatus } from "./ExecutionStatus.js";
+import { ExecutionStep, ExecutionStepStatus } from "./ExecutionStep.js";
+import { DomainEvent } from "../audit/shared/DomainEvent.js";
+import { ExecutionStarted } from "./events/ExecutionStarted.js";
+import { ExecutionStepCompleted } from "./events/ExecutionStepCompleted.js";
+import { ExecutionCompleted } from "./events/ExecutionCompleted.js";
+import { InvalidProcessStateError } from "../process/ProcessErrors.js";
 
 export class Execution {
   private domainEvents: DomainEvent[] = [];

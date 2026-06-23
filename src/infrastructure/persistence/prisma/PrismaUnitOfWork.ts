@@ -1,19 +1,22 @@
-// src/infrastructure/persistence/prisma/PrismaUnitOfWork.ts
-import { PrismaClient, Prisma } from '../../../generated/prisma';
-import { UnitOfWork } from '../../../application/use-cases/ports/UnitOfWork';
-import { OutboxRepository } from '../../../application/use-cases/ports/OutBoxRepository';
+import { injectable } from 'inversify';
+import { getPrismaClient } from './PrismaClient.js';
+import { Prisma } from '../../../generated/prisma/index.js';
+import { UnitOfWork } from '../../../application/use-cases/ports/UnitOfWork.js';
+import { transactionStorage } from './PrismaContext.js';
 
+@injectable()
 export class PrismaUnitOfWork implements UnitOfWork {
-  constructor(
-    private readonly prisma: PrismaClient,
-    private readonly outboxRepo: OutboxRepository
-  ) {}
+  private readonly prisma = getPrismaClient();
 
-  async run<T>(
-    work: (tx: Prisma.TransactionClient, outbox: OutboxRepository) => Promise<T>
-  ): Promise<T> {
+  async run<T>(work: () => Promise<T>): Promise<T> {
     return this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      return work(tx, this.outboxRepo);
+      
+      return transactionStorage.run(tx, work);
+      
+    }, {
+      
+      maxWait: 10000, // Tiempo máximo para conectarse (10 segundos)
+      timeout: 20000  // Tiempo máximo para que dure la transacción (20 segundos)
     });
   }
 }

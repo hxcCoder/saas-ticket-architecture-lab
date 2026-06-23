@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { CompleteExecutionStep } from '../../CompleteExecutionStep';
-import { InMemoryExecutionRepository } from './fakes/InMemoryExecutionRepository';
-import { ExecutionStep } from './../../../../domain/entities/execution/ExecutionStep';
+import { CompleteExecutionStep } from '../../CompleteExecutionStep.js';
+import { InMemoryExecutionRepository } from './fakes/InMemoryExecutionRepository.js';
+import { ExecutionStep } from './../../../../domain/entities/execution/ExecutionStep.js';
 
 describe('CompleteExecutionStep Use Case', () => {
   let repo: InMemoryExecutionRepository;

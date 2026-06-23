@@ -1,253 +1,211 @@
-# SaaS Ticket Backend
+<div align="center">
 
-[![License: MIT](https://img.shields.io/github/license/hxcCoder/saas-ticket-backend)](https://github.com/hxcCoder/saas-ticket-backend/blob/main/LICENSE)
-[![Node.js Version](https://img.shields.io/badge/Node.js-v18+-brightgreen)](https://nodejs.org/)
-[![TypeScript Version](https://img.shields.io/badge/TypeScript-4.9-blue)](https://www.typescriptlang.org/)
-[![Build Status](https://github.com/hxcCoder/saas-ticket-backend/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/hxcCoder/saas-ticket-backend/actions/workflows/ci.yml)
-[![Coverage Status](https://codecov.io/gh/hxcCoder/saas-ticket-backend/branch/main/graph/badge.svg)](https://codecov.io/gh/hxcCoder/saas-ticket-backend)
-[![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://www.docker.com/)
+# Backend Tickets
 
+**Ticket workflow automation backend** built with Domain-Driven Design, Clean Architecture, and Event-Driven patterns.
+
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](#license)
+
+</div>
+
+---
 
 ## Table of Contents
 
-- [About](#about)
+- [Overview](#overview)
+- [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
-- [Project Structure](#project-structure)
-- [Installation](#installation)
-- [Usage](#usage)
-  - [API Endpoints](#api-endpoints)
-  - [Examples](#examples)
+- [Domain Model](#domain-model)
+- [Event Flow](#event-flow)
+- [API Reference](#api-reference)
+- [Database Schema](#database-schema)
+- [Getting Started](#getting-started)
 - [Testing](#testing)
-- [Contributing](#contributing)
+- [Roadmap](#roadmap)
+- [Learning Goals](#learning-goals)
 - [License](#license)
 
 ---
 
-## About
+## Overview
+Backend Tickets is a SaaS-oriented backend that lets an organization **define, activate, run, and monitor business processes** — think invoice approvals, onboarding checklists, or any multi-step internal workflow — without sacrificing maintainability as the system grows.
 
-This backend provides a **robust workflow execution engine** with:
+Under the hood, every state change is captured as a **Domain Event** and persisted transactionally through the **Outbox Pattern**, so the core workflow engine stays fully decoupled from whatever consumes those events downstream (notifications, analytics, third-party integrations, etc.).
 
-- Strong **domain rules** using DDD
-- State transitions control: `CREATED → ACTIVE → EXECUTING → COMPLETED`
-- Immutable **audit logging**
-- Clean Architecture: Domain, Application, Infrastructure, Interfaces
+The codebase is intentionally built as a reference implementation of Clean Architecture + DDD in TypeScript — strict layering, explicit domain rules, and transactional consistency from day one.
 
-It allows creation, activation, execution, and completion of processes with steps, including execution tracking per user.
+## Features
 
----
+| Category | What it does |
+|---|---|
+| **Process Management** | Create processes, activate workflows, define ordered steps, enforce domain rules |
+| **Execution Engine** | Start executions, track status, complete steps, auto-emit domain events |
+| **Event-Driven Core** | Domain Events · Audit Logging · Outbox Pattern · Event Publishing Worker |
+| **SaaS Capabilities** | Multi-organization support, subscription validation, plan restrictions, active process limits |
+| **Security** | JWT auth middleware, request validation with Zod, structured domain error handling |
 
 ## Tech Stack
 
-- Node.js 18+
-- TypeScript 4.9+
-- PostgreSQL
-- Prisma ORM
-- Express.js
-- Clean Architecture + DDD
-- Jest (Unit & Integration tests)
-- Docker & Docker Compose
-
----
+| Layer | Technology |
+|---|---|
+| Runtime / Framework | Node.js (ESM Node16 resolution), Express, TypeScript |
+| Persistence | PostgreSQL, Prisma ORM |
+| Architecture | InversifyJS (DI), AsyncLocalStorage, Unit of Work |
+| Validation | Zod |
+| Testing | Jest |
+| Logging | Winston, Morgan |
 
 ## Architecture
 
-- **Domain Layer**: Entities, Value Objects, Domain Services  
-- **Application Layer**: Use Cases  
-- **Infrastructure**: Repositories (Prisma)  
-- **Interfaces**: HTTP Controllers, Routes, DTOs  
+This proyect follows a strict layered architecture inspired by Clean Architecture and DDD — dependencies always point inward, toward the domain.
 
-**Execution Flow**:
-
-```mermaid
-flowchart TD
-  A[POST /processes] --> B[CreateProcessUseCase]
-  B --> C[Validate Steps]
-  C --> D[Persist Process in PrismaProcessRepository]
-  D --> E[Response with ProcessDTO]
-  E --> F[ActivateProcessUseCase]
-  F --> G[Create Execution & ExecutionSteps]
-  G --> H[ExecuteProcessUseCase]
-  H --> I[CompleteExecutionUseCase]
-
+```text
+src
+├── domain            # Entities, domain events, business rules
+├── application       # Use cases, ports (interfaces)
+├── infrastructure    # Prisma, repositories, services, DI container
+└── interfaces
+    └── http          # Controllers, routes, middleware
 ```
 
-## Domain UML:
+**Patterns in play:** Clean Architecture · Domain-Driven Design · Repository Pattern · Dependency Injection · Unit of Work · Outbox Pattern · Event-Driven Architecture
+
+## Domain Model
 
 ```mermaid
 classDiagram
-  class Process {
-    +id: string
-    +name: string
-    +status: string
-  }
-
-  class ProcessStep {
-    +id: string
-    +name: string
-    +status: string
-  }
-
-  class Execution {
-    +id: string
-    +processId: string
-    +status: string
-  }
-
-  class ExecutionStep {
-    +id: string
-    +executionId: string
-    +status: string
-  }
-
-  class User {
-    +id: string
-    +name: string
-    +email: string
-  }
-
-  Process --> ProcessStep
-  Process "1" --> "many" Execution
-  Execution --> ExecutionStep
-  User "1" --> "many" Execution
+    class Process {
+        +ProcessStep[] steps
+        +Status status
+    }
+    class Execution {
+        +ExecutionStep[] steps
+        +Status status
+    }
+    Process "1" --> "*" ProcessStep
+    Execution "1" --> "*" ExecutionStep
+    Process ..> Execution : instantiates
 ```
-# Project Structure
-```text
-src/
-├── domain/           # Entities, value objects, domain rules
-├── application/      # Use Cases / Application logic
-├── infrastructure/   # Repositories (Prisma), services
-├── interfaces/       # HTTP controllers, routes, DTOs
-├── tests/            # Unit & integration tests
-├── prisma/           # Schema & migrations
+
+| Aggregate | Emits |
+|---|---|
+| **Process** | `process.created` · `process.activated` · `process.archived` |
+| **Execution** | `execution.started` · `execution.step.completed` · `execution.completed` |
+
+## Event Flow
+
+```mermaid
+flowchart TD
+    A[Create Process] --> B(ProcessCreated)
+    B --> C(ProcessActivated)
+    C --> D[Start Execution]
+    D --> E(ExecutionStarted)
+    E --> F(ExecutionStepCompleted)
+    F --> G(ExecutionCompleted)
+    G --> H[Outbox]
+    H --> I[Publisher Worker]
 ```
-# Installation
-Clone the repository:
+
+Every domain event lands in the **Outbox** within the same transaction as the state change, then gets relayed by the **Publisher Worker** — guaranteeing at-least-once delivery without ever risking an inconsistent state.
+
+## API Reference
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| `POST` | `/api/organizations` | Create an organization |
+| `POST` | `/api/processes` | Create and activate a process |
+| `POST` | `/api/processes/start-execution` | Start a new execution of a process |
+
+<details>
+<summary><strong>POST /api/organizations</strong></summary>
+
+```json
+{
+  "name": "My Company",
+  "status": "ACTIVE",
+  "plan": "PRO"
+}
+```
+</details>
+
+<details>
+<summary><strong>POST /api/processes</strong></summary>
+
+```json
+{
+  "organizationId": "uuid",
+  "name": "Invoice Approval",
+  "steps": [
+    { "id": "uuid", "name": "Review", "order": 0 }
+  ]
+}
+```
+</details>
+
+<details>
+<summary><strong>POST /api/processes/start-execution</strong></summary>
+
+```json
+{
+  "processId": "uuid",
+  "executionId": "uuid"
+}
+```
+</details>
+
+## Database Schema
+
+Core entities managed via Prisma:
+
+`Organization` · `Subscription` · `Plan` · `Process` · `ProcessStep` · `Execution` · `ExecutionStep` · `AuditLog` · `Outbox`
+
+## Getting Started
+
 ```bash
-git clone https://github.com/hxcCoder/saas-ticket-backend.git
+# 1. Clone the repo
+git clone https://github.com/your-user/saas-ticket-backend.git
 cd saas-ticket-backend
+
+# 2. Install dependencies
 npm install
-```
 
-*Environment Variables*
+# 3. Configure environment
+cp .env.example .env
+# then set DATABASE_URL and JWT_SECRET
 
-Copy .env.example to .env and fill the values:
-```bash
-DATABASE_URL=postgresql://user:pass@localhost:5432/dbname
-Database Setup
+# 4. Run migrations
 npx prisma migrate dev
+
+# 5. Generate the Prisma client
 npx prisma generate
-Start Server
+
+# 6. Start the dev server
 npm run dev
 ```
-Or using Docker Compose:
-```bash
-docker-compose up -d
-```
-## Usage
-API Endpoints
 
-Create Process: POST /processes
+The API will be available at `http://localhost:3000` (or whichever `PORT` you configure).
 
-Activate Process: PATCH /processes/:id/activate
-
-Execute Step: PATCH /executions/:id/execute-step/:stepId
-
-Complete Execution: PATCH /executions/:id/complete
-
-## Examples
-
-Create Process
-
-POST /processes
-Content-Type: application/json
-```json
-{
-  "name": "Invoice Approval",
-  "steps": [
-    {"name": "Submit invoice"},
-    {"name": "Manager review"}
-  ]
-}
-Response:
-
-{
-  "id": "process_123",
-  "name": "Invoice Approval",
-  "status": "CREATED",
-  "steps": [
-    {"id": "step_1", "name": "Submit invoice", "status": "PENDING"},
-    {"id": "step_2", "name": "Manager review", "status": "PENDING"}
-  ]
-}
-```
-```json
-Activate Process
-
-PATCH /processes/process_123/activate
-Response:
-
-{
-  "id": "process_123",
-  "status": "ACTIVE"
-}
-Execute Step
-
-PATCH /executions/execution_456/execute-step/step_1
-Response:
-
-{
-  "executionId": "execution_456",
-  "stepId": "step_1",
-  "status": "EXECUTING"
-}
-```
-```json
-Complete Execution
-
-PATCH /executions/execution_456/complete
-Response:
-
-{
-  "executionId": "execution_456",
-  "status": "COMPLETED"
-}
-```
 ## Testing
 
-Run all tests:
 ```bash
+# Unit tests
 npm test
-```
-Watch mode:
-```bash
-npm run test:watch
-```
 
-Coverage report:
-```bash
-npm run coverage
+# Integration tests
+npm run test:integration
 ```
 
-Unit tests: domain logic & use cases
+## Learning Goals
 
-Integration tests: full workflows from create → activate → execute → complete
+This project was built to practice and demonstrate:
 
-## Contributing
-Contributions are welcome!
+Advanced TypeScript · Clean Architecture · Domain-Driven Design · Event-Driven Systems · Backend Design · Transaction Management · Repository Pattern · Dependency Injection
 
-Fork the repository
+## License
 
-Create a feature branch (git checkout -b feature/xyz)
-
-Commit your changes (git commit -m 'Add feature')
-
-Push to the branch (git push origin feature/xyz)
-
-Open a Pull Request
-
-Please follow the project code style and naming conventions.
-
-# License
-This project is licensed under the MIT License — see the LICENSE file for details.
-© 2026 Benjamin Millalonco
+Distributed under the **MIT License**.

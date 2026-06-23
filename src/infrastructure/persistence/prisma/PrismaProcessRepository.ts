@@ -1,25 +1,27 @@
 import { injectable } from "inversify";
-import { ProcessRepository } from "../../../application/use-cases/ports/ProcessRepository";
-import { Process } from "../../../domain/entities/process/Process";
-import { getPrismaClient } from "./PrismaClient";
-import { Prisma } from "@prisma/client";
+import { ProcessRepository } from "../../../application/use-cases/ports/ProcessRepository.js";
+import { Process } from "../../../domain/entities/process/Process.js";
+import { getPrismaClient } from "./PrismaClient.js";
+import { transactionStorage } from "./PrismaContext.js";
 
 @injectable()
 export class PrismaProcessRepository implements ProcessRepository {
-  private getDb(tx?: Prisma.TransactionClient) {
-    return tx || getPrismaClient();
+  private readonly prisma = getPrismaClient();
+
+  //  Interceptor de transacción silencioso
+  private get db() {
+    const tx = transactionStorage.getStore();
+    return tx ? tx : this.prisma;
   }
 
-  async save(process: Process, tx?: Prisma.TransactionClient): Promise<void> {
-    const db = this.getDb(tx);
-
+  async save(process: Process): Promise<void> {
     const stepsData = process.getSteps().map(step => ({
       id: step.getId(),
       name: step.getName(),
       order: step.getOrder(),
     }));
 
-    await db.process.upsert({
+    await this.db.process.upsert({
       where: { id: process.getId() },
       update: {
         name: process.getName(),
@@ -37,7 +39,7 @@ export class PrismaProcessRepository implements ProcessRepository {
   }
 
   async findById(id: string): Promise<Process | null> {
-    const data = await getPrismaClient().process.findUnique({
+    const data = await this.db.process.findUnique({
       where: { id },
       include: { steps: true },
     });

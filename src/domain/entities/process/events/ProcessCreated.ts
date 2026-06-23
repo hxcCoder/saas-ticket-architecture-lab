@@ -1,4 +1,4 @@
-import { DomainEvent } from "../../audit/shared/DomainEvent";
+import { DomainEvent } from "../../audit/shared/DomainEvent.js";
 
 export class ProcessCreated extends DomainEvent {
   constructor(

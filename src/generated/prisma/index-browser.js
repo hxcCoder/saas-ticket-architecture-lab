@@ -169,6 +169,31 @@ exports.Prisma.OutboxScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.AuditLogScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  eventName: 'eventName',
+  eventData: 'eventData',
+  payload: 'payload',
+  occurredOn: 'occurredOn',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PlanScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  maxActiveProcesses: 'maxActiveProcesses'
+};
+
+exports.Prisma.SubscriptionScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  status: 'status',
+  planId: 'planId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -200,7 +225,10 @@ exports.Prisma.ModelName = {
   ProcessStep: 'ProcessStep',
   Execution: 'Execution',
   ExecutionStep: 'ExecutionStep',
-  Outbox: 'Outbox'
+  Outbox: 'Outbox',
+  AuditLog: 'AuditLog',
+  Plan: 'Plan',
+  Subscription: 'Subscription'
 };
 
 /**

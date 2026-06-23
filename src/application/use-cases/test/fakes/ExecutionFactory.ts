@@ -1,6 +1,6 @@
 // src/application/use-cases/test/fakes/ExecutionFactory.ts
-import { Execution } from "../../../../domain/entities/execution/Execution";
-import { ExecutionStep, ExecutionStepStatus } from "../../../../domain/entities/execution/ExecutionStep";
+import { Execution } from "../../../../domain/entities/execution/Execution.js";
+import { ExecutionStep, ExecutionStepStatus } from "../../../../domain/entities/execution/ExecutionStep.js";
 
 export class ExecutionFactory {
   static createExecution(id: string = "exec1", processId: string = "proc1"): Execution {

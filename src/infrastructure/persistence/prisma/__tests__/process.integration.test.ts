@@ -1,8 +1,8 @@
-import { PrismaUnitOfWork } from "../PrismaUnitOfWork";
-import { PrismaProcessRepository } from "../PrismaProcessRepository";
-import { Process } from "../../../../domain/entities/process/Process";
-import { ProcessStep } from "../../../../domain/entities/process/ProcessStep";
-import { getPrismaClient } from "../PrismaClient";
+import { PrismaUnitOfWork } from "../PrismaUnitOfWork.js";
+import { PrismaProcessRepository } from "../PrismaProcessRepository.js";
+import { Process } from "../../../../domain/entities/process/Process.js";
+import { ProcessStep } from "../../../../domain/entities/process/ProcessStep.js";
+import { getPrismaClient } from "../PrismaClient.js";
 
 const prisma = getPrismaClient();
 const outboxRepo = {

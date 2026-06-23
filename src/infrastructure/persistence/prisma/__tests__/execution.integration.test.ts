@@ -1,7 +1,7 @@
-import { PrismaUnitOfWork } from "../PrismaUnitOfWork";
-import { PrismaExecutionRepository } from "../PrismaExecutionRepository";
-import { ExecutionFactory } from "../../../../application/use-cases/test/fakes/ExecutionFactory";
-import { getPrismaClient } from "../PrismaClient";
+import { PrismaUnitOfWork } from "../PrismaUnitOfWork.js";
+import { PrismaExecutionRepository } from "../PrismaExecutionRepository.js";
+import { ExecutionFactory } from "../../../../application/use-cases/test/fakes/ExecutionFactory.js";
+import { getPrismaClient } from "../PrismaClient.js";
 
 const prisma = getPrismaClient();
 const outboxRepo = {

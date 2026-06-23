@@ -1,5 +1,5 @@
 // src/application/use-cases/ports/EventPublisherWorker.ts
-import { OutboxRepository } from "../prisma/PrismaOutboxRepository";
+import { OutboxRepository } from "../../../application/use-cases/ports/OutBoxRepository.js";
 
 export class EventPublisherWorker {
   constructor(private readonly outboxRepo: OutboxRepository) {}

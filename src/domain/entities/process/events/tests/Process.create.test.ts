@@ -1,4 +1,4 @@
-import { ProcessCreated } from "../ProcessCreated";
+import { ProcessCreated } from "../ProcessCreated.js";
 
 describe("ProcessCreated Domain Event", () => {
     it("should expose correct primitives", () => {

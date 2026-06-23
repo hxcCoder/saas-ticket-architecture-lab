@@ -1,4 +1,4 @@
-import { ProcessStep } from "../process/ProcessStep";
+import { ProcessStep } from "../process/ProcessStep.js";
 
 export enum ExecutionStepStatus {
   PENDING = "PENDING",

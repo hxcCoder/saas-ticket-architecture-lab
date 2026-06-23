@@ -1,1 +1,113 @@
 {"clientVersion":"6.19.2","errorCode":"P1012","level":"error","message":"Prisma connection failed \u001b[1;91merror\u001b[0m: \u001b[1mEnvironment variable not found: DATABASE_URL.\u001b[0m\n  \u001b[1;94m-->\u001b[0m  \u001b[4mschema.prisma:3\u001b[0m\n\u001b[1;94m   | \u001b[0m\n\u001b[1;94m 2 | \u001b[0m  provider = \"postgresql\"\n\u001b[1;94m 3 | \u001b[0m  url      = \u001b[1;91menv(\"DATABASE_URL\")\u001b[0m\n\u001b[1;94m   | \u001b[0m\n\nValidation Error Count: 1","name":"PrismaClientInitializationError","stack":"PrismaClientInitializationError: \u001b[1;91merror\u001b[0m: \u001b[1mEnvironment variable not found: DATABASE_URL.\u001b[0m\n  \u001b[1;94m-->\u001b[0m  \u001b[4mschema.prisma:3\u001b[0m\n\u001b[1;94m   | \u001b[0m\n\u001b[1;94m 2 | \u001b[0m  provider = \"postgresql\"\n\u001b[1;94m 3 | \u001b[0m  url      = \u001b[1;91menv(\"DATABASE_URL\")\u001b[0m\n\u001b[1;94m   | \u001b[0m\n\nValidation Error Count: 1\n    at r (C:\\Users\\Benjamin\\Desktop\\saas-ticket\\saas-ticket-backend\\src\\generated\\prisma\\runtime\\library.js:116:2770)","timestamp":"2026-06-23T02:51:17.352Z"}
+{"clientVersion":"6.19.2","errorCode":"P1012","level":"error","message":"Prisma connection failed \u001b[1;91merror\u001b[0m: \u001b[1mEnvironment variable not found: DATABASE_URL.\u001b[0m\n  \u001b[1;94m-->\u001b[0m  \u001b[4mschema.prisma:3\u001b[0m\n\u001b[1;94m   | \u001b[0m\n\u001b[1;94m 2 | \u001b[0m  provider = \"postgresql\"\n\u001b[1;94m 3 | \u001b[0m  url      = \u001b[1;91menv(\"DATABASE_URL\")\u001b[0m\n\u001b[1;94m   | \u001b[0m\n\nValidation Error Count: 1","name":"PrismaClientInitializationError","stack":"PrismaClientInitializationError: \u001b[1;91merror\u001b[0m: \u001b[1mEnvironment variable not found: DATABASE_URL.\u001b[0m\n  \u001b[1;94m-->\u001b[0m  \u001b[4mschema.prisma:3\u001b[0m\n\u001b[1;94m   | \u001b[0m\n\u001b[1;94m 2 | \u001b[0m  provider = \"postgresql\"\n\u001b[1;94m 3 | \u001b[0m  url      = \u001b[1;91menv(\"DATABASE_URL\")\u001b[0m\n\u001b[1;94m   | \u001b[0m\n\nValidation Error Count: 1\n    at r (C:\\Users\\Benjamin\\Desktop\\saas-ticket\\saas-ticket-backend\\src\\generated\\prisma\\runtime\\library.js:116:2770)","timestamp":"2026-06-23T03:25:41.743Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T03:26:39.450Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T03:26:39.456Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:03:30:56 +0000] \"POST /api/organizations HTTP/1.1\" 404 157 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T03:30:56.138Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:03:31:06 +0000] \"POST /api/organizations HTTP/1.1\" 404 157 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T03:31:06.472Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:03:37:11 +0000] \"POST /api/organizations HTTP/1.1\" 404 157 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T03:37:11.432Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T04:55:36.817Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T04:55:36.830Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T04:56:20.716Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T04:56:20.722Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T04:56:34.245Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T04:56:34.251Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T05:04:09.619Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T05:04:09.627Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T05:06:38.285Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T05:06:38.290Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T05:06:44.580Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T05:06:44.586Z"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [23/Jun/2026:05:06:56 +0000] \"POST /api/organizations HTTP/1.1\" 201 134 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T05:06:56.015Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:05:07:31 +0000] \"POST /api/processes HTTP/1.1\" 500 33 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T05:07:31.746Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:05:07:41 +0000] \"POST /api/processes HTTP/1.1\" 500 33 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T05:07:41.474Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T05:10:56.184Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T05:10:56.190Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:05:11:02 +0000] \"POST /api/organizations HTTP/1.1\" 201 134 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T05:11:02.740Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:05:11:04 +0000] \"POST /api/processes HTTP/1.1\" 500 33 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T05:11:04.025Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T05:12:31.494Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T05:12:31.500Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:05:14:15 +0000] \"POST /api/organizations HTTP/1.1\" 201 134 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T05:14:15.224Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:05:14:15 +0000] \"POST /api/processes HTTP/1.1\" 500 33 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T05:14:15.827Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T06:26:55.718Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T06:26:55.724Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T06:27:23.743Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T06:27:23.793Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T06:27:29.946Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T06:27:29.952Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T06:27:53.839Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T06:27:53.845Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T07:17:23.770Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T07:17:23.776Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T07:18:45.306Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T07:18:45.315Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T07:21:43.087Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T07:21:43.094Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:21:49 +0000] \"POST /api/organizations HTTP/1.1\" 201 134 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:21:49.607Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:21:52 +0000] \"POST /api/processes HTTP/1.1\" 500 33 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:21:52.175Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T07:25:03.663Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T07:25:03.671Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T07:25:23.812Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T07:25:23.898Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T07:26:52.146Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T07:26:52.160Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T07:27:16.945Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T07:27:16.955Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T07:29:03.142Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T07:29:03.150Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:29:06 +0000] \"POST /api/organizations HTTP/1.1\" 201 134 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:29:06.231Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:29:09 +0000] \"POST /api/processes HTTP/1.1\" 201 87 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:29:09.225Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:29:34 +0000] \"POST /api/processes HTTP/1.1\" 201 87 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:29:34.487Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:33:14 +0000] \"POST /api/processes HTTP/1.1\" 201 87 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:33:14.223Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:33:30 +0000] \"POST /api/processes HTTP/1.1\" 201 87 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:33:30.688Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:33:32 +0000] \"POST /api/processes HTTP/1.1\" 201 87 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:33:32.374Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:33:33 +0000] \"POST /api/processes HTTP/1.1\" 201 87 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:33:33.503Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T07:41:13.098Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T07:41:13.105Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:46:51 +0000] \"POST /api/organizations HTTP/1.1\" 201 134 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:46:51.166Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:46:53 +0000] \"POST /api/processes HTTP/1.1\" 201 87 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:46:53.791Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T07:48:29.895Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T07:48:29.907Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:49:06 +0000] \"POST /api/organizations HTTP/1.1\" 201 134 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:49:06.450Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:49:08 +0000] \"POST /api/processes HTTP/1.1\" 201 87 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:49:08.765Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:49:16 +0000] \"POST /api/processes/start-execution HTTP/1.1\" 500 33 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:49:16.324Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:49:36 +0000] \"POST /api/processes/start-execution HTTP/1.1\" 500 33 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:49:36.346Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:49:52 +0000] \"POST /api/processes/start-execution HTTP/1.1\" 500 33 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:49:52.493Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T07:50:50.396Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T07:50:50.408Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:51:19 +0000] \"POST /api/organizations HTTP/1.1\" 201 134 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:51:19.863Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:51:22 +0000] \"POST /api/processes HTTP/1.1\" 201 87 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:51:22.535Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:51:29 +0000] \"POST /api/processes/start-execution HTTP/1.1\" 500 33 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:51:29.919Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T07:51:53.663Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T07:51:53.669Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:53:22 +0000] \"POST /api/organizations HTTP/1.1\" 201 134 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:53:22.014Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:53:24 +0000] \"POST /api/processes HTTP/1.1\" 201 87 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:53:24.243Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:53:32 +0000] \"POST /api/processes/start-execution HTTP/1.1\" 500 33 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:53:32.170Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T07:53:42.100Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T07:53:42.106Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:53:45 +0000] \"POST /api/organizations HTTP/1.1\" 201 134 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:53:45.644Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:53:48 +0000] \"POST /api/processes HTTP/1.1\" 201 87 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:53:48.238Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:53:55 +0000] \"POST /api/processes/start-execution HTTP/1.1\" 500 33 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:53:55.523Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T07:54:57.348Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T07:54:57.354Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:55:13 +0000] \"POST /api/organizations HTTP/1.1\" 201 134 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:55:13.599Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:55:18 +0000] \"POST /api/processes HTTP/1.1\" 201 87 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:55:18.063Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:07:55:26 +0000] \"POST /api/processes/start-execution HTTP/1.1\" 500 33 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T07:55:26.761Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T07:58:16.548Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T07:58:16.555Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T08:00:32.180Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T08:00:32.188Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T08:03:41.861Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T08:03:41.868Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:08:03:44 +0000] \"POST /api/organizations HTTP/1.1\" 201 134 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T08:03:44.772Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:08:03:47 +0000] \"POST /api/processes HTTP/1.1\" 201 87 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T08:03:47.144Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:08:03:49 +0000] \"POST /api/processes/start-execution HTTP/1.1\" 201 - \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T08:03:49.419Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T08:14:54.949Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T08:14:54.961Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:08:15:08 +0000] \"POST /api/organizations HTTP/1.1\" 201 134 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T08:15:08.855Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:08:15:10 +0000] \"POST /api/processes HTTP/1.1\" 201 87 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T08:15:10.885Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:08:15:13 +0000] \"POST /api/processes/start-execution HTTP/1.1\" 201 - \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T08:15:13.334Z"}
+{"level":"info","message":"Prisma connected","timestamp":"2026-06-23T08:17:14.738Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2026-06-23T08:17:14.744Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:08:17:18 +0000] \"POST /api/organizations HTTP/1.1\" 201 134 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T08:17:18.847Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:08:17:21 +0000] \"POST /api/processes HTTP/1.1\" 201 87 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T08:17:21.089Z"}
+{"level":"info","message":"::1 - - [23/Jun/2026:08:17:23 +0000] \"POST /api/processes/start-execution HTTP/1.1\" 201 54 \"http://127.0.0.1:5500/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","timestamp":"2026-06-23T08:17:23.674Z"}

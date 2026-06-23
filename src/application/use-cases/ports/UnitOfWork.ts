@@ -1,11 +1,8 @@
-// src/application/use-cases/ports/UnitOfWork.ts
-import { PrismaClient, Prisma } from '../../../generated/prisma';
-import { OutboxRepository } from './OutBoxRepository';
+// ¡Ya no hay imports de Prisma aquí!
 
 export interface UnitOfWork {
   /**
-   * Ejecuta una función dentro de una transacción atómica
+   * Ejecuta una función dentro de una transacción atómica totalmente aislada
    */
-  run<T>(work: (tx: Prisma.TransactionClient, outbox: OutboxRepository) => Promise<T>): Promise<T>;
+  run<T>(work: () => Promise<T>): Promise<T>;
 }
-  

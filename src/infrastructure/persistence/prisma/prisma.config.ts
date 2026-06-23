@@ -1,4 +1,4 @@
-import { PrismaClient } from '../src/generated/prisma';
+import { PrismaClient } from '@prisma/client';
 
 // Instanciamos el cliente usando la ruta donde se genera
 export const prisma = new PrismaClient({
