@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Control Dashboard | Sentinel Pre-Alpha</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-200 p-8 font-sans">
+
+    <div class="max-w-5xl mx-auto space-y-6">
+        <header class="border-b border-slate-700 pb-4">
+            <h1 class="text-3xl font-bold text-emerald-400">Control Center</h1>
+            <p class="text-slate-400">Interactuando con Core SaaS Backend (Process & Execution)</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <div class="bg-slate-800 p-6 rounded-lg border border-slate-700 shadow-xl">
+                <h2 class="text-xl font-semibold mb-4 text-white">1. Crear Nuevo Proceso</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm text-slate-400">Nombre del Proceso</label>
+                        <input type="text" id="processName" value="Onboarding de Cliente" class="w-full bg-slate-900 border border-slate-600 rounded p-2 text-white mt-1">
+                    </div>
+                    <button onclick="crearProceso()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded transition">
+                        Disparar POST /
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 p-6 rounded-lg border border-slate-700 shadow-xl">
+                <h2 class="text-xl font-semibold mb-4 text-white">2. Iniciar Ejecución</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm text-slate-400">ID del Proceso (Devuelto en el paso 1)</label>
+                        <input type="text" id="processId" placeholder="Ej: 123e4567-e89b-12d3-a456-426614174000" class="w-full bg-slate-900 border border-slate-600 rounded p-2 text-white mt-1">
+                    </div>
+                    <button onclick="iniciarEjecucion()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded transition">
+                        Disparar POST /start-execution
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-black p-6 rounded-lg border border-slate-700 shadow-xl font-mono text-sm">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-emerald-400 font-bold">Terminal de Respuestas (HTTP)</h2>
+                <button onclick="limpiarConsola()" class="text-slate-500 hover:text-white text-xs">Limpiar</button>
+            </div>
+            <pre id="consoleOutput" class="text-slate-300 whitespace-pre-wrap overflow-x-auto min-h-[200px]"></pre>
+        </div>
+    </div>
+
+    <script>
+        // Cambia este puerto si tu Express corre en otro lado
+        const API_URL = 'http://localhost:3000/api/processes';
+
+        // Utilidad rápida para generar UUIDs (Simulando lo que haría el backend o un token real)
+        const generateUUID = () => crypto.randomUUID();
+
+        const logToConsole = (title, data, isError = false) => {
+            const consoleDiv = document.getElementById('consoleOutput');
+            const color = isError ? 'text-red-400' : 'text-emerald-300';
+            const timestamp = new Date().toLocaleTimeString();
+            consoleDiv.innerHTML = `<span class="text-slate-500">[${timestamp}]</span> <span class="${color}">${title}</span>\n${JSON.stringify(data, null, 2)}\n\n` + consoleDiv.innerHTML;
+        };
+
+        const limpiarConsola = () => {
+            document.getElementById('consoleOutput').innerHTML = '';
+        };
+
+        // 1. Llamar al caso de uso: CreateAndActivateProcess
+        async function crearProceso() {
+            const name = document.getElementById('processName').value;
+            
+            // Armamos el payload exacto que pide tu ProcessSchemas.ts (Zod)
+            const payload = {
+                name: name,
+                organizationId: generateUUID(), // Fake organization ID
+                steps: [
+                    { id: generateUUID(), name: "Verificación de Identidad", order: 1 },
+                    { id: generateUUID(), name: "Firma de Contrato", order: 2 }
+                ]
+            };
+
+            logToConsole('Enviando request a POST /', payload);
+
+            try {
+                const response = await fetch(`${API_URL}/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                logToConsole(`Respuesta del Servidor (${response.status})`, data, !response.ok);
+                
+                // Si fue exitoso, auto-completamos el ID en el panel 2
+                if(response.ok && data.processId) {
+                    document.getElementById('processId').value = data.processId;
+                }
+            } catch (error) {
+                logToConsole('Error de Red', error.message, true);
+            }
+        }
+
+        // 2. Llamar al caso de uso de ejecución
+        async function iniciarEjecucion() {
+            const processId = document.getElementById('processId').value;
+            
+            if(!processId) {
+                alert("Primero crea un proceso para obtener un ID válido.");
+                return;
+            }
+
+            const payload = { processId: processId };
+            logToConsole('Enviando request a POST /start-execution', payload);
+
+            try {
+                const response = await fetch(`${API_URL}/start-execution`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                logToConsole(`Respuesta del Servidor (${response.status})`, data, !response.ok);
+            } catch (error) {
+                logToConsole('Error de Red', error.message, true);
+            }
+        }
+    </script>
+</body>
+</html>

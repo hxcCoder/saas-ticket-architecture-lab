@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import { container } from './infrastructure/config/container';
@@ -26,7 +26,7 @@ const processRoutes = container.get(ProcessRoutes);
 app.use('/api/processes', processRoutes.router);
 
 // Health check
-app.get('/health', (req, res) => res.json({ status: 'OK' }));
+app.get('/health', (req: Request, res: Response) => res.json({ status: 'OK' }));
 
 // Conectar Prisma
 getPrismaClient()

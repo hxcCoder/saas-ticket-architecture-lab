@@ -1,0 +1,1928 @@
+<repository>
+
+<directory_tree>
+├── .gitattribute
+├── .gitignore
+├── config
+│   └── prisma.ts
+├── docs
+│   ├── Correct-Progress.md
+│   ├── Map-flow.md
+│   ├── North-Star.md
+│   ├── Technical-Explain(ESP).md
+│   └── use-cases
+│       └── create-and-activate-process.md
+├── jest.config.js
+├── LICENCE
+├── package.json
+├── prisma
+│   ├── migrations
+│   │   ├── 20260127220425_core
+│   │   ├── 20260127225657_init
+│   │   └── migration_lock.toml
+│   ├── prisma.config.ts
+│   └── schema.prisma
+├── readme.md
+├── src
+│   ├── application
+│   │   ├── application.md
+│   │   └── use-cases
+│   │       ├── CompleteExecutionStep.ts
+│   │       ├── CreateAndActivateProcess.ts
+│   │       ├── ports
+│   │       │   ├── AuditRepository.ts
+│   │       │   ├── ExecutionRepository.ts
+│   │       │   ├── OutBoxRepository.ts
+│   │       │   ├── ProcessRepository.ts
+│   │       │   ├── SubscriptionService.ts
+│   │       │   ├── test
+│   │       │   │   ├── CompleteExecutionStep.test.ts
+│   │       │   │   ├── fakes
+│   │       │   │   │   ├── InMemoryAuditRepository.ts
+│   │       │   │   │   └── InMemoryExecutionRepository.ts
+│   │       │   │   └── InMemoryOutboxRepository.ts
+│   │       │   └── UnitOfWork.ts
+│   │       ├── StartExecution.ts
+│   │       └── test
+│   │           └── fakes
+│   │               ├── ExecutionFactory.ts
+│   │               └── ProcessFactory.ts
+│   ├── domain
+│   │   ├── domain.md
+│   │   └── entities
+│   │       ├── audit
+│   │       │   ├── AuditLog.ts
+│   │       │   └── shared
+│   │       │       ├── DomainError.ts
+│   │       │       └── DomainEvent.ts
+│   │       ├── execution
+│   │       │   ├── events
+│   │       │   │   ├── ExecutionCompleted.ts
+│   │       │   │   ├── ExecutionStarted.ts
+│   │       │   │   └── ExecutionStepCompleted.ts
+│   │       │   ├── Execution.ts
+│   │       │   ├── ExecutionErrors.ts
+│   │       │   ├── ExecutionStatus.ts
+│   │       │   └── ExecutionStep.ts
+│   │       ├── organization
+│   │       │   ├── Organization.ts
+│   │       │   ├── OrganizationErrors.ts
+│   │       │   └── OrganizationStatus.ts
+│   │       └── process
+│   │           ├── events
+│   │           │   ├── ProcessActivated.ts
+│   │           │   ├── ProcessArchived.ts
+│   │           │   ├── ProcessCreated.ts
+│   │           │   └── tests
+│   │           │       ├── process.activate.error.test.ts
+│   │           │       ├── Process.activate.test.ts
+│   │           │       └── Process.create.test.ts
+│   │           ├── Process.ts
+│   │           ├── ProcessErrors.ts
+│   │           ├── ProcessStatus.ts
+│   │           ├── ProcessStep.ts
+│   │           ├── ProcessStepErrors.ts
+│   │           └── ProcessStepStatus.ts
+│   ├── generated
+│   ├── index.ts
+│   ├── infrastructure
+│   │   ├── config
+│   │   │   ├── container.ts
+│   │   │   └── logger.ts
+│   │   ├── fix-events.ts
+│   │   ├── infraestructure.md
+│   │   └── persistence
+│   │       ├── prisma
+│   │       │   ├── __tests__
+│   │       │   │   ├── execution.integration.test.ts
+│   │       │   │   └── process.integration.test.ts
+│   │       │   ├── Json.ts
+│   │       │   ├── PrismaAuditRepository.ts
+│   │       │   ├── PrismaClient.ts
+│   │       │   ├── PrismaExecutionRepository.ts
+│   │       │   ├── PrismaOutboxRepository.ts
+│   │       │   ├── PrismaProcessRepository.ts
+│   │       │   └── PrismaUnitOfWork.ts
+│   │       └── services
+│   │           ├── EventPublishWorker.ts
+│   │           └── SubscriptionServiceImpl.ts
+│   ├── interfaces
+│   │   ├── http
+│   │   │   ├── authMiddleware.ts
+│   │   │   ├── ProcessController.ts
+│   │   │   ├── ProcessRoutes.ts
+│   │   │   └── ProcessSchemas.ts
+│   │   └── interfaces.md
+│   └── Saas-estructure.md
+├── tests
+│   └── jest.config.ts
+└── tsconfig.json
+</directory_tree>
+
+<file path="config/prisma.ts">
+import { PrismaClient } from &apos;../src/generated/prisma/client&apos;
+
+
+export const prisma = new PrismaClient({
+    log: [&apos;query&apos;, &apos;info&apos;, &apos;warn&apos;, &apos;error&apos;],
+});
+</file>
+
+<file path="prisma/prisma.config.ts">
+import { PrismaClient } from &apos;../src/generated/prisma&apos;;
+
+// Instanciamos el cliente usando la ruta donde se genera
+export const prisma = new PrismaClient({
+    log: process.env.NODE_ENV === &apos;dev&apos; ? [&apos;query&apos;, &apos;error&apos;, &apos;warn&apos;] : [&apos;error&apos;],
+});
+
+export default prisma;
+</file>
+
+<file path="src/application/use-cases/CompleteExecutionStep.ts">
+import { ExecutionRepository } from &apos;./ports/ExecutionRepository&apos;;
+import { Execution } from &apos;../../domain/entities/execution/Execution&apos;;
+
+
+export class CompleteExecutionStep {
+  constructor(private executionRepo: ExecutionRepository) {}
+
+  async execute(executionId: string, stepId: string): Promise&lt;void&gt; {
+    const execution = await this.executionRepo.findById(executionId);
+    if (!execution) throw new Error(&apos;Execution not found&apos;);
+    execution.markStepDone(stepId);
+    await this.executionRepo.save(execution);
+  }
+}
+
+</file>
+
+<file path="src/application/use-cases/CreateAndActivateProcess.ts">
+import { Process } from &quot;../../domain/entities/process/Process&quot;;
+import { ProcessStep } from &quot;../../domain/entities/process/ProcessStep&quot;;
+import { ProcessRepository } from &quot;./ports/ProcessRepository&quot;;
+import { SubscriptionService } from &quot;./ports/SubscriptionService&quot;;
+import { UnitOfWork } from &quot;./ports/UnitOfWork&quot;;
+
+// Definimos el contrato de entrada con IDs para los pasos
+export interface CreateProcessInput {
+    id: string;
+    organizationId: string;
+    name: string;
+    steps: { 
+        id: string;     // &lt;-- El ID viene desde afuera (UUID recomendado)
+        name: string; 
+        order: number 
+    }[];
+}
+
+export class CreateAndActivateProcess {
+    constructor(
+        private readonly processRepo: ProcessRepository,
+        private readonly subscriptionService: SubscriptionService,
+        private readonly unitOfWork: UnitOfWork
+    ) {}
+
+    async execute(input: CreateProcessInput): Promise&lt;void&gt; {
+        // 1. Regla de Negocio: Validar límites de la organización
+        const canCreate = await this.subscriptionService.canCreateProcess(input.organizationId);
+        if (!canCreate) {
+            throw new Error(&quot;Organization cannot create more processes: Plan limit reached&quot;);
+        }
+
+        // 2. Crear el Aggregate Root (Process)
+        const process = Process.create(input.id, input.name, input.organizationId);
+
+        // 3. Añadir los pasos usando el constructor de objeto que definimos
+        input.steps.forEach(s =&gt; {
+            process.addStep(new ProcessStep({
+                id: s.id,
+                name: s.name,
+                order: s.order
+            }));
+        });
+
+        // 4. Cambiar estado (Dispara validaciones de dominio como &apos;mínimo 1 paso&apos;)
+        process.activate();
+
+        // 5. Persistencia Atómica
+        // Usamos el Unit of Work para asegurar que si algo falla al guardar, no quede nada a medias
+        await this.unitOfWork.run(async (tx) =&gt; {
+        await this.processRepo.save(process, tx);
+});
+
+    }
+}
+</file>
+
+<file path="src/application/use-cases/ports/AuditRepository.ts">
+    import { DomainEvent } from &quot;../../../domain/entities/audit/shared/DomainEvent&quot;;
+
+    export interface AuditRepository {
+        saveEvents(events: DomainEvent[]): Promise&lt;void&gt;;
+    }
+
+</file>
+
+<file path="src/application/use-cases/ports/ExecutionRepository.ts">
+import { Execution } from &quot;../../../domain/entities/execution/Execution&quot;;
+
+export interface ExecutionRepository {
+    findById(id: string): Promise&lt;Execution | null&gt;;
+    save(execution: Execution): Promise&lt;void&gt;;
+}
+
+</file>
+
+<file path="src/application/use-cases/ports/OutBoxRepository.ts">
+export type OutboxEvent = {
+  id: string;
+  eventName: string;
+  payload: unknown;
+  occurredOn: Date;
+  published: boolean;
+};
+
+export interface OutboxRepository {
+  save(event: OutboxEvent): Promise&lt;void&gt;;
+  findPending(limit?: number): Promise&lt;OutboxEvent[]&gt;;
+  markAsPublished(id: string): Promise&lt;void&gt;;
+}
+
+</file>
+
+<file path="src/application/use-cases/ports/ProcessRepository.ts">
+import { Process } from &quot;../../../domain/entities/process/Process&quot;;
+
+export interface ProcessRepository {
+    findById(id: string): Promise&lt;Process | null&gt;;
+    save(process: Process, tx?: unknown): Promise&lt;void&gt;;
+}
+
+</file>
+
+<file path="src/application/use-cases/ports/SubscriptionService.ts">
+export interface SubscriptionService {
+    canCreateProcess(organizationId: string): Promise&lt;boolean&gt;;
+}
+
+</file>
+
+<file path="src/application/use-cases/ports/test/CompleteExecutionStep.test.ts">
+import { describe, it, expect, beforeEach } from &apos;@jest/globals&apos;;
+import { CompleteExecutionStep } from &apos;../../CompleteExecutionStep&apos;;
+import { InMemoryExecutionRepository } from &apos;./fakes/InMemoryExecutionRepository&apos;;
+import { ExecutionStep } from &apos;./../../../../domain/entities/execution/ExecutionStep&apos;;
+
+describe(&apos;CompleteExecutionStep Use Case&apos;, () =&gt; {
+  let repo: InMemoryExecutionRepository;
+  let useCase: CompleteExecutionStep;
+
+  beforeEach(() =&gt; {
+    repo = new InMemoryExecutionRepository();
+    useCase = new CompleteExecutionStep(repo);
+  });
+
+  it(&apos;should mark step as completed&apos;, async () =&gt; {
+    // 🔹 Creamos un step mock
+    const stepMock: any = {
+      getId: () =&gt; &apos;step1&apos;,
+      getName: () =&gt; &apos;Step 1&apos;
+    };
+    const step = ExecutionStep.fromProcessStep(stepMock);
+
+    // 🔹 Creamos la ejecución in-memory
+    const execution = repo.createDummyExecution([step]);
+    await repo.save(execution);
+
+    // 🔹 Ejecutamos el use case
+    await useCase.execute(execution.getId(), &apos;step1&apos;);
+
+    // 🔹 Verificamos que el step está completado
+    const updated = await repo.findById(execution.getId());
+    expect(updated?.isStepCompleted(&apos;step1&apos;)).toBe(true);
+
+    // 🔹 Opcional: verificamos que el evento se registró
+    const events = updated?.pullDomainEvents() ?? [];
+    expect(events.some(e =&gt; e.constructor.name === &apos;ExecutionStepCompleted&apos;)).toBe(true);
+  });
+});
+
+</file>
+
+<file path="src/application/use-cases/ports/test/fakes/InMemoryAuditRepository.ts">
+
+</file>
+
+<file path="src/application/use-cases/ports/test/fakes/InMemoryExecutionRepository.ts">
+import { Execution } from &apos;../../../../../domain/entities/execution/Execution&apos;;
+import { ExecutionStep } from &apos;../../../../../domain/entities/execution/ExecutionStep&apos;;
+
+export class InMemoryExecutionRepository {
+  private store = new Map&lt;string, Execution&gt;();
+
+  async save(execution: Execution) {
+    this.store.set(execution.getId(), execution);
+  }
+
+  async findById(id: string): Promise&lt;Execution | null&gt; {
+    return this.store.get(id) ?? null;
+  }
+
+  // Helper para tests: crea una ejecución dummy con steps opcionales
+  createDummyExecution(steps: ExecutionStep[] = []): Execution {
+    return Execution.createForTest(&apos;exec1&apos;, &apos;process1&apos;, steps);
+  }
+}
+
+</file>
+
+<file path="src/application/use-cases/ports/test/InMemoryOutboxRepository.ts">
+import { OutboxRepository } from &apos;../../../../infrastructure/persistence/prisma/PrismaOutboxRepository&apos;;
+
+export class InMemoryOutboxRepository implements OutboxRepository {
+  private events: any[] = [];
+
+  async save(event: any) { this.events.push(event); }
+  async findPending(limit?: number) { return this.events.filter(e =&gt; !e.published).slice(0, limit); }
+  async markAsPublished(id: string) { 
+    const e = this.events.find(e =&gt; e.id === id); 
+    if (e) e.published = true;
+  }
+}
+
+</file>
+
+<file path="src/application/use-cases/ports/UnitOfWork.ts">
+// src/application/use-cases/ports/UnitOfWork.ts
+import { PrismaClient, Prisma } from &apos;../../../generated/prisma&apos;;
+import { OutboxRepository } from &apos;./OutBoxRepository&apos;;
+
+export interface UnitOfWork {
+  /**
+   * Ejecuta una función dentro de una transacción atómica
+   */
+  run&lt;T&gt;(work: (tx: Prisma.TransactionClient, outbox: OutboxRepository) =&gt; Promise&lt;T&gt;): Promise&lt;T&gt;;
+}
+  
+</file>
+
+<file path="src/application/use-cases/StartExecution.ts">
+import { ExecutionRepository } from &apos;./ports/ExecutionRepository&apos;;
+import { ProcessRepository } from &apos;./ports/ProcessRepository&apos;;
+import { AuditRepository } from &apos;./ports/AuditRepository&apos;;
+import { Execution } from &apos;../../domain/entities/execution/Execution&apos;;
+import { ProcessNotActive } from &apos;../../domain/entities/execution/ExecutionErrors&apos;;
+
+export class StartExecution {
+  constructor(
+    private executionRepo: ExecutionRepository,
+    private processRepo: ProcessRepository,
+    private auditRepo: AuditRepository
+  ) {}
+
+  async execute(processId: string, executionId: string): Promise&lt;void&gt; {
+    const process = await this.processRepo.findById(processId);
+    if (!process || !process.isActive()) {
+      throw new ProcessNotActive();
+    }
+    const execution = Execution.start(executionId, process);
+    await this.executionRepo.save(execution);
+    await this.auditRepo.saveEvents(execution.pullDomainEvents());
+  }
+}
+
+</file>
+
+<file path="src/application/use-cases/test/fakes/ExecutionFactory.ts">
+// src/application/use-cases/test/fakes/ExecutionFactory.ts
+import { Execution } from &quot;../../../../domain/entities/execution/Execution&quot;;
+import { ExecutionStep, ExecutionStepStatus } from &quot;../../../../domain/entities/execution/ExecutionStep&quot;;
+
+export class ExecutionFactory {
+  static createExecution(id: string = &quot;exec1&quot;, processId: string = &quot;proc1&quot;): Execution {
+    const step1 = ExecutionStep.rehydrate({ stepId: &quot;step1&quot;, status: ExecutionStepStatus.PENDING });
+    const step2 = ExecutionStep.rehydrate({ stepId: &quot;step2&quot;, status: ExecutionStepStatus.PENDING });
+
+    return Execution.createForTest(id, processId, [step1, step2]);
+  }
+}
+
+</file>
+
+<file path="src/application/use-cases/test/fakes/ProcessFactory.ts">
+import { Process } from &quot;../../../../domain/entities/process/Process&quot;;
+import { ProcessStep } from &quot;../../../../domain/entities/process/ProcessStep&quot;;
+
+export class ProcessFactory {
+  static create(id: string, name: string, organizationId: string): Process {
+    return Process.create(id, name, organizationId);
+  }
+
+  static withSteps(
+    id: string,
+    name: string,
+    organizationId: string,
+    stepsData: { id: string; name: string; order: number }[]
+  ): Process {
+    const process = Process.create(id, name, organizationId);
+    stepsData.forEach(s =&gt;
+      process.addStep(new ProcessStep({ id: s.id, name: s.name, order: s.order }))
+    );
+    return process;
+  }
+}
+
+</file>
+
+<file path="src/domain/entities/audit/AuditLog.ts">
+
+</file>
+
+<file path="src/domain/entities/audit/shared/DomainError.ts">
+    export abstract class DomainError extends Error {
+public readonly occurredAt: Date;
+
+protected constructor(message: string) {
+    super(message);
+
+    this.name = this.constructor.name;
+    this.occurredAt = new Date();
+
+    Object.setPrototypeOf(this, new.target.prototype);
+}
+}
+
+</file>
+
+<file path="src/domain/entities/audit/shared/DomainEvent.ts">
+import { randomUUID } from &quot;crypto&quot;;
+
+export abstract class DomainEvent {
+    public readonly eventId: string;
+    public readonly occurredOn: Date;
+
+    constructor(eventId?: string, occurredOn?: Date) {
+        this.eventId = eventId ?? randomUUID();
+        this.occurredOn = occurredOn ?? new Date();
+    }
+
+    abstract getEventName(): string;
+    abstract toPrimitives(): Record&lt;string, unknown&gt;;
+}
+
+</file>
+
+<file path="src/domain/entities/execution/events/ExecutionCompleted.ts">
+import { DomainEvent } from &quot;../../audit/shared/DomainEvent&quot;;
+
+export class ExecutionCompleted extends DomainEvent {
+  constructor(public readonly executionId: string) {
+    super();
+  }
+
+  getEventName(): string {
+    return &quot;execution.completed&quot;;
+  }
+
+  toPrimitives() {
+    return {
+      executionId: this.executionId,
+    };
+  }
+}
+
+</file>
+
+<file path="src/domain/entities/execution/events/ExecutionStarted.ts">
+import { DomainEvent } from &quot;../../audit/shared/DomainEvent&quot;;
+
+export class ExecutionStarted extends DomainEvent {
+  constructor(
+    public readonly executionId: string,
+    public readonly processId: string,
+    eventId?: string,
+    occurredOn?: Date
+  ) {
+    super(eventId, occurredOn);
+  }
+
+  getEventName(): string {
+    return &quot;execution.started&quot;;
+  }
+
+  toPrimitives(): Record&lt;string, unknown&gt; {
+    return {
+      executionId: this.executionId,
+      processId: this.processId,
+      occurredOn: this.occurredOn.toISOString(),
+    };
+  }
+}
+
+</file>
+
+<file path="src/domain/entities/execution/events/ExecutionStepCompleted.ts">
+import { DomainEvent } from &quot;../../audit/shared/DomainEvent&quot;;
+
+export class ExecutionStepCompleted extends DomainEvent {
+  constructor(
+    public readonly executionId: string,
+    public readonly stepId: string,
+    eventId?: string,
+    occurredOn?: Date
+  ) {
+    super(eventId, occurredOn);
+  }
+
+  getEventName(): string {
+    return &quot;execution.step.completed&quot;;
+  }
+
+  toPrimitives(): Record&lt;string, unknown&gt; {
+    return {
+      executionId: this.executionId,
+      stepId: this.stepId,
+    };
+  }
+}
+
+</file>
+
+<file path="src/domain/entities/execution/Execution.ts">
+// src/domain/entities/execution/Execution.ts
+import { Process } from &quot;../process/Process&quot;;
+import { ExecutionStatus } from &quot;./ExecutionStatus&quot;;
+import { ExecutionStep, ExecutionStepStatus } from &quot;./ExecutionStep&quot;;
+import { DomainEvent } from &quot;../audit/shared/DomainEvent&quot;;
+import { ExecutionStarted } from &quot;./events/ExecutionStarted&quot;;
+import { ExecutionStepCompleted } from &quot;./events/ExecutionStepCompleted&quot;;
+import { ExecutionCompleted } from &quot;./events/ExecutionCompleted&quot;;
+import { InvalidProcessStateError } from &quot;../process/ProcessErrors&quot;;
+
+export class Execution {
+  private domainEvents: DomainEvent[] = [];
+
+  private constructor(
+    private readonly id: string,
+    private readonly processId: string,
+    private status: ExecutionStatus,
+    private steps: ExecutionStep[],
+    recordEvent: boolean
+  ) {
+    Execution.validateState(status, steps);
+
+    if (recordEvent) {
+      this.record(new ExecutionStarted(this.id, this.processId));
+    }
+  }
+
+  static start(id: string, process: Process): Execution {
+    if (!process.isActive()) {
+      throw new InvalidProcessStateError(&quot;Cannot execute an inactive process&quot;);
+    }
+
+    const steps = process
+      .getSteps()
+      .map(step =&gt; ExecutionStep.fromProcessStep(step));
+
+    if (steps.length === 0) {
+      throw new Error(&quot;Execution must contain at least one step&quot;);
+    }
+
+    return new Execution(
+      id,
+      process.getId(),
+      ExecutionStatus.RUNNING,
+      steps,
+      true
+    );
+  }
+
+  static rehydrate(params: {
+    id: string;
+    processId: string;
+    status: ExecutionStatus;
+    steps: ExecutionStep[];
+  }): Execution {
+    Execution.validateState(params.status, params.steps);
+
+    const unique = new Set(params.steps.map(s =&gt; s.getStepId()));
+    if (unique.size !== params.steps.length) {
+      throw new Error(&quot;Duplicate execution steps detected&quot;);
+    }
+
+    return new Execution(
+      params.id,
+      params.processId,
+      params.status,
+      params.steps,
+      false
+    );
+  }
+
+  markStepDone(stepId: string): void {
+    if (this.status !== ExecutionStatus.RUNNING) {
+      throw new Error(&quot;Cannot update steps when execution is not running&quot;);
+    }
+
+    const step = this.steps.find(s =&gt; s.getStepId() === stepId);
+    if (!step) throw new Error(&quot;Execution step not found&quot;);
+
+    if (step.isDone()) return;
+
+    step.markDone();
+    this.record(new ExecutionStepCompleted(this.id, stepId));
+
+    if (this.steps.every(s =&gt; s.isDone())) {
+      this.status = ExecutionStatus.COMPLETED;
+      this.record(new ExecutionCompleted(this.id));
+    }
+  }
+
+  pullDomainEvents(): DomainEvent[] {
+    const events = this.domainEvents;
+    this.domainEvents = [];
+    return events;
+  }
+
+  private record(event: DomainEvent): void {
+    this.domainEvents.push(event);
+  }
+
+  getId(): string { return this.id; }
+  getProcessId(): string { return this.processId; }
+  getStatus(): ExecutionStatus { return this.status; }
+  getSteps(): ExecutionStep[] { return [...this.steps]; }
+
+  isStepCompleted(stepId: string): boolean {
+    const step = this.steps.find(s =&gt; s.getStepId() === stepId);
+    return step?.isDone() ?? false;
+  }
+
+  private static validateState(
+    status: ExecutionStatus,
+    steps: ExecutionStep[]
+  ): void {
+    if (!Object.values(ExecutionStatus).includes(status)) {
+      throw new Error(&quot;Invalid ExecutionStatus&quot;);
+    }
+
+    if (!Array.isArray(steps)) {
+      throw new Error(&quot;Steps must be an array&quot;);
+    }
+  }
+
+  static createForTest(
+    id: string,
+    processId: string,
+    steps: ExecutionStep[] = []
+  ): Execution {
+    return new Execution(
+      id,
+      processId,
+      ExecutionStatus.RUNNING,
+      steps,
+      false
+    );
+  }
+}
+
+</file>
+
+<file path="src/domain/entities/execution/ExecutionErrors.ts">
+import { DomainError } from &quot;../audit/shared/DomainError&quot;;
+
+export class InvalidExecutionStatusError extends DomainError {
+    constructor(status: string) {
+        super(`Invalid execution status: ${status}`);
+    }
+}
+
+export class InvalidExecutionStepError extends DomainError {
+    constructor(message: string) {
+        super(message);
+    }
+}
+
+export class ProcessNotActive extends DomainError {
+    constructor() {
+        super(&quot;Cannot start execution from inactive process&quot;);
+    }
+}
+
+export namespace ExecutionErrors {
+    export class ExecutionNotRunning extends Error {
+        constructor() {
+            super(&quot;Execution is not running&quot;);
+        }
+    }
+
+    export class ExecutionAlreadyCompleted extends Error {
+        constructor() {
+            super(&quot;Execution already completed&quot;);
+        }
+    }
+}
+
+</file>
+
+<file path="src/domain/entities/execution/ExecutionStatus.ts">
+    export enum ExecutionStatus {
+        RUNNING = &quot;RUNNING&quot;,
+        COMPLETED = &quot;COMPLETED&quot;,
+        FAILED = &quot;FAILED&quot;,
+    }
+
+</file>
+
+<file path="src/domain/entities/execution/ExecutionStep.ts">
+import { ProcessStep } from &quot;../process/ProcessStep&quot;;
+
+export enum ExecutionStepStatus {
+  PENDING = &quot;PENDING&quot;,
+  DONE = &quot;DONE&quot;,
+  FAILED = &quot;FAILED&quot;,
+}
+
+export class ExecutionStep {
+  private readonly stepId: string;
+  private status: ExecutionStepStatus;
+
+  private constructor(stepId: string, status?: ExecutionStepStatus) {
+    this.stepId = stepId;
+    this.status = status ?? ExecutionStepStatus.PENDING;
+  }
+
+  static fromProcessStep(step: ProcessStep): ExecutionStep {
+    return new ExecutionStep(step.getId());
+  }
+
+  static rehydrate(params: {
+    stepId: string;
+    status: ExecutionStepStatus;
+  }): ExecutionStep {
+    if (!Object.values(ExecutionStepStatus).includes(params.status)) {
+      throw new Error(&quot;Invalid ExecutionStepStatus during rehydration&quot;);
+    }
+    return new ExecutionStep(params.stepId, params.status);
+  }
+
+  markDone(): void {
+    if (this.status !== ExecutionStepStatus.PENDING) return;
+    this.status = ExecutionStepStatus.DONE;
+  }
+
+  isDone(): boolean {
+    return this.status === ExecutionStepStatus.DONE;
+  }
+
+  getStepId(): string {
+    return this.stepId;
+  }
+
+  getStatus(): ExecutionStepStatus {
+    return this.status;
+  }
+}
+</file>
+
+<file path="src/domain/entities/organization/Organization.ts">
+
+</file>
+
+<file path="src/domain/entities/organization/OrganizationErrors.ts">
+
+</file>
+
+<file path="src/domain/entities/organization/OrganizationStatus.ts">
+
+</file>
+
+<file path="src/domain/entities/process/events/ProcessActivated.ts">
+import { DomainEvent } from &apos;../../audit/shared/DomainEvent&apos;;
+
+export class ProcessActivated extends DomainEvent {
+  constructor(
+    public readonly processId: string,
+    eventId?: string,
+    occurredOn?: Date
+  ) {
+    super(eventId, occurredOn);
+  }
+
+  getEventName(): string {
+    return &apos;process.activated&apos;;
+  }
+
+  toPrimitives(): Record&lt;string, unknown&gt; {
+    return {
+      processId: this.processId,
+    };
+  }
+}
+
+</file>
+
+<file path="src/domain/entities/process/events/ProcessArchived.ts">
+import { DomainEvent } from &quot;../../audit/shared/DomainEvent&quot;;
+
+export class ProcessArchived extends DomainEvent {
+  constructor(
+    public readonly processId: string,
+    eventId?: string,
+    occurredOn?: Date
+  ) {
+    super(eventId, occurredOn);
+  }
+
+  getEventName(): string {
+    return &quot;process.archived&quot;;
+  }
+
+  toPrimitives(): Record&lt;string, unknown&gt; {
+    return {
+      processId: this.processId,
+    };
+  }
+}
+
+</file>
+
+<file path="src/domain/entities/process/events/ProcessCreated.ts">
+import { DomainEvent } from &quot;../../audit/shared/DomainEvent&quot;;
+
+export class ProcessCreated extends DomainEvent {
+  constructor(
+    public readonly processId: string,
+    public readonly name: string,
+    eventId?: string,
+    occurredOn?: Date
+  ) {
+    super(eventId, occurredOn);
+  }
+
+  getEventName(): string {
+    return &quot;process.created&quot;;
+  }
+
+  toPrimitives(): Record&lt;string, unknown&gt; {
+    return {
+      processId: this.processId,
+      name: this.name,
+    };
+  }
+}
+
+</file>
+
+<file path="src/domain/entities/process/events/tests/process.activate.error.test.ts">
+import { Process } from &quot;../../Process&quot;;
+import { ProcessHasNoStepsError } from &quot;../../ProcessErrors&quot;;
+
+describe(&quot;Process.activate errors&quot;, () =&gt; {
+    it(&quot;throws if process has no steps&quot;, () =&gt; {
+        const process = Process.create(&quot;p-1&quot;, &quot;Process&quot;);
+
+        expect(() =&gt; {
+            process.activate();
+        }).toThrow(ProcessHasNoStepsError);
+    });
+});
+
+</file>
+
+<file path="src/domain/entities/process/events/tests/Process.activate.test.ts">
+import { Process } from &quot;../../Process&quot;;
+import { ProcessStep } from &quot;../../ProcessStep&quot;;
+import { ProcessStatus } from &quot;../../ProcessStatus&quot;;
+
+describe(&quot;Process.activate&quot;, () =&gt; {
+    it(&quot;activates a process with steps&quot;, () =&gt; {
+        const process = Process.create(&quot;p-1&quot;, &quot;My process&quot;);
+
+        const step = new ProcessStep({
+            id: &quot;s-1&quot;,
+            name: &quot;First step&quot;,
+            order: 0,
+        });
+
+        process.addStep(step);
+        process.activate();
+
+        expect(process.getStatus()).toBe(ProcessStatus.ACTIVE);
+        expect(process.isActive()).toBe(true);
+    });
+});
+
+</file>
+
+<file path="src/domain/entities/process/events/tests/Process.create.test.ts">
+import { ProcessCreated } from &quot;../ProcessCreated&quot;;
+
+describe(&quot;ProcessCreated Domain Event&quot;, () =&gt; {
+    it(&quot;should expose correct primitives&quot;, () =&gt; {
+    const event = new ProcessCreated(&quot;process-1&quot;, &quot;My Process&quot;);
+
+    expect(event.getEventName()).toBe(&quot;process.created&quot;);
+    expect(event.toPrimitives()).toEqual({
+        processId: &quot;process-1&quot;,
+        name: &quot;My Process&quot;,
+    });
+});
+});
+
+</file>
+
+<file path="src/domain/entities/process/Process.ts">
+import { ProcessStatus } from &quot;./ProcessStatus&quot;;
+import { ProcessStep } from &quot;./ProcessStep&quot;;
+import {
+    ProcessAlreadyActiveError,
+    ProcessHasNoStepsError,
+    InvalidProcessStateError,
+} from &quot;./ProcessErrors&quot;;
+import { DomainEvent } from &quot;../audit/shared/DomainEvent&quot;;
+import { ProcessCreated } from &quot;./events/ProcessCreated&quot;;
+import { ProcessActivated } from &quot;./events/ProcessActivated&quot;;
+
+export class Process {
+    private readonly id: string;
+    private name: string;
+    private readonly organizationId: string;
+    private status: ProcessStatus;
+    private steps: ProcessStep[] = [];
+    private domainEvents: DomainEvent[] = [];
+
+private constructor(id: string, name: string, organizationId: string) {
+        this.id = id;
+        this.name = name;
+        this.organizationId = organizationId;
+        this.status = ProcessStatus.DRAFT;
+        this.record(new ProcessCreated(id, name));
+    }
+
+static create(id: string, name: string, organizationId: string): Process {
+        return new Process(id, name, organizationId);
+    }
+static rehydrate(data: {
+    id: string;
+    name: string;
+    organizationId: string;
+    status: ProcessStatus;
+    steps: { id: string; name: string; order: number }[]; // Añadimos id aquí
+}): Process {
+    const process = new Process(data.id, data.name, data.organizationId);
+    process.status = data.status;
+    
+    process.steps = data.steps.map(s =&gt; new ProcessStep({ 
+        id: s.id, 
+        name: s.name, 
+        order: s.order 
+    }));
+    
+    process.pullDomainEvents(); 
+    return process;
+}
+
+getOrganizationId(): string { return this.organizationId; }
+
+addStep(step: ProcessStep): void {
+    if (this.status !== ProcessStatus.DRAFT) {
+        throw new InvalidProcessStateError(
+        &quot;Cannot add steps to a non-draft process&quot;
+    );
+}
+
+    this.steps.push(step);
+}
+
+activate(): void {
+    if (this.status !== ProcessStatus.DRAFT) {
+        throw new InvalidProcessStateError(
+        &quot;Only draft processes can be activated&quot;
+        );
+    }
+
+    if (this.steps.length === 0) {
+        throw new ProcessHasNoStepsError();
+    }
+
+    this.status = ProcessStatus.ACTIVE;
+    this.record(new ProcessActivated(this.id));
+}
+
+isActive(): boolean {
+    return this.status === ProcessStatus.ACTIVE;
+}
+
+pullDomainEvents(): DomainEvent[] {
+    const events = [...this.domainEvents];
+    this.domainEvents = [];
+    return events;
+}
+
+private record(event: DomainEvent): void {
+    this.domainEvents.push(event);
+}
+public getId(): string {
+    return this.id;
+}
+public getName(): string {
+    return this.name;
+}
+public getSteps(): readonly ProcessStep[] {
+    return this.steps;
+}
+
+public getStatus(): ProcessStatus {
+    return this.status;
+}
+
+}
+
+</file>
+
+<file path="src/domain/entities/process/ProcessErrors.ts">
+import { DomainError } from &quot;../audit/shared/DomainError&quot;;
+
+export class ProcessAlreadyActiveError extends DomainError {
+    constructor() {
+    super(&quot;Process is already active&quot;);
+}
+}
+
+export class ProcessHasNoStepsError extends DomainError {
+    constructor() {
+    super(&quot;Process must have at least one step&quot;);
+}
+}
+
+export class InvalidProcessStateError extends DomainError {
+    constructor(message: string) {
+    super(message);
+}
+}
+
+</file>
+
+<file path="src/domain/entities/process/ProcessStatus.ts">
+export enum ProcessStatus {
+    DRAFT = &quot;draft&quot;,
+    ACTIVE = &quot;active&quot;,
+    PAUSED = &quot;paused&quot;,
+    ARCHIVED = &quot;archived&quot;,
+}
+//Aqui creo los estados del status, usando enumarcinon.
+</file>
+
+<file path="src/domain/entities/process/ProcessStep.ts">
+    import { ProcessStepStatus } from &quot;./ProcessStepStatus&quot;;
+    import {
+        EmptyStepNameError,
+        InvalidStepOrderError,
+    } from &quot;./ProcessStepErrors&quot;;
+
+    export class ProcessStep {
+        private readonly id: string;
+        private readonly name: string;
+        private readonly order: number;
+        private status: ProcessStepStatus;
+
+        constructor(params: { id: string; name: string; order: number }) {
+            if (!params.name.trim()) {
+                throw new EmptyStepNameError();
+            }
+
+            if (params.order &lt; 0) {
+                throw new InvalidStepOrderError();
+            }
+            if (!params.id.trim()) {
+                throw new InvalidStepOrderError();
+            }   
+            this.id = params.id;
+            this.name = params.name;
+            this.order = params.order;
+            this.status = ProcessStepStatus.ACTIVE;
+        }
+
+        getId(): string {
+            return this.id;
+        }
+
+
+        getName(): string {
+            return this.name;
+        }
+        getOrder(): number {
+            return this.order;
+        }
+        isActive(): boolean {
+            return this.status === ProcessStepStatus.ACTIVE;
+        }
+
+        disable(): void {
+            this.status = ProcessStepStatus.DISABLED;
+        }
+    }
+
+
+</file>
+
+<file path="src/domain/entities/process/ProcessStepErrors.ts">
+import { DomainError } from &quot;../audit/shared/DomainError&quot;;
+
+export class InvalidStepOrderError extends DomainError {
+    constructor() {
+    super(&quot;Process step order must be zero or positive&quot;);
+}
+}
+
+export class EmptyStepNameError extends DomainError {
+    constructor() {
+    super(&quot;Process step name cannot be empty&quot;);
+}
+}
+
+</file>
+
+<file path="src/domain/entities/process/ProcessStepStatus.ts">
+export enum ProcessStepStatus {
+    ACTIVE = &quot;active&quot;,
+    DISABLED = &quot;disabled&quot;,
+}
+
+</file>
+
+<file path="src/index.ts">
+import express from &apos;express&apos;;
+import cors from &apos;cors&apos;;
+import morgan from &apos;morgan&apos;;
+import { container } from &apos;./infrastructure/config/container&apos;;
+import { logger } from &apos;./infrastructure/config/logger&apos;;
+import { ProcessRoutes } from &apos;./interfaces/http/ProcessRoutes&apos;;
+import { getPrismaClient } from &apos;./infrastructure/persistence/prisma/PrismaClient&apos;;
+
+// Stream para Morgan -&gt; Winston
+const stream = {
+  write: (message: string) =&gt; {
+    logger.info(message.trim());
+  },
+};
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middlewares
+app.use(cors());
+app.use(express.json());
+app.use(morgan(&apos;combined&apos;, { stream }));
+
+// Conectar rutas
+const processRoutes = container.get(ProcessRoutes);
+app.use(&apos;/api/processes&apos;, processRoutes.router);
+
+// Health check
+app.get(&apos;/health&apos;, (req, res) =&gt; res.json({ status: &apos;OK&apos; }));
+
+// Conectar Prisma
+getPrismaClient()
+  .$connect()
+  .then(() =&gt; {
+    logger.info(&apos;Prisma connected&apos;);
+    app.listen(PORT, () =&gt; logger.info(`Server running on port ${PORT}`));
+  })
+  .catch((err: unknown) =&gt; {
+  logger.error(&apos;Prisma connection failed&apos;, err);
+});
+
+</file>
+
+<file path="src/infrastructure/config/container.ts">
+// src/infrastructure/config/container.ts
+import &apos;reflect-metadata&apos;;
+import { Container } from &apos;inversify&apos;;
+import { PrismaClient } from &apos;./../../generated/prisma&apos;;
+
+import { ExecutionRepository } from &apos;../../application/use-cases/ports/ExecutionRepository&apos;;
+import { AuditRepository } from &apos;../../application/use-cases/ports/AuditRepository&apos;;
+import { ProcessRepository } from &apos;../../application/use-cases/ports/ProcessRepository&apos;;
+import { SubscriptionService } from &apos;../../application/use-cases/ports/SubscriptionService&apos;;
+import { UnitOfWork } from &apos;../../application/use-cases/ports/UnitOfWork&apos;;
+import { OutboxRepository } from &apos;../../application/use-cases/ports/OutBoxRepository&apos;;
+
+import { PrismaExecutionRepository } from &apos;../persistence/prisma/PrismaExecutionRepository&apos;;
+import { PrismaAuditRepository } from &apos;../persistence/prisma/PrismaAuditRepository&apos;;
+import { PrismaProcessRepository } from &apos;../persistence/prisma/PrismaProcessRepository&apos;;
+import { PrismaOutboxRepository } from &apos;../persistence/prisma/PrismaOutboxRepository&apos;;
+import { PrismaUnitOfWork } from &apos;../persistence/prisma/PrismaUnitOfWork&apos;;
+
+import { SubscriptionServiceImpl } from &apos;../persistence/services/SubscriptionServiceImpl&apos;;
+
+import { StartExecution } from &apos;../../application/use-cases/StartExecution&apos;;
+import { CreateAndActivateProcess } from &apos;../../application/use-cases/CreateAndActivateProcess&apos;;
+import { ProcessController } from &apos;../../interfaces/http/ProcessController&apos;;
+
+const container = new Container();
+
+/* ========================
+   Infraestructura base
+======================== */
+
+// PrismaClient singleton
+container.bind&lt;PrismaClient&gt;(PrismaClient).toConstantValue(new PrismaClient());
+
+// Repositorios
+container.bind&lt;OutboxRepository&gt;(&apos;OutboxRepository&apos;).to(PrismaOutboxRepository);
+container.bind&lt;ExecutionRepository&gt;(&apos;ExecutionRepository&apos;).toDynamicValue(ctx =&gt; {
+  const outbox = ctx.container.get&lt;OutboxRepository&gt;(&apos;OutboxRepository&apos;);
+  return new PrismaExecutionRepository(outbox);
+});
+container.bind&lt;AuditRepository&gt;(&apos;AuditRepository&apos;).to(PrismaAuditRepository);
+container.bind&lt;ProcessRepository&gt;(&apos;ProcessRepository&apos;).to(PrismaProcessRepository);
+container.bind&lt;SubscriptionService&gt;(&apos;SubscriptionService&apos;).to(SubscriptionServiceImpl);
+container.bind&lt;UnitOfWork&gt;(&apos;UnitOfWork&apos;).to(PrismaUnitOfWork);
+
+/* ========================
+   Casos de uso
+======================== */
+container.bind(StartExecution).toSelf();
+container.bind(CreateAndActivateProcess).toSelf();
+
+/* ========================
+   Controllers
+======================== */
+container.bind(ProcessController).toSelf();
+
+export { container };
+
+</file>
+
+<file path="src/infrastructure/config/logger.ts">
+import winston from &apos;winston&apos;;
+
+export const logger = winston.createLogger({
+  level: &apos;info&apos;,
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    }),
+    new winston.transports.File({ filename: &apos;logs/error.log&apos;, level: &apos;error&apos; }),
+    new winston.transports.File({ filename: &apos;logs/combined.log&apos; }),
+  ],
+});
+</file>
+
+<file path="src/infrastructure/fix-events.ts">
+import fs from &apos;fs&apos;;
+import path from &apos;path&apos;;
+
+const EVENTS_ROOT = path.join(__dirname, &apos;domain/entities&apos;);
+
+
+function pascalToSnake(name: string): string {
+  return name
+    .replace(/([a-z])([A-Z])/g, &apos;$1.$2&apos;)
+    .toLowerCase();
+}
+
+function fixEventFile(filePath: string) {
+  const content = fs.readFileSync(filePath, &apos;utf-8&apos;);
+
+  if (!content.includes(&apos;extends DomainEvent&apos;)) return;
+
+  const classMatch = content.match(/export class (\w+) extends DomainEvent/);
+  if (!classMatch) return;
+
+  const className = classMatch[1];
+  const eventName = pascalToSnake(className);
+
+  let fixed = content;
+
+  // 1️⃣ Constructor
+  if (!/constructor\(/.test(content)) {
+    fixed = fixed.replace(
+      /extends DomainEvent\s*{/,
+      `extends DomainEvent {
+  constructor(eventId?: string, occurredOn?: Date) {
+    super(eventId, occurredOn);
+  }`
+    );
+  } else {
+    // Si ya hay constructor, agrega super si no existe
+    if (!/super\(/.test(content)) {
+      fixed = fixed.replace(
+        /constructor\s*\(([^)]*)\)\s*{/,
+        `constructor($1) {\n    super();`
+      );
+    }
+  }
+
+  // 2️⃣ getEventName()
+  if (!/getEventName\(\)/.test(fixed)) {
+    fixed += `
+
+  getEventName(): string {
+    return &apos;${eventName}&apos;;
+  }`;
+  }
+
+  // 3️⃣ toPrimitives()
+  if (!/toPrimitives\(\)/.test(fixed)) {
+    fixed += `
+
+  toPrimitives(): Record&lt;string, unknown&gt; {
+    return {};
+  }`;
+  }
+
+  fs.writeFileSync(filePath, fixed, &apos;utf-8&apos;);
+  console.log(`✅ Fixed: ${filePath}`);
+}
+
+function walkDir(dir: string) {
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    const fullPath = path.join(dir, file);
+    const stat = fs.statSync(fullPath);
+    if (stat.isDirectory()) walkDir(fullPath);
+    else if (file.endsWith(&apos;.ts&apos;)) fixEventFile(fullPath);
+  }
+}
+
+walkDir(EVENTS_ROOT);
+console.log(&apos;🎯 Todos los eventos procesados.&apos;);
+
+</file>
+
+<file path="src/infrastructure/persistence/prisma/Json.ts">
+export type JsonPrimitive = string | number | boolean | null;
+
+export type JsonValue =
+  | JsonPrimitive
+  | JsonValue[]
+  | { [key: string]: JsonValue };
+
+export function toJsonValue(input: unknown): JsonValue {
+  return JSON.parse(JSON.stringify(input));
+}
+
+</file>
+
+<file path="src/infrastructure/persistence/prisma/PrismaAuditRepository.ts">
+import { AuditRepository } from &quot;../../../application/use-cases/ports/AuditRepository&quot;;
+import { DomainEvent } from &quot;../../../domain/entities/audit/shared/DomainEvent&quot;;
+import { getPrismaClient } from &quot;./PrismaClient&quot;;
+import { Prisma } from &quot;../../../generated/prisma&quot;;
+
+export class PrismaAuditRepository implements AuditRepository {
+  private prisma = getPrismaClient();
+
+  async saveEvents(events: DomainEvent[]): Promise&lt;void&gt; {
+    try {
+      for (const event of events) {
+        const primitives = event.toPrimitives();
+
+        await this.prisma.auditLog.create({
+          data: {
+            eventId: event.eventId, // ✅ FIX
+            eventName: event.getEventName(),
+            eventData: primitives as Prisma.InputJsonValue,
+            payload: primitives as Prisma.InputJsonValue,
+            occurredOn: event.occurredOn,
+          },
+        });
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to save events: ${error.message}`);
+      }
+      throw new Error(&quot;Failed to save events&quot;);
+    }
+  }
+}
+
+</file>
+
+<file path="src/infrastructure/persistence/prisma/PrismaClient.ts">
+import { PrismaClient } from &quot;@prisma/client&quot;;
+
+let prisma: PrismaClient | null = null;
+
+export function getPrismaClient(): PrismaClient {
+  if (!prisma) {
+    prisma = new PrismaClient({
+      log: [&quot;error&quot;, &quot;warn&quot;],
+    });
+  }
+  return prisma;
+}
+
+</file>
+
+<file path="src/infrastructure/persistence/prisma/PrismaExecutionRepository.ts">
+// src/infrastructure/persistence/prisma/PrismaExecutionRepository.ts
+import { PrismaClient, StepStatus } from &quot;../../../generated/prisma&quot;;
+import { getPrismaClient } from &quot;./PrismaClient&quot;;
+import { ExecutionRepository } from &quot;../../../application/use-cases/ports/ExecutionRepository&quot;;
+import { OutboxRepository } from &quot;../../../application/use-cases/ports/OutBoxRepository&quot;;
+import { Execution } from &quot;../../../domain/entities/execution/Execution&quot;;
+import { ExecutionStep } from &quot;../../../domain/entities/execution/ExecutionStep&quot;;
+import { ExecutionStatus } from &quot;../../../domain/entities/execution/ExecutionStatus&quot;;
+import { ExecutionStepStatus } from &quot;../../../domain/entities/execution/ExecutionStep&quot;;
+import { toJsonValue } from &quot;./Json&quot;;
+
+type DbExecutionStep = {
+  stepId: string;
+  status: string;
+};
+
+type DbExecution = {
+  id: string;
+  processId: string;
+  status: string;
+  steps: DbExecutionStep[];
+};
+
+const toPrismaStepStatus = (status: ExecutionStepStatus): StepStatus =&gt;
+  status as unknown as StepStatus;
+
+export class PrismaExecutionRepository implements ExecutionRepository {
+  private prisma: PrismaClient = getPrismaClient();
+
+  constructor(private readonly outboxRepo: OutboxRepository) {}
+
+  async save(execution: Execution): Promise&lt;void&gt; {
+    const events = execution.pullDomainEvents();
+
+    await this.prisma.$transaction(async tx =&gt; {
+      await tx.execution.upsert({
+        where: { id: execution.getId() },
+        update: { status: execution.getStatus() as ExecutionStatus },
+        create: {
+          id: execution.getId(),
+          processId: execution.getProcessId(),
+          status: execution.getStatus() as ExecutionStatus,
+        },
+      });
+
+      for (const step of execution.getSteps()) {
+        await tx.executionStep.upsert({
+          where: {
+            executionId_stepId: {
+              executionId: execution.getId(),
+              stepId: step.getStepId(),
+            },
+          },
+          update: { status: toPrismaStepStatus(step.getStatus()) },
+          create: {
+            executionId: execution.getId(),
+            stepId: step.getStepId(),
+            status: toPrismaStepStatus(step.getStatus()),
+          },
+        });
+      }
+
+      for (const event of events) {
+        await this.outboxRepo.save({
+          id: event.eventId,
+          eventName: event.getEventName(),
+          payload: toJsonValue(event.toPrimitives()),
+          occurredOn: event.occurredOn,
+          published: false,
+        });
+      }
+    });
+  }
+
+  async findById(id: string): Promise&lt;Execution | null&gt; {
+    const row = await this.prisma.execution.findUnique({
+      where: { id },
+      include: { steps: true },
+    });
+    if (!row) return null;
+
+    const dbRow = row as unknown as DbExecution;
+    return Execution.rehydrate({
+      id: dbRow.id,
+      processId: dbRow.processId,
+      status: dbRow.status as ExecutionStatus,
+      steps: dbRow.steps.map(step =&gt;
+        ExecutionStep.rehydrate({
+          stepId: step.stepId,
+          status: step.status as ExecutionStepStatus,
+        })
+      ),
+    });
+  }
+}
+
+</file>
+
+<file path="src/infrastructure/persistence/prisma/PrismaOutboxRepository.ts">
+import { PrismaClient } from &quot;../../../generated/prisma&quot;;
+import { getPrismaClient } from &quot;./PrismaClient&quot;;
+import {
+  OutboxRepository,
+  OutboxEvent
+} from &quot;../../../application/use-cases/ports/OutBoxRepository&quot;;
+
+export class PrismaOutboxRepository implements OutboxRepository {
+  private prisma: PrismaClient = getPrismaClient();
+
+  async save(event: OutboxEvent): Promise&lt;void&gt; {
+    await this.prisma.outbox.create({
+      data: {
+        id: event.id,
+        eventName: event.eventName,
+        payload: event.payload ?? {},
+        occurredOn: event.occurredOn,
+        published: event.published,
+      },
+    });
+  }
+
+  async findPending(limit = 100): Promise&lt;OutboxEvent[]&gt; {
+    const rows = await this.prisma.outbox.findMany({
+      where: { published: false },
+      take: limit,
+    });
+
+    return rows.map(r =&gt; ({
+      id: r.id,
+      eventName: r.eventName,
+      payload: r.payload,
+      occurredOn: r.occurredOn,
+      published: r.published,
+    }));
+  }
+
+  async markAsPublished(id: string): Promise&lt;void&gt; {
+    await this.prisma.outbox.update({
+      where: { id },
+      data: { published: true },
+    });
+  }
+}
+
+</file>
+
+<file path="src/infrastructure/persistence/prisma/PrismaProcessRepository.ts">
+import { injectable } from &quot;inversify&quot;;
+import { ProcessRepository } from &quot;../../../application/use-cases/ports/ProcessRepository&quot;;
+import { Process } from &quot;../../../domain/entities/process/Process&quot;;
+import { getPrismaClient } from &quot;./PrismaClient&quot;;
+import { Prisma } from &quot;@prisma/client&quot;;
+
+@injectable()
+export class PrismaProcessRepository implements ProcessRepository {
+  private getDb(tx?: Prisma.TransactionClient) {
+    return tx || getPrismaClient();
+  }
+
+  async save(process: Process, tx?: Prisma.TransactionClient): Promise&lt;void&gt; {
+    const db = this.getDb(tx);
+
+    const stepsData = process.getSteps().map(step =&gt; ({
+      id: step.getId(),
+      name: step.getName(),
+      order: step.getOrder(),
+    }));
+
+    await db.process.upsert({
+      where: { id: process.getId() },
+      update: {
+        name: process.getName(),
+        status: process.getStatus(),
+        steps: { deleteMany: {}, create: stepsData },
+      },
+      create: {
+        id: process.getId(),
+        name: process.getName(),
+        organizationId: process.getOrganizationId(),
+        status: process.getStatus(),
+        steps: { create: stepsData },
+      },
+    });
+  }
+
+  async findById(id: string): Promise&lt;Process | null&gt; {
+    const data = await getPrismaClient().process.findUnique({
+      where: { id },
+      include: { steps: true },
+    });
+    if (!data) return null;
+
+    return Process.rehydrate({
+      id: data.id,
+      name: data.name,
+      organizationId: data.organizationId,
+      status: data.status as any,
+      steps: data.steps.map((s: any) =&gt; ({
+        id: s.id,
+        name: s.name,
+        order: s.order,
+      })),
+    });
+  }
+}
+
+</file>
+
+<file path="src/infrastructure/persistence/prisma/PrismaUnitOfWork.ts">
+// src/infrastructure/persistence/prisma/PrismaUnitOfWork.ts
+import { PrismaClient, Prisma } from &apos;../../../generated/prisma&apos;;
+import { UnitOfWork } from &apos;../../../application/use-cases/ports/UnitOfWork&apos;;
+import { OutboxRepository } from &apos;../../../application/use-cases/ports/OutBoxRepository&apos;;
+
+export class PrismaUnitOfWork implements UnitOfWork {
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly outboxRepo: OutboxRepository
+  ) {}
+
+  async run&lt;T&gt;(
+    work: (tx: Prisma.TransactionClient, outbox: OutboxRepository) =&gt; Promise&lt;T&gt;
+  ): Promise&lt;T&gt; {
+    return this.prisma.$transaction(async (tx: Prisma.TransactionClient) =&gt; {
+      return work(tx, this.outboxRepo);
+    });
+  }
+}
+
+</file>
+
+<file path="src/infrastructure/persistence/prisma/__tests__/execution.integration.test.ts">
+import { PrismaUnitOfWork } from &quot;../PrismaUnitOfWork&quot;;
+import { PrismaExecutionRepository } from &quot;../PrismaExecutionRepository&quot;;
+import { ExecutionFactory } from &quot;../../../../application/use-cases/test/fakes/ExecutionFactory&quot;;
+import { getPrismaClient } from &quot;../PrismaClient&quot;;
+
+const prisma = getPrismaClient();
+const outboxRepo = {
+  save: jest.fn(),
+  findPending: jest.fn(),
+  markAsPublished: jest.fn(),
+};
+const uow = new PrismaUnitOfWork(prisma, outboxRepo as any);
+const repo = new PrismaExecutionRepository(outboxRepo as any);
+
+describe(&quot;Execution Repository Integration&quot;, () =&gt; {
+  beforeAll(async () =&gt; {
+    await prisma.executionStep.deleteMany({});
+    await prisma.execution.deleteMany({});
+  });
+
+  it(&quot;should save and retrieve an execution&quot;, async () =&gt; {
+    const execution = ExecutionFactory.createExecution();
+    await uow.run(async (tx, outbox) =&gt; await repo.save(execution));
+
+    const loaded = await repo.findById(execution.getId());
+    expect(loaded).not.toBeNull();
+    expect(loaded!.getId()).toBe(execution.getId());
+    expect(loaded!.getSteps().length).toBe(execution.getSteps().length);
+  });
+});
+
+</file>
+
+<file path="src/infrastructure/persistence/prisma/__tests__/process.integration.test.ts">
+import { PrismaUnitOfWork } from &quot;../PrismaUnitOfWork&quot;;
+import { PrismaProcessRepository } from &quot;../PrismaProcessRepository&quot;;
+import { Process } from &quot;../../../../domain/entities/process/Process&quot;;
+import { ProcessStep } from &quot;../../../../domain/entities/process/ProcessStep&quot;;
+import { getPrismaClient } from &quot;../PrismaClient&quot;;
+
+const prisma = getPrismaClient();
+const outboxRepo = {
+  save: jest.fn(),
+  findPending: jest.fn(),
+  markAsPublished: jest.fn(),
+};
+const uow = new PrismaUnitOfWork(prisma, outboxRepo as any);
+const processRepo = new PrismaProcessRepository();
+
+describe(&quot;Process Repository Integration&quot;, () =&gt; {
+  beforeAll(async () =&gt; {
+    await prisma.processStep.deleteMany({});
+    await prisma.process.deleteMany({});
+  });
+
+  it(&quot;should save and retrieve a process with steps&quot;, async () =&gt; {
+    const process = Process.create(&quot;p1&quot;, &quot;Test Process&quot;, &quot;org1&quot;);
+    process.addStep(new ProcessStep({ id: &quot;s1&quot;, name: &quot;Step 1&quot;, order: 1 }));
+    process.addStep(new ProcessStep({ id: &quot;s2&quot;, name: &quot;Step 2&quot;, order: 2 }));
+
+    await uow.run(async (tx, outbox) =&gt; await processRepo.save(process, tx));
+
+    const loaded = await processRepo.findById(&quot;p1&quot;);
+    expect(loaded).not.toBeNull();
+    expect(loaded!.getId()).toBe(process.getId());
+    expect(loaded!.getSteps().length).toBe(2);
+  });
+});
+
+</file>
+
+<file path="src/infrastructure/persistence/services/EventPublishWorker.ts">
+// src/application/use-cases/ports/EventPublisherWorker.ts
+import { OutboxRepository } from &quot;../prisma/PrismaOutboxRepository&quot;;
+
+export class EventPublisherWorker {
+  constructor(private readonly outboxRepo: OutboxRepository) {}
+
+  async publishPending() {
+    const events = await this.outboxRepo.findPending();
+    for (const event of events) {
+      try {
+        console.log(&quot;Publicando evento:&quot;, event.eventName, event.payload);
+        await this.outboxRepo.markAsPublished(event.id);
+      } catch (err) {
+        console.error(&quot;Error publicando evento&quot;, event.id, err);
+      }
+    }
+  }
+}
+    
+</file>
+
+<file path="src/infrastructure/persistence/services/SubscriptionServiceImpl.ts">
+import { injectable } from &quot;inversify&quot;;
+import { SubscriptionService } from &quot;../../../application/use-cases/ports/SubscriptionService&quot;;
+import { getPrismaClient } from &quot;../../persistence/prisma/PrismaClient&quot;;
+
+@injectable()
+export class SubscriptionServiceImpl implements SubscriptionService {
+  private prisma = getPrismaClient();
+
+  async canCreateProcess(organizationId: string): Promise&lt;boolean&gt; {
+    const subscription = await this.prisma.subscription.findFirst({
+      where: {
+        organizationId,
+        status: &quot;ACTIVE&quot;,
+      },
+      include: { plan: true },
+    });
+
+    if (!subscription) return false;
+
+    const activeProcesses = await this.prisma.process.count({
+      where: {
+        organizationId,
+        status: &quot;ACTIVE&quot;,
+      },
+    });
+
+    return activeProcesses &lt; subscription.plan.maxActiveProcesses;
+  }
+}
+
+</file>
+
+<file path="src/interfaces/http/authMiddleware.ts">
+import { Request, Response, NextFunction } from &apos;express&apos;;
+import jwt from &apos;jsonwebtoken&apos;;
+
+export const authMiddleware = (req: Request, res: Response, next: NextFunction) =&gt; {
+  const token = req.headers.authorization?.split(&apos; &apos;)[1];
+  if (!token) return res.status(401).json({ error: &apos;No token&apos; });
+  try {
+    jwt.verify(token, process.env.JWT_SECRET!);
+    next();
+  } catch {
+    res.status(401).json({ error: &apos;Invalid token&apos; });
+  }
+};
+</file>
+
+<file path="src/interfaces/http/ProcessController.ts">
+import { Request, Response } from &apos;express&apos;;
+import { StartExecution } from &apos;../../application/use-cases/StartExecution&apos;;
+import { CreateAndActivateProcess } from &apos;../../application/use-cases/CreateAndActivateProcess&apos;;
+import { z } from &apos;zod&apos;;
+import { DomainError } from &quot;../../domain/entities/audit/shared/DomainError&quot;;
+
+
+// Esquemas de validación
+const startExecutionSchema = z.object({
+  processId: z.string().uuid(),
+  executionId: z.string().uuid(),
+});
+
+const createProcessSchema = z.object({
+  name: z.string().min(3),
+  organizationId: z.string().uuid(),
+  steps: z.array(z.object({
+    id: z.string().uuid(),
+    name: z.string().min(1),
+    order: z.number().int().min(0)
+  })).min(1)
+});
+
+export class ProcessController {
+  // Inyectamos ambos casos de uso
+  constructor(
+    private startExecUseCase: StartExecution,
+    private createProcessUseCase: CreateAndActivateProcess
+  ) {}
+
+  // MÉTODO EXISTENTE: Ejecutar
+  async startExecution(req: Request, res: Response): Promise&lt;void&gt; {
+    try {
+      const { processId, executionId } = startExecutionSchema.parse(req.body);
+      await this.startExecUseCase.execute(processId, executionId);
+      res.status(201).send();
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  }
+
+  // MÉTODO NUEVO: Crear
+  async create(req: Request, res: Response): Promise&lt;void&gt; {
+    try {
+      const validatedData = createProcessSchema.parse(req.body);
+      
+      // El ID del proceso lo puede mandar el cliente o generarlo aquí
+      const processId = (req.body.id as string) || crypto.randomUUID();
+
+      await this.createProcessUseCase.execute({
+        id: processId,
+        ...validatedData
+      });
+
+      res.status(201).json({ id: processId, message: &quot;Process created and activated&quot; });
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  }
+
+  // Helper para no repetir código de errores
+  private handleError(res: Response, error: unknown) {
+  if (error instanceof z.ZodError) {
+    res.status(400).json({ error: &quot;Invalid input&quot;, details: error.issues });
+    return;
+  }
+
+  if (error instanceof DomainError) {
+    res.status(422).json({ error: error.message });
+    return;
+  }
+
+  res.status(500).json({ error: &quot;Internal server error&quot; });
+}
+}
+</file>
+
+<file path="src/interfaces/http/ProcessRoutes.ts">
+import { Router } from &apos;express&apos;;
+import { ProcessController } from &apos;./ProcessController&apos;;
+import { container } from &apos;../../infrastructure/config/container&apos;;
+
+export class ProcessRoutes {
+  public router: Router;
+  private controller: ProcessController;
+
+  constructor() {
+    this.router = Router();
+    this.controller = container.get(ProcessController);
+    this.initRoutes();
+  }
+
+  private initRoutes(): void {
+  // Ruta para crear (POST /)
+  this.router.post(&apos;/&apos;, this.controller.create.bind(this.controller));
+  
+  // Ruta para ejecutar (POST /start-execution)
+  this.router.post(&apos;/start-execution&apos;, this.controller.startExecution.bind(this.controller));
+}
+}
+</file>
+
+<file path="src/interfaces/http/ProcessSchemas.ts">
+import { z } from &apos;zod&apos;;
+
+export const CreateProcessSchema = z.object({
+name: z.string().min(3).max(100),
+  organizationId: z.string().uuid(), // En el futuro esto vendrá del token
+steps: z.array(z.object({
+    id: z.string().uuid(),
+    name: z.string().min(1),
+    order: z.number().int().min(0)
+})).min(1, &quot;Un proceso debe tener al menos un paso&quot;)
+});
+</file>
+
+<file path="tests/jest.config.ts">
+export default {
+    preset: &quot;ts-jest&quot;,
+    testEnvironment: &quot;node&quot;,
+    roots: [&quot;&lt;rootDir&gt;/src&quot;],
+};
+
+</file>
+
+</repository>
