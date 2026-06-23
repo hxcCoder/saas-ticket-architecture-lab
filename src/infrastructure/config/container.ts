@@ -1,56 +1,48 @@
-// src/infrastructure/config/container.ts
-import 'reflect-metadata';
 import { Container } from 'inversify';
-import { PrismaClient } from './../../generated/prisma';
+import 'reflect-metadata'; // Asegúrate de tener esta importación al inicio para Inversify
 
-import { ExecutionRepository } from '../../application/use-cases/ports/ExecutionRepository';
-import { AuditRepository } from '../../application/use-cases/ports/AuditRepository';
-import { ProcessRepository } from '../../application/use-cases/ports/ProcessRepository';
-import { SubscriptionService } from '../../application/use-cases/ports/SubscriptionService';
-import { UnitOfWork } from '../../application/use-cases/ports/UnitOfWork';
-import { OutboxRepository } from '../../application/use-cases/ports/OutBoxRepository';
+// Interfaces/Puertos (Application)
+import { ExecutionRepository } from '../../application/use-cases/ports/ExecutionRepository.js';
+import { AuditRepository } from '../../application/use-cases/ports/AuditRepository.js';
+import { ProcessRepository } from '../../application/use-cases/ports/ProcessRepository.js';
+import { SubscriptionService } from '../../application/use-cases/ports/SubscriptionService.js';
+import { UnitOfWork } from '../../application/use-cases/ports/UnitOfWork.js';
+import { OutboxRepository } from '../../application/use-cases/ports/OutBoxRepository.js';
 
-import { PrismaExecutionRepository } from '../persistence/prisma/PrismaExecutionRepository';
-import { PrismaAuditRepository } from '../persistence/prisma/PrismaAuditRepository';
-import { PrismaProcessRepository } from '../persistence/prisma/PrismaProcessRepository';
-import { PrismaOutboxRepository } from '../persistence/prisma/PrismaOutboxRepository';
-import { PrismaUnitOfWork } from '../persistence/prisma/PrismaUnitOfWork';
+// Adaptadores de Persistencia (Infrastructure)
+import { PrismaExecutionRepository } from '../persistence/prisma/PrismaExecutionRepository.js';
+import { PrismaAuditRepository } from '../persistence/prisma/PrismaAuditRepository.js';
+import { PrismaProcessRepository } from '../persistence/prisma/PrismaProcessRepository.js';
+import { PrismaOutboxRepository } from '../persistence/prisma/PrismaOutboxRepository.js';
+import { PrismaUnitOfWork } from '../persistence/prisma/PrismaUnitOfWork.js';
+import { SubscriptionServiceImpl } from '../persistence/services/SubscriptionServiceImpl.js';
 
-import { SubscriptionServiceImpl } from '../persistence/services/SubscriptionServiceImpl';
+// Casos de Uso
+import { StartExecution } from '../../application/use-cases/StartExecution.js';
+import { CreateAndActivateProcess } from '../../application/use-cases/CreateAndActivateProcess.js';
 
-import { StartExecution } from '../../application/use-cases/StartExecution';
-import { CreateAndActivateProcess } from '../../application/use-cases/CreateAndActivateProcess';
-import { ProcessController } from '../../interfaces/http/ProcessController';
+// Controladores e Interfaces HTTP
+import { ProcessController } from '../../interfaces/http/ProcessController.js';
+import { ProcessRoutes } from '../../interfaces/http/ProcessRoutes.js';
 
 const container = new Container();
 
-/* ========================
-   Infraestructura base
-======================== */
+// --- BINDINGS DE TU ARQUITECTURA ---
 
-// PrismaClient singleton
-container.bind<PrismaClient>(PrismaClient).toConstantValue(new PrismaClient());
+// Repositorios y Servicios
+container.bind<ExecutionRepository>('ExecutionRepository').to(PrismaExecutionRepository).inSingletonScope();
+container.bind<AuditRepository>('AuditRepository').to(PrismaAuditRepository).inSingletonScope();
+container.bind<ProcessRepository>('ProcessRepository').to(PrismaProcessRepository).inSingletonScope();
+container.bind<OutboxRepository>('OutBoxRepository').to(PrismaOutboxRepository).inSingletonScope();
+container.bind<UnitOfWork>('UnitOfWork').to(PrismaUnitOfWork).inSingletonScope();
+container.bind<SubscriptionService>('SubscriptionService').to(SubscriptionServiceImpl).inSingletonScope();
 
-// Repositorios
-container.bind<OutboxRepository>('OutboxRepository').to(PrismaOutboxRepository);
-container.bind<ExecutionRepository>('ExecutionRepository').toDynamicValue(ctx => {
-  const outbox = ctx.container.get<OutboxRepository>('OutboxRepository');
-  return new PrismaExecutionRepository(outbox);
-});
-container.bind<AuditRepository>('AuditRepository').to(PrismaAuditRepository);
-container.bind<ProcessRepository>('ProcessRepository').to(PrismaProcessRepository);
-container.bind<SubscriptionService>('SubscriptionService').to(SubscriptionServiceImpl);
-container.bind<UnitOfWork>('UnitOfWork').to(PrismaUnitOfWork);
+// Casos de Uso
+container.bind<StartExecution>(StartExecution).toSelf().inSingletonScope();
+container.bind<CreateAndActivateProcess>(CreateAndActivateProcess).toSelf().inSingletonScope();
 
-/* ========================
-   Casos de uso
-======================== */
-container.bind(StartExecution).toSelf();
-container.bind(CreateAndActivateProcess).toSelf();
-
-/* ========================
-   Controllers
-======================== */
-container.bind(ProcessController).toSelf();
+// Capa HTTP (Controlador y Rutas)
+container.bind<ProcessController>(ProcessController).toSelf().inSingletonScope();
+container.bind<ProcessRoutes>(ProcessRoutes).toSelf().inSingletonScope();
 
 export { container };

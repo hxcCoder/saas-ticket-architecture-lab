@@ -5,6 +5,7 @@
 ├── .gitignore
 ├── config
 │   └── prisma.ts
+├── dashboard.html
 ├── docs
 │   ├── Correct-Progress.md
 │   ├── Map-flow.md
@@ -126,6 +127,20 @@ import { PrismaClient } from &apos;../src/generated/prisma/client&apos;
 export const prisma = new PrismaClient({
     log: [&apos;query&apos;, &apos;info&apos;, &apos;warn&apos;, &apos;error&apos;],
 });
+</file>
+
+<file path="jest.config.js">
+/** @type {import(&apos;jest&apos;).Config} */
+module.exports = {
+  preset: &quot;ts-jest&quot;,
+  testEnvironment: &quot;node&quot;,
+  roots: [&quot;&lt;rootDir&gt;/src&quot;],
+  testMatch: [&quot;**/*.test.ts&quot;],
+  moduleFileExtensions: [&quot;ts&quot;, &quot;js&quot;],
+  clearMocks: true,
+  maxWorkers: 1,
+};
+
 </file>
 
 <file path="prisma/prisma.config.ts">
@@ -1155,7 +1170,7 @@ export enum ProcessStepStatus {
 </file>
 
 <file path="src/index.ts">
-import express from &apos;express&apos;;
+import express, { Request, Response } from &apos;express&apos;;
 import cors from &apos;cors&apos;;
 import morgan from &apos;morgan&apos;;
 import { container } from &apos;./infrastructure/config/container&apos;;
@@ -1183,7 +1198,7 @@ const processRoutes = container.get(ProcessRoutes);
 app.use(&apos;/api/processes&apos;, processRoutes.router);
 
 // Health check
-app.get(&apos;/health&apos;, (req, res) =&gt; res.json({ status: &apos;OK&apos; }));
+app.get(&apos;/health&apos;, (req: Request, res: Response) =&gt; res.json({ status: &apos;OK&apos; }));
 
 // Conectar Prisma
 getPrismaClient()
