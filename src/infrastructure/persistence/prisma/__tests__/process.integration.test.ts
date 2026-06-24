@@ -5,6 +5,20 @@ import { Process } from '../../../../domain/entities/process/Process.js';
 import { ProcessStep } from '../../../../domain/entities/process/ProcessStep.js';
 import { getPrismaClient } from '../PrismaClient.js';
 
+beforeAll(async () => {
+  // 1. Creamos la organización padre para que no falle la llave foránea
+  await prisma.organization.upsert({
+    where: { id: "org-123" },
+    update: {},
+    create: {
+      id: "org-123",
+      name: "Test Org",
+      status: "ACTIVE",
+      plan: "PRO"
+    }
+  });
+});
+
 const prisma = getPrismaClient();
 const uow = new PrismaUnitOfWork();
 const processRepo = new PrismaProcessRepository();
