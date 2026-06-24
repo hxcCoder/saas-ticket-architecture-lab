@@ -4,6 +4,7 @@ export enum ExecutionStepStatus {
   PENDING = "PENDING",
   DONE = "DONE",
   FAILED = "FAILED",
+  COMPLETED = "COMPLETED",
 }
 
 export class ExecutionStep {
