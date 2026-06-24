@@ -1,4 +1,3 @@
-// jest.config.cjs
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   preset: "ts-jest",
@@ -6,10 +5,19 @@ module.exports = {
   roots: ["<rootDir>/src"],
   testMatch: ["**/*.test.ts"],
   
-  // 🌟 NUEVO: Ignoramos las pruebas de integración que requieren base de datos real para el CI
+  // Ignoramos las pruebas de integración que requieren base de datos real para el CI
   testPathIgnorePatterns: [
     "/node_modules/",
     "<rootDir>/src/infrastructure/persistence/prisma/__tests__/"
+  ],
+
+  // Excluimos del reporte de cobertura los archivos de infraestructura y puntos de entrada
+  coveragePathIgnorePatterns: [
+    "/node_modules/",
+    "<rootDir>/src/infrastructure/persistence/prisma/",
+    "<rootDir>/src/interfaces/http/",
+    "<rootDir>/src/index.ts",
+    "<rootDir>/src/infrastructure/persistence/services/SubscriptionServiceImpl.ts"
   ],
 
   moduleFileExtensions: ["ts", "js"],
