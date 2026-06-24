@@ -1047,7 +1047,7 @@ import { ProcessHasNoStepsError } from &quot;../../ProcessErrors.js&quot;;
 
 describe(&quot;Process.activate errors&quot;, () =&gt; {
     it(&quot;throws if process has no steps&quot;, () =&gt; {
-        const process = Process.create(&quot;p-1&quot;, &quot;Process&quot;);
+        const process = Process.create(&quot;p-1&quot;, &quot;Process&quot;, &quot;org-123&quot;);
 
         expect(() =&gt; {
             process.activate();
@@ -1064,7 +1064,7 @@ import { ProcessStatus } from &quot;../../ProcessStatus.js&quot;;
 
 describe(&quot;Process.activate&quot;, () =&gt; {
     it(&quot;activates a process with steps&quot;, () =&gt; {
-        const process = Process.create(&quot;p-1&quot;, &quot;My process&quot;);
+        const process = Process.create(&quot;p-1&quot;, &quot;My process&quot;, &quot;org-123&quot;);
 
         const step = new ProcessStep({
             id: &quot;s-1&quot;,
@@ -23941,14 +23941,49 @@ const repo = new PrismaExecutionRepository(outboxRepo as any);
 
 describe(&apos;Execution Repository Integration&apos;, () =&gt; {
   beforeAll(async () =&gt; {
+    // Limpiamos las tablas hijas primero para evitar conflictos
     await prisma.executionStep.deleteMany({});
     await prisma.execution.deleteMany({});
   });
 
   it(&apos;should save and retrieve an execution&apos;, async () =&gt; {
+    // 1. Generamos la ejecución simulada desde tu Factory
     const execution = ExecutionFactory.createExecution();
-    await uow.run(async () =&gt; await repo.save(execution));
+    const processId = execution.getProcessId(); // Obtenemos el ID del proceso generado
+    const orgId = &quot;org-test-exec&quot;; 
 
+    // 2. CREAMOS LOS REGISTROS PADRE (Para que la Foreign Key Constraint no explote)
+    
+    // a) Crear la Organización
+    await prisma.organization.upsert({
+      where: { id: orgId },
+      update: {},
+      create: {
+        id: orgId,
+        name: &quot;Test Organization&quot;,
+        status: &quot;ACTIVE&quot;,
+        plan: &quot;PRO&quot;
+      }
+    });
+
+    // b) Crear el Proceso usando exactamente el processId que pide la Ejecución
+    await prisma.process.upsert({
+      where: { id: processId },
+      update: {},
+      create: {
+        id: processId,
+        name: &quot;Test Process for Execution&quot;,
+        organizationId: orgId,
+        status: &quot;ACTIVE&quot;
+      }
+    });
+
+    // 3. Guardamos la ejecución usando tu transacción invisible
+    await uow.run(async () =&gt; {
+      await repo.save(execution);
+    });
+
+    // 4. Afirmaciones (Asserts)
     const loaded = await repo.findById(execution.getId());
     expect(loaded).not.toBeNull();
     expect(loaded!.getId()).toBe(execution.getId());
@@ -23964,6 +23999,20 @@ import { PrismaProcessRepository } from &apos;../PrismaProcessRepository.js&apos
 import { Process } from &apos;../../../../domain/entities/process/Process.js&apos;;
 import { ProcessStep } from &apos;../../../../domain/entities/process/ProcessStep.js&apos;;
 import { getPrismaClient } from &apos;../PrismaClient.js&apos;;
+
+beforeAll(async () =&gt; {
+  // 1. Creamos la organización padre para que no falle la llave foránea
+  await prisma.organization.upsert({
+    where: { id: &quot;org-123&quot; },
+    update: {},
+    create: {
+      id: &quot;org-123&quot;,
+      name: &quot;Test Org&quot;,
+      status: &quot;ACTIVE&quot;,
+      plan: &quot;PRO&quot;
+    }
+  });
+});
 
 const prisma = getPrismaClient();
 const uow = new PrismaUnitOfWork();
