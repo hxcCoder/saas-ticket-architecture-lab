@@ -5,76 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SaaS Control Dashboard | Sentinel Alpha</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Animación suave para la terminal */
+        html { scroll-behavior: smooth; }
+        .loader {
+            border-top-color: transparent;
+            animation: spinner 1.5s linear infinite;
+        }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body class="bg-slate-900 text-slate-200 p-8 font-sans min-h-screen flex flex-col">
 
     <div class="max-w-6xl mx-auto space-y-6 w-full">
-        <header class="border-b border-slate-700 pb-4 flex justify-between items-end">
+        <header class="border-b border-slate-700 pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-emerald-400">Control Center</h1>
-                <p class="text-slate-400">Pruebas End-to-End: Organización -> Proceso -> Ejecución</p>
+                <h1 class="text-3xl font-bold text-emerald-400 tracking-tight">Control Center</h1>
+                <p class="text-slate-400 mt-1">Pruebas End-to-End: Organización &rarr; Proceso &rarr; Ejecución</p>
             </div>
-            <div class="text-xs text-slate-500 font-mono">Backend Status: <span class="text-emerald-500">Listening on :3000</span></div>
+            <div class="text-xs text-slate-400 font-mono bg-slate-800 px-3 py-1.5 rounded border border-slate-700">
+                Backend Status: <span class="text-emerald-400 flex items-center inline-flex gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Listening on :3000
+                </span>
+            </div>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             
-            <div class="bg-slate-800 p-6 rounded-lg border border-purple-500/30 shadow-xl relative overflow-hidden">
+            <div class="bg-slate-800 p-6 rounded-lg border border-purple-500/30 shadow-xl relative overflow-hidden flex flex-col">
                 <div class="absolute top-0 left-0 w-full h-1 bg-purple-500"></div>
-                <h2 class="text-lg font-semibold mb-4 text-purple-400">1. Crear Organización</h2>
-                <p class="text-xs text-slate-400 mb-4">Requisito de DB: Un proceso debe pertenecer a una empresa real.</p>
-                <div class="space-y-4">
+                <h2 class="text-lg font-semibold mb-2 text-purple-400 flex items-center gap-2">
+                    <span class="bg-purple-500/20 text-purple-400 py-0.5 px-2 rounded text-sm">1</span> 
+                    Crear Organización
+                </h2>
+                <p class="text-xs text-slate-400 mb-6">Requisito de DB: Un proceso debe pertenecer a una empresa real.</p>
+                <div class="space-y-4 mt-auto">
                     <div>
-                        <label class="block text-sm text-slate-400">Nombre de Empresa</label>
-                        <input type="text" id="orgName" value="Acme Corp" class="w-full bg-slate-900 border border-slate-600 rounded p-2 text-white mt-1 outline-none focus:border-purple-500">
+                        <label class="block text-sm text-slate-400 font-medium">Nombre de Empresa</label>
+                        <input type="text" id="orgName" value="Acme Corp" class="w-full bg-slate-900 border border-slate-600 rounded p-2.5 text-white mt-1.5 outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all">
                     </div>
-                    <button onclick="crearOrganizacion()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded transition">
-                        POST /api/organizations
+                    <button id="btnOrg" onclick="crearOrganizacion()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 px-4 rounded transition-colors flex justify-center items-center gap-2">
+                        <span>POST /organizations</span>
                     </button>
                 </div>
             </div>
 
-            <div class="bg-slate-800 p-6 rounded-lg border border-emerald-500/30 shadow-xl relative overflow-hidden">
+            <div class="bg-slate-800 p-6 rounded-lg border border-emerald-500/30 shadow-xl relative overflow-hidden flex flex-col">
                 <div class="absolute top-0 left-0 w-full h-1 bg-emerald-500"></div>
-                <h2 class="text-lg font-semibold mb-4 text-emerald-400">2. Definir Proceso</h2>
-                <p class="text-xs text-slate-400 mb-4">Crea el "molde" y sus pasos vinculados a la empresa.</p>
-                <div class="space-y-4">
+                <h2 class="text-lg font-semibold mb-2 text-emerald-400 flex items-center gap-2">
+                    <span class="bg-emerald-500/20 text-emerald-400 py-0.5 px-2 rounded text-sm">2</span> 
+                    Definir Proceso
+                </h2>
+                <p class="text-xs text-slate-400 mb-6">Crea el "molde" y sus pasos vinculados a la empresa.</p>
+                <div class="space-y-4 mt-auto">
                     <div>
-                        <label class="block text-sm text-slate-400">ID Organización</label>
-                        <input type="text" id="orgId" placeholder="Esperando paso 1..." class="w-full bg-slate-900/50 border border-slate-700 rounded p-2 text-emerald-200 text-sm mt-1 font-mono" readonly>
+                        <label class="block text-sm text-slate-400 font-medium">ID Organización</label>
+                        <input type="text" id="orgId" placeholder="Esperando paso 1..." class="w-full bg-slate-900/50 border border-slate-700 rounded p-2.5 text-emerald-300 text-xs mt-1.5 font-mono" readonly>
                     </div>
                     <div>
-                        <label class="block text-sm text-slate-400">Nombre del Proceso</label>
-                        <input type="text" id="processName" value="Onboarding de Cliente" class="w-full bg-slate-900 border border-slate-600 rounded p-2 text-white mt-1 outline-none focus:border-emerald-500">
+                        <label class="block text-sm text-slate-400 font-medium">Nombre del Proceso</label>
+                        <input type="text" id="processName" value="Onboarding de Cliente" class="w-full bg-slate-900 border border-slate-600 rounded p-2.5 text-white mt-1.5 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
                     </div>
-                    <button onclick="crearProceso()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded transition">
-                        POST /api/processes
+                    <button id="btnProcess" onclick="crearProceso()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded transition-colors flex justify-center items-center gap-2">
+                        <span>POST /processes</span>
                     </button>
                 </div>
             </div>
 
-            <div class="bg-slate-800 p-6 rounded-lg border border-blue-500/30 shadow-xl relative overflow-hidden">
+            <div class="bg-slate-800 p-6 rounded-lg border border-blue-500/30 shadow-xl relative overflow-hidden flex flex-col">
                 <div class="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
-                <h2 class="text-lg font-semibold mb-4 text-blue-400">3. Iniciar Ejecución</h2>
-                <p class="text-xs text-slate-400 mb-4">Crea una instancia viva basada en el molde del proceso.</p>
-                <div class="space-y-4">
+                <h2 class="text-lg font-semibold mb-2 text-blue-400 flex items-center gap-2">
+                    <span class="bg-blue-500/20 text-blue-400 py-0.5 px-2 rounded text-sm">3</span> 
+                    Iniciar Ejecución
+                </h2>
+                <p class="text-xs text-slate-400 mb-6">Crea una instancia viva basada en el molde del proceso activo.</p>
+                <div class="space-y-4 mt-auto">
                     <div>
-                        <label class="block text-sm text-slate-400">ID del Proceso</label>
-                        <input type="text" id="processId" placeholder="Esperando paso 2..." class="w-full bg-slate-900/50 border border-slate-700 rounded p-2 text-blue-200 text-sm mt-1 font-mono" readonly>
+                        <label class="block text-sm text-slate-400 font-medium">ID del Proceso</label>
+                        <input type="text" id="processId" placeholder="Esperando paso 2..." class="w-full bg-slate-900/50 border border-slate-700 rounded p-2.5 text-blue-300 text-xs mt-1.5 font-mono" readonly>
                     </div>
-                    <button onclick="iniciarEjecucion()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded transition mt-auto">
-                        POST /start-execution
+                    <button id="btnExec" onclick="iniciarEjecucion()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded transition-colors flex justify-center items-center gap-2 mt-auto">
+                        <span>POST /start-execution</span>
                     </button>
                 </div>
             </div>
         </div>
 
-        <div class="bg-[#0D1117] p-4 rounded-lg border border-slate-700 shadow-xl font-mono text-sm flex-grow flex flex-col">
-            <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
-                <h2 class="text-slate-300 font-bold">Terminal de HTTP</h2>
-                <button onclick="limpiarConsola()" class="text-slate-500 hover:text-white text-xs bg-slate-800 px-2 py-1 rounded">Limpiar</button>
+        <div class="bg-[#0D1117] p-4 rounded-lg border border-slate-700 shadow-xl font-mono text-sm flex-grow flex flex-col h-80">
+            <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-3">
+                <h2 class="text-slate-300 font-bold flex items-center gap-2">
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M4 15V9a2 2 0 012-2h12a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2z"></path></svg>
+                    Terminal HTTP
+                </h2>
+                <button onclick="limpiarConsola()" class="text-slate-400 hover:text-white hover:bg-slate-700 text-xs bg-slate-800 px-3 py-1.5 rounded transition">Limpiar</button>
             </div>
-            <pre id="consoleOutput" class="text-slate-400 whitespace-pre-wrap overflow-y-auto h-64"></pre>
+            <div id="consoleContainer" class="overflow-y-auto flex-grow flex flex-col-reverse">
+                <pre id="consoleOutput" class="text-slate-400 whitespace-pre-wrap"></pre>
+            </div>
         </div>
     </div>
 
@@ -82,28 +113,63 @@
         const API_BASE = 'http://localhost:3000/api';
         const generateUUID = () => crypto.randomUUID();
 
+        // Utilidad para manejar botones (Loading states)
+        const toggleButtonState = (btnId, isLoading) => {
+            const btn = document.getElementById(btnId);
+            if (isLoading) {
+                btn.disabled = true;
+                btn.classList.add('opacity-75', 'cursor-not-allowed');
+                btn.innerHTML = `<div class="w-4 h-4 border-2 border-white rounded-full loader"></div> Procesando...`;
+            } else {
+                btn.disabled = false;
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                const text = btnId === 'btnOrg' ? 'POST /organizations' : 
+                             btnId === 'btnProcess' ? 'POST /processes' : 'POST /start-execution';
+                btn.innerHTML = `<span>${text}</span>`;
+            }
+        };
+
+        // Utilidad para loggear en la consola visual
         const logToConsole = (method, endpoint, payload, response, isError = false) => {
             const consoleDiv = document.getElementById('consoleOutput');
-            const color = isError ? 'text-red-400' : 'text-emerald-400';
+            const color = isError ? 'text-rose-400' : 'text-emerald-400';
             const timestamp = new Date().toLocaleTimeString();
             
+            // Reemplaza < y > para evitar inyección HTML en el PRE si la API devuelve HTML
+            const safeResponse = JSON.stringify(response, null, 2)
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+
             const logEntry = `
-<span class="text-slate-600">[${timestamp}]</span> <span class="font-bold text-slate-300">${method}</span> <span class="text-blue-300">${endpoint}</span>
-<span class="text-slate-500">Req:</span> ${JSON.stringify(payload)}
-<span class="text-slate-500">Res:</span> <span class="${color}">${JSON.stringify(response, null, 2)}</span>
-<span class="text-slate-700">---------------------------------------------------</span>`;
+<span class="text-slate-500">[${timestamp}]</span> <span class="font-bold text-slate-200">${method}</span> <span class="text-blue-400">${endpoint}</span>
+<span class="text-slate-500">Requisición:</span> <span class="text-slate-300">${JSON.stringify(payload)}</span>
+<span class="text-slate-500">Respuesta:</span> <span class="${color}">${safeResponse}</span>
+<span class="text-slate-700">─────────────────────────────────────────────────────────</span>`;
             
-            consoleDiv.innerHTML = logEntry + '\n' + consoleDiv.innerHTML;
+            // Agregamos al final para que el scroll funcione de arriba hacia abajo
+            consoleDiv.innerHTML += logEntry + '\n';
         };
 
         const limpiarConsola = () => {
             document.getElementById('consoleOutput').innerHTML = '';
         };
 
-        // PASO 1
+        // Alert visual para inputs faltantes
+        const highlightError = (inputId) => {
+            const input = document.getElementById(inputId);
+            input.classList.add('border-rose-500', 'ring-1', 'ring-rose-500');
+            setTimeout(() => input.classList.remove('border-rose-500', 'ring-1', 'ring-rose-500'), 2000);
+        };
+
+        // --------------------------------------------------------
+        // PASO 1: Crear Organización
+        // --------------------------------------------------------
         async function crearOrganizacion() {
-            const name = document.getElementById('orgName').value;
+            const name = document.getElementById('orgName').value.trim();
+            if (!name) return highlightError('orgName');
+
             const payload = { name, status: "ACTIVE", plan: "PRO" };
+            toggleButtonState('btnOrg', true);
             
             try {
                 const response = await fetch(`${API_BASE}/organizations`, {
@@ -115,29 +181,43 @@
                 const data = await response.json();
                 logToConsole('POST', '/organizations', payload, data, !response.ok);
                 
-                if(response.ok && data.id) {
-                    document.getElementById('orgId').value = data.id; 
+                if (response.ok && data.id) {
+                    const orgInput = document.getElementById('orgId');
+                    orgInput.value = data.id; 
+                    // Feedback visual de éxito
+                    orgInput.classList.add('bg-emerald-900/30');
+                    setTimeout(() => orgInput.classList.remove('bg-emerald-900/30'), 1500);
                 }
             } catch (error) {
                 logToConsole('POST', '/organizations', payload, { error: error.message }, true);
+            } finally {
+                toggleButtonState('btnOrg', false);
             }
         }
 
-        // PASO 2
+        // --------------------------------------------------------
+        // PASO 2: Definir Proceso
+        // --------------------------------------------------------
         async function crearProceso() {
-            const name = document.getElementById('processName').value;
-            const orgId = document.getElementById('orgId').value;
+            const name = document.getElementById('processName').value.trim();
+            const orgId = document.getElementById('orgId').value.trim();
             
-            if(!orgId) return alert("¡Primero crea una Organización en el Paso 1!");
+            if (!orgId) {
+                logToConsole('CLIENT', 'Validación Fallida', {}, { error: 'Debes completar el Paso 1 para obtener un ID de Organización.' }, true);
+                return highlightError('orgId');
+            }
+            if (!name) return highlightError('processName');
 
             const payload = {
                 name: name,
                 organizationId: orgId,
                 steps: [
-                    { id: generateUUID(), name: "Verificación de Identidad", order: 1 },
-                    { id: generateUUID(), name: "Firma de Contrato", order: 2 }
+                    { id: generateUUID(), name: "Validación de Datos", order: 1 },
+                    { id: generateUUID(), name: "Aprobación Financiera", order: 2 }
                 ]
             };
+
+            toggleButtonState('btnProcess', true);
 
             try {
                 const response = await fetch(`${API_BASE}/processes`, {
@@ -149,26 +229,38 @@
                 const data = await response.json();
                 logToConsole('POST', '/processes', payload, data, !response.ok);
                 
-                // Mapeo seguro por si devuelve data.id o data.processId
-                const returnedId = data.processId || data.id;
-                if(response.ok && returnedId) {
-                    document.getElementById('processId').value = returnedId; 
+                // Mapeo dinámico: el backend devuelve { id, message } según ProcessController.ts
+                const returnedId = data.id || data.processId; 
+                if (response.ok && returnedId) {
+                    const procInput = document.getElementById('processId');
+                    procInput.value = returnedId; 
+                    procInput.classList.add('bg-blue-900/30');
+                    setTimeout(() => procInput.classList.remove('bg-blue-900/30'), 1500);
                 }
             } catch (error) {
                 logToConsole('POST', '/processes', payload, { error: error.message }, true);
+            } finally {
+                toggleButtonState('btnProcess', false);
             }
         }
 
-        // PASO 3
+        // --------------------------------------------------------
+        // PASO 3: Iniciar Ejecución
+        // --------------------------------------------------------
         async function iniciarEjecucion() {
-            const processId = document.getElementById('processId').value;
-            if(!processId) return alert("¡Primero define un Proceso en el Paso 2!");
+            const processId = document.getElementById('processId').value.trim();
+            
+            if (!processId) {
+                logToConsole('CLIENT', 'Validación Fallida', {}, { error: 'Debes completar el Paso 2 para obtener un ID de Proceso.' }, true);
+                return highlightError('processId');
+            }
 
-            // 🚀 CORRECCIÓN AQUÍ: Se añade el executionId que el backend exige
             const payload = { 
                 processId: processId,
                 executionId: generateUUID() 
             };
+
+            toggleButtonState('btnExec', true);
 
             try {
                 const response = await fetch(`${API_BASE}/processes/start-execution`, {
@@ -181,6 +273,8 @@
                 logToConsole('POST', '/processes/start-execution', payload, data, !response.ok);
             } catch (error) {
                 logToConsole('POST', '/processes/start-execution', payload, { error: error.message }, true);
+            } finally {
+                toggleButtonState('btnExec', false);
             }
         }
     </script>

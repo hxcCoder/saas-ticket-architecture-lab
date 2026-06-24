@@ -10,6 +10,7 @@
 [![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](#license)
 [![Codecov](https://codecov.io/gh/hxcCoder/saas-ticket-backend/graph/badge.svg)](https://codecov.io/gh/hxcCoder/saas-ticket-backend)
+
 </div>
 
 ---
@@ -33,11 +34,12 @@
 ---
 
 ## Overview
+
 Backend Tickets is a SaaS-oriented backend that lets an organization **define, activate, run, and monitor business processes** — think invoice approvals, onboarding checklists, or any multi-step internal workflow — without sacrificing maintainability as the system grows.
 
 Under the hood, every state change is captured as a **Domain Event** and persisted transactionally through the **Outbox Pattern**, so the core workflow engine stays fully decoupled from whatever consumes those events downstream (notifications, analytics, third-party integrations, etc.).
 
-The codebase is intentionally built as a reference implementation of Clean Architecture + DDD in TypeScript — strict layering, explicit domain rules, and transactional consistency from day one.
+The codebase is intentionally built as a reference implementation of Clean Architecture + DDD in TypeScript — strict layering, explicit domain rules, and invisible transactional consistency via `AsyncLocalStorage`.
 
 ## Features
 
@@ -46,8 +48,8 @@ The codebase is intentionally built as a reference implementation of Clean Archi
 | **Process Management** | Create processes, activate workflows, define ordered steps, enforce domain rules |
 | **Execution Engine** | Start executions, track status, complete steps, auto-emit domain events |
 | **Event-Driven Core** | Domain Events · Audit Logging · Outbox Pattern · Event Publishing Worker |
-| **SaaS Capabilities** | Multi-organization support, subscription validation, plan restrictions, active process limits |
-| **Security** | JWT auth middleware, request validation with Zod, structured domain error handling |
+| **SaaS Capabilities** | Multi-organization support, subscription validation, active process limits (`maxActiveProcesses`) |
+| **Security & Validation** | JWT auth middleware, request validation with Zod, structured domain error handling |
 
 ## Tech Stack
 
@@ -55,25 +57,25 @@ The codebase is intentionally built as a reference implementation of Clean Archi
 |---|---|
 | Runtime / Framework | Node.js (ESM Node16 resolution), Express, TypeScript |
 | Persistence | PostgreSQL, Prisma ORM |
-| Architecture | InversifyJS (DI), AsyncLocalStorage, Unit of Work |
+| Architecture | InversifyJS (DI), AsyncLocalStorage (Unit of Work), Repository Pattern |
 | Validation | Zod |
-| Testing | Jest |
+| Testing | Jest (`ts-jest`) |
 | Logging | Winston, Morgan |
 
 ## Architecture
 
-This proyect follows a strict layered architecture inspired by Clean Architecture and DDD — dependencies always point inward, toward the domain.
+This project follows a strict layered architecture inspired by Clean Architecture and DDD — dependencies always point inward, toward the domain.
 
 ```text
 src
-├── domain            # Entities, domain events, business rules
-├── application       # Use cases, ports (interfaces)
-├── infrastructure    # Prisma, repositories, services, DI container
+├── domain            # Entities, domain events, custom domain errors, business rules
+├── application       # Use cases, DTOs, ports (interfaces)
+├── infrastructure    # Prisma implementations, external services, Event Worker, DI container
 └── interfaces
-    └── http          # Controllers, routes, middleware
+    └── http          # Express Controllers, routes, Zod schemas, middlewares
 ```
 
-**Patterns in play:** Clean Architecture · Domain-Driven Design · Repository Pattern · Dependency Injection · Unit of Work · Outbox Pattern · Event-Driven Architecture
+Patterns in play: Clean Architecture · Domain-Driven Design · Repository Pattern · Dependency Injection · Unit of Work (AsyncLocalStorage) · Outbox Pattern · Event-Driven Architecture
 
 ## Domain Model
 
@@ -81,11 +83,11 @@ src
 classDiagram
     class Process {
         +ProcessStep[] steps
-        +Status status
+        +ProcessStatus status
     }
     class Execution {
         +ExecutionStep[] steps
-        +Status status
+        +ExecutionStatus status
     }
     Process "1" --> "*" ProcessStep
     Execution "1" --> "*" ExecutionStep
@@ -94,8 +96,8 @@ classDiagram
 
 | Aggregate | Emits |
 |---|---|
-| **Process** | `process.created` · `process.activated` · `process.archived` |
-| **Execution** | `execution.started` · `execution.step.completed` · `execution.completed` |
+| Process | `process.created` · `process.activated` · `process.archived` |
+| Execution | `execution.started` · `execution.step.completed` · `execution.completed` |
 
 ## Event Flow
 
@@ -105,24 +107,33 @@ flowchart TD
     B --> C(ProcessActivated)
     C --> D[Start Execution]
     D --> E(ExecutionStarted)
-    E --> F(ExecutionStepCompleted)
-    F --> G(ExecutionCompleted)
-    G --> H[Outbox]
-    H --> I[Publisher Worker]
+    E --> F[Complete Step]
+    F --> G(ExecutionStepCompleted)
+    G -->|All Steps Done| H(ExecutionCompleted)
+    H --> I[Outbox Transaction]
+    I --> J[Publisher Worker]
 ```
 
-Every domain event lands in the **Outbox** within the same transaction as the state change, then gets relayed by the **Publisher Worker** — guaranteeing at-least-once delivery without ever risking an inconsistent state.
+Every domain event lands in the Outbox and AuditLog within the same atomic transaction as the state change, then gets relayed by the Publisher Worker — guaranteeing at-least-once delivery without ever risking an inconsistent state.
 
 ## API Reference
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| `POST` | `/api/organizations` | Create an organization |
-| `POST` | `/api/processes` | Create and activate a process |
-| `POST` | `/api/processes/start-execution` | Start a new execution of a process |
+| GET | `/health` | Health check |
+| POST | `/api/organizations` | Create a new organization |
+| POST | `/api/processes` | Create and activate a process |
+| POST | `/api/processes/start-execution` | Start a new execution of an active process |
 
-<details>
-<summary><strong>POST /api/organizations</strong></summary>
+**`GET /health`**
+
+```json
+{
+  "status": "OK"
+}
+```
+
+**`POST /api/organizations`**
 
 ```json
 {
@@ -131,24 +142,20 @@ Every domain event lands in the **Outbox** within the same transaction as the st
   "plan": "PRO"
 }
 ```
-</details>
 
-<details>
-<summary><strong>POST /api/processes</strong></summary>
+**`POST /api/processes`**
 
 ```json
 {
   "organizationId": "uuid",
   "name": "Invoice Approval",
   "steps": [
-    { "id": "uuid", "name": "Review", "order": 0 }
+    { "id": "uuid", "name": "Review", "order": 1 }
   ]
 }
 ```
-</details>
 
-<details>
-<summary><strong>POST /api/processes/start-execution</strong></summary>
+**`POST /api/processes/start-execution`**
 
 ```json
 {
@@ -156,13 +163,12 @@ Every domain event lands in the **Outbox** within the same transaction as the st
   "executionId": "uuid"
 }
 ```
-</details>
 
 ## Database Schema
 
-Core entities managed via Prisma:
+Core entities managed via Prisma ORM:
 
-`Organization` · `Subscription` · `Plan` · `Process` · `ProcessStep` · `Execution` · `ExecutionStep` · `AuditLog` · `Outbox`
+`Organization` · `Subscription` · `Plan` · `Process` · `ProcessStep` · `Execution` · `ExecutionStep` · `Outbox` · `AuditLog`
 
 ## Getting Started
 
@@ -193,19 +199,26 @@ The API will be available at `http://localhost:3000` (or whichever `PORT` you co
 ## Testing
 
 ```bash
-# Unit tests
+# Run isolated Domain and Use Case unit tests
 npm test
 
-# Integration tests
+# Run infrastructure and Prisma integration tests
 npm run test:integration
+
+# Check coverage
+npm run test:cov
 ```
+
+## Roadmap
+
+> _Pendiente de definir en la fuente original._
 
 ## Learning Goals
 
 This project was built to practice and demonstrate:
 
-Advanced TypeScript · Clean Architecture · Domain-Driven Design · Event-Driven Systems · Backend Design · Transaction Management · Repository Pattern · Dependency Injection
+Advanced TypeScript · Clean Architecture · Domain-Driven Design · Event-Driven Systems · Backend Design · Invisible Transaction Management (`AsyncLocalStorage`) · Repository Pattern · Dependency Injection
 
 ## License
 
-Distributed under the **MIT License**.
+Distributed under the MIT License.
