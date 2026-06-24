@@ -3,14 +3,13 @@
 # Backend Tickets
 
 **Ticket workflow automation backend** built with Domain-Driven Design, Clean Architecture, and Event-Driven patterns.
-[![codecov](https://codecov.io/gh/tu-usuario/logisparse/graph/badge.svg?token=TU_TOKEN_OPCIONAL)](https://codecov.io/gh/hxcCoder/saas-ticket-backend)
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](#license)
-
+[![Codecov](https://codecov.io/gh/hxcCoder/saas-ticket-backend/graph/badge.svg)](https://codecov.io/gh/hxcCoder/saas-ticket-backend)
 </div>
 
 ---
