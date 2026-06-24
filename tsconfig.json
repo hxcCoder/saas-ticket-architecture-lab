@@ -5,7 +5,7 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "isolatedModules": true,
+    "isolatedModules": false,
     "rootDir": "src",
     "outDir": "dist",
     "strict": true,

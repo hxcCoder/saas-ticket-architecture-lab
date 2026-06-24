@@ -1,3 +1,4 @@
+// jest.config.cjs
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   preset: "ts-jest",
@@ -5,19 +6,18 @@ module.exports = {
   roots: ["<rootDir>/src"],
   testMatch: ["**/*.test.ts"],
   
-  // Ignoramos las pruebas de integración que requieren base de datos real para el CI
+  // 🌟 NUEVO: Ignoramos las pruebas de integración que requieren base de datos real para el CI
   testPathIgnorePatterns: [
     "/node_modules/",
     "<rootDir>/src/infrastructure/persistence/prisma/__tests__/"
   ],
 
-  // Excluimos del reporte de cobertura los archivos de infraestructura y puntos de entrada
   coveragePathIgnorePatterns: [
     "/node_modules/",
-    "<rootDir>/src/infrastructure/persistence/prisma/",
-    "<rootDir>/src/interfaces/http/",
-    "<rootDir>/src/index.ts",
-    "<rootDir>/src/infrastructure/persistence/services/SubscriptionServiceImpl.ts"
+    "/src/infrastructure/persistence/prisma/",
+    "/src/interfaces/http/",
+    "/src/index.ts",
+    "src/infrastructure/persistence/services/SubscriptionServiceImpl.ts"
   ],
 
   moduleFileExtensions: ["ts", "js"],
@@ -34,7 +34,8 @@ module.exports = {
       {
         isolatedModules: true,
         diagnostics: {
-          ignoreCodes: ['151002'],
+          // Se agregó el código '1272' para ignorar el error de decoradores y módulos aislados
+          ignoreCodes: ['151002', '1272'], 
         },
         tsconfig: {
           module: "CommonJS",
