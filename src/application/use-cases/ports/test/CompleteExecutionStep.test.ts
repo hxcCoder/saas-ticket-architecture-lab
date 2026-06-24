@@ -3,7 +3,7 @@ import { CompleteExecutionStep } from '../../CompleteExecutionStep.js';
 import { InMemoryExecutionRepository } from './fakes/InMemoryExecutionRepository.js';
 import { InMemoryAuditRepository } from './fakes/InMemoryAuditRepository.js';
 import { InMemoryUnitOfWork } from './fakes/InMemoryUnitOfWork.js';
-import { ExecutionFactory } from '../../test/fakes/ExecutionFactory.js';
+import { ExecutionFactory } from '../../__tests__/fakes/ExecutionFactory.js';
 
 describe('CompleteExecutionStep Use Case', () => {
   let repo: InMemoryExecutionRepository;

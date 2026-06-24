@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, jest } from '@jest/globals';
 import { PrismaUnitOfWork } from '../PrismaUnitOfWork.js';
 import { PrismaExecutionRepository } from '../PrismaExecutionRepository.js';
-import { ExecutionFactory } from '../../../../application/use-cases/test/fakes/ExecutionFactory.js';
+import { ExecutionFactory } from '../../../../application/use-cases/__tests__/fakes/ExecutionFactory.js';
 import { getPrismaClient } from '../PrismaClient.js';
 
 const prisma = getPrismaClient();

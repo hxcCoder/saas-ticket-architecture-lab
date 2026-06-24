@@ -4,6 +4,7 @@ import { ExecutionStatus } from '../ExecutionStatus.js';
 import { ExecutionStep, ExecutionStepStatus } from '../ExecutionStep.js';
 import { Process } from '../../process/Process.js';
 import { ProcessStep } from '../../process/ProcessStep.js';
+import { ProcessStatus } from '../../process/ProcessStatus.js'; // Añadida la importación necesaria
 import { InvalidProcessStateError } from '../../process/ProcessErrors.js';
 import { ExecutionStarted } from '../events/ExecutionStarted.js';
 import { ExecutionStepCompleted } from '../events/ExecutionStepCompleted.js';
@@ -15,7 +16,6 @@ describe('Execution Domain Entity', () => {
 
     beforeEach(() => {
         // Configuramos Procesos de prueba usando la propia API del dominio.
-        // No utilizamos Application Fakes aquí para mantener el dominio aislado.
         activeProcess = Process.create('proc-1', 'Test Process', 'org-1');
         activeProcess.addStep(new ProcessStep({ id: 'step-1', name: 'Step 1', order: 1 }));
         activeProcess.addStep(new ProcessStep({ id: 'step-2', name: 'Step 2', order: 2 }));
@@ -48,11 +48,13 @@ describe('Execution Domain Entity', () => {
 
         it('debe lanzar Error si el proceso no tiene pasos configurados', () => {
             const emptyProcess = Process.create('proc-3', 'Empty Process', 'org-1');
-            emptyProcess.activate();
+            
+            // Forzamos el estado activo saltando la regla de negocio para evaluar Execution.ts
+            (emptyProcess as any).status = ProcessStatus.ACTIVE;
 
             expect(() => {
                 Execution.start('exec-3', emptyProcess);
-            }).toThrow('Execution must contain at least one step');
+            }).toThrow('Execution must contain at least one step'); 
         });
     });
 

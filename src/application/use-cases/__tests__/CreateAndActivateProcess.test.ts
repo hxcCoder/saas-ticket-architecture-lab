@@ -36,7 +36,7 @@ it('should create and activate a process with steps', async () => {
 
     const saved = await processRepo.findById('p1');
     expect(saved).not.toBeNull();
-    expect(saved?.getStatus()).toBe('ACTIVE');
+    expect(saved?.getStatus()).toBe('active');
     expect(saved?.getSteps().length).toBe(2);
     expect(subscriptionService.canCreateProcess).toHaveBeenCalledWith('org1');
 });
