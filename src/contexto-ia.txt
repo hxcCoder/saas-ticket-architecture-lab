@@ -4,6 +4,12 @@
 ├── application
 │   ├── application.md
 │   └── use-cases
+│       ├── __tests__
+│       │   ├── CreateAndActivateProcess.test.ts
+│       │   ├── fakes
+│       │   │   ├── ExecutionFactory.ts
+│       │   │   └── ProcessFactory.ts
+│       │   └── StartExecution.test.ts
 │       ├── CompleteExecutionStep.ts
 │       ├── CreateAndActivateProcess.ts
 │       ├── ports
@@ -21,22 +27,22 @@
 │       │   │   │   └── InMemoryUnitOfWork.ts
 │       │   │   └── InMemoryOutboxRepository.ts
 │       │   └── UnitOfWork.ts
-│       ├── StartExecution.ts
-│       └── test
-│           ├── CreateAndActivateProcess.ts
-│           ├── fakes
-│           │   ├── ExecutionFactory.ts
-│           │   └── ProcessFactory.ts
-│           └── StartExecution.test.ts
+│       └── StartExecution.ts
 ├── domain
 │   ├── domain.md
 │   └── entities
 │       ├── audit
-│       │   ├── AuditLog.ts
 │       │   └── shared
+│       │       ├── __tests__
+│       │       │   └── DomainShared.test.ts
 │       │       ├── DomainError.ts
 │       │       └── DomainEvent.ts
 │       ├── execution
+│       │   ├── __tests__
+│       │   │   ├── Execution.test.ts
+│       │   │   ├── ExecutionErrors.test.ts
+│       │   │   ├── ExecutionEvent.test.ts
+│       │   │   └── ExecutionStep.test.ts
 │       │   ├── events
 │       │   │   ├── ExecutionCompleted.ts
 │       │   │   ├── ExecutionStarted.ts
@@ -46,6 +52,9 @@
 │       │   ├── ExecutionStatus.ts
 │       │   └── ExecutionStep.ts
 │       └── process
+│           ├── __tests__
+│           │   ├── Process.test.ts
+│           │   └── ProcessStep.test.ts
 │           ├── events
 │           │   ├── ProcessActivated.ts
 │           │   ├── ProcessArchived.ts
@@ -120,6 +129,8 @@
 │       │   ├── PrismaProcessRepository.ts
 │       │   └── PrismaUnitOfWork.ts
 │       └── services
+│           ├── __tests__
+│           │   └── EventPublishWorker.test.ts
 │           ├── EventPublishWorker.ts
 │           └── SubscriptionServiceImpl.ts
 ├── interfaces
@@ -279,7 +290,7 @@ import { CompleteExecutionStep } from &apos;../../CompleteExecutionStep.js&apos;
 import { InMemoryExecutionRepository } from &apos;./fakes/InMemoryExecutionRepository.js&apos;;
 import { InMemoryAuditRepository } from &apos;./fakes/InMemoryAuditRepository.js&apos;;
 import { InMemoryUnitOfWork } from &apos;./fakes/InMemoryUnitOfWork.js&apos;;
-import { ExecutionFactory } from &apos;../../test/fakes/ExecutionFactory.js&apos;;
+import { ExecutionFactory } from &apos;../../__tests__/fakes/ExecutionFactory.js&apos;;
 
 describe(&apos;CompleteExecutionStep Use Case&apos;, () =&gt; {
   let repo: InMemoryExecutionRepository;
@@ -455,7 +466,7 @@ export class StartExecution {
 }
 </file>
 
-<file path="application/use-cases/test/CreateAndActivateProcess.ts">
+<file path="application/use-cases/__tests__/CreateAndActivateProcess.test.ts">
 import { describe, it, expect, beforeEach, jest } from &apos;@jest/globals&apos;;
 import { CreateAndActivateProcess } from &apos;../CreateAndActivateProcess.js&apos;;
 import { InMemoryProcessRepository } from &apos;../ports/test/fakes/InMemoryProcessRepository.js&apos;;
@@ -494,7 +505,7 @@ it(&apos;should create and activate a process with steps&apos;, async () =&gt; {
 
     const saved = await processRepo.findById(&apos;p1&apos;);
     expect(saved).not.toBeNull();
-    expect(saved?.getStatus()).toBe(&apos;ACTIVE&apos;);
+    expect(saved?.getStatus()).toBe(&apos;active&apos;);
     expect(saved?.getSteps().length).toBe(2);
     expect(subscriptionService.canCreateProcess).toHaveBeenCalledWith(&apos;org1&apos;);
 });
@@ -516,7 +527,7 @@ it(&apos;should throw if subscription limit reached&apos;, async () =&gt; {
 });
 </file>
 
-<file path="application/use-cases/test/fakes/ExecutionFactory.ts">
+<file path="application/use-cases/__tests__/fakes/ExecutionFactory.ts">
 // src/application/use-cases/test/fakes/ExecutionFactory.ts
 import { Execution } from &quot;../../../../domain/entities/execution/Execution.js&quot;;
 import { ExecutionStep, ExecutionStepStatus } from &quot;../../../../domain/entities/execution/ExecutionStep.js&quot;;
@@ -532,7 +543,7 @@ export class ExecutionFactory {
 
 </file>
 
-<file path="application/use-cases/test/fakes/ProcessFactory.ts">
+<file path="application/use-cases/__tests__/fakes/ProcessFactory.ts">
 import { Process } from &quot;../../../../domain/entities/process/Process.js&quot;;
 import { ProcessStep } from &quot;../../../../domain/entities/process/ProcessStep.js&quot;;
 
@@ -557,7 +568,7 @@ export class ProcessFactory {
 
 </file>
 
-<file path="application/use-cases/test/StartExecution.test.ts">
+<file path="application/use-cases/__tests__/StartExecution.test.ts">
 import { describe, it, expect, beforeEach, jest } from &apos;@jest/globals&apos;;
 import { StartExecution } from &apos;../StartExecution.js&apos;;
 import { InMemoryExecutionRepository } from &apos;../ports/test/fakes/InMemoryExecutionRepository.js&apos;;
@@ -613,10 +624,6 @@ it(&apos;should throw if process is not active&apos;, async () =&gt; {
 });
 </file>
 
-<file path="domain/entities/audit/AuditLog.ts">
-
-</file>
-
 <file path="domain/entities/audit/shared/DomainError.ts">
     export abstract class DomainError extends Error {
 public readonly occurredAt: Date;
@@ -649,6 +656,58 @@ export abstract class DomainEvent {
     abstract toPrimitives(): Record&lt;string, unknown&gt;;
 }
 
+</file>
+
+<file path="domain/entities/audit/shared/__tests__/DomainShared.test.ts">
+import { describe, it, expect } from &apos;@jest/globals&apos;;
+import { DomainError } from &apos;../DomainError.js&apos;;
+import { DomainEvent } from &apos;../DomainEvent.js&apos;;
+
+// Implementaciones concretas para probar las clases abstractas
+class TestError extends DomainError {
+    constructor(message: string) {
+        super(message);
+    }
+}
+
+class TestEvent extends DomainEvent {
+    getEventName(): string { return &apos;test.event.fired&apos;; }
+    toPrimitives(): Record&lt;string, unknown&gt; { return { dummy: true }; }
+}
+
+describe(&apos;Shared Domain Classes&apos;, () =&gt; {
+    describe(&apos;DomainError&apos;, () =&gt; {
+        it(&apos;debe inicializarse capturando correctamente el nombre de la clase y la fecha&apos;, () =&gt; {
+            const error = new TestError(&apos;Mensaje de prueba&apos;);
+            
+            expect(error.message).toBe(&apos;Mensaje de prueba&apos;);
+            expect(error.name).toBe(&apos;TestError&apos;); // Valida el new.target.prototype
+            expect(error.occurredAt).toBeInstanceOf(Date);
+        });
+    });
+
+    describe(&apos;DomainEvent&apos;, () =&gt; {
+        it(&apos;debe autogenerar eventId (UUID) y occurredOn si no se proveen&apos;, () =&gt; {
+            const event = new TestEvent();
+            
+            expect(event.eventId).toBeDefined();
+            expect(typeof event.eventId).toBe(&apos;string&apos;);
+            expect(event.occurredOn).toBeInstanceOf(Date);
+            
+            // Validamos los métodos abstractos implementados
+            expect(event.getEventName()).toBe(&apos;test.event.fired&apos;);
+            expect(event.toPrimitives()).toEqual({ dummy: true });
+        });
+
+        it(&apos;debe respetar el eventId y occurredOn pasados explícitamente en el constructor&apos;, () =&gt; {
+            const mockDate = new Date(&apos;2024-01-01T00:00:00Z&apos;);
+            const event = new TestEvent(&apos;uuid-custom-123&apos;, mockDate);
+            
+            expect(event.eventId).toBe(&apos;uuid-custom-123&apos;);
+            expect(event.occurredOn).toEqual(mockDate);
+        });
+    });
+});
 </file>
 
 <file path="domain/entities/execution/events/ExecutionCompleted.ts">
@@ -921,6 +980,7 @@ export enum ExecutionStepStatus {
   PENDING = &quot;PENDING&quot;,
   DONE = &quot;DONE&quot;,
   FAILED = &quot;FAILED&quot;,
+  COMPLETED = &quot;COMPLETED&quot;,
 }
 
 export class ExecutionStep {
@@ -963,6 +1023,261 @@ export class ExecutionStep {
     return this.status;
   }
 }
+</file>
+
+<file path="domain/entities/execution/__tests__/Execution.test.ts">
+import { describe, it, expect, beforeEach } from &apos;@jest/globals&apos;;
+import { Execution } from &apos;../Execution.js&apos;;
+import { ExecutionStatus } from &apos;../ExecutionStatus.js&apos;;
+import { ExecutionStep, ExecutionStepStatus } from &apos;../ExecutionStep.js&apos;;
+import { Process } from &apos;../../process/Process.js&apos;;
+import { ProcessStep } from &apos;../../process/ProcessStep.js&apos;;
+import { ProcessStatus } from &apos;../../process/ProcessStatus.js&apos;; // Añadida la importación necesaria
+import { InvalidProcessStateError } from &apos;../../process/ProcessErrors.js&apos;;
+import { ExecutionStarted } from &apos;../events/ExecutionStarted.js&apos;;
+import { ExecutionStepCompleted } from &apos;../events/ExecutionStepCompleted.js&apos;;
+import { ExecutionCompleted } from &apos;../events/ExecutionCompleted.js&apos;;
+
+describe(&apos;Execution Domain Entity&apos;, () =&gt; {
+    let activeProcess: Process;
+    let inactiveProcess: Process;
+
+    beforeEach(() =&gt; {
+        // Configuramos Procesos de prueba usando la propia API del dominio.
+        activeProcess = Process.create(&apos;proc-1&apos;, &apos;Test Process&apos;, &apos;org-1&apos;);
+        activeProcess.addStep(new ProcessStep({ id: &apos;step-1&apos;, name: &apos;Step 1&apos;, order: 1 }));
+        activeProcess.addStep(new ProcessStep({ id: &apos;step-2&apos;, name: &apos;Step 2&apos;, order: 2 }));
+        activeProcess.activate(); // Lo pasamos a estado ACTIVE
+
+        inactiveProcess = Process.create(&apos;proc-2&apos;, &apos;Inactive Process&apos;, &apos;org-1&apos;);
+        inactiveProcess.addStep(new ProcessStep({ id: &apos;step-3&apos;, name: &apos;Step 3&apos;, order: 1 }));
+        // No lo activamos intencionalmente
+    });
+
+    describe(&apos;start()&apos;, () =&gt; {
+        it(&apos;debe iniciar una ejecución y registrar el evento ExecutionStarted&apos;, () =&gt; {
+            const execution = Execution.start(&apos;exec-1&apos;, activeProcess);
+
+            expect(execution.getId()).toBe(&apos;exec-1&apos;);
+            expect(execution.getProcessId()).toBe(&apos;proc-1&apos;);
+            expect(execution.getStatus()).toBe(ExecutionStatus.RUNNING);
+            expect(execution.getSteps().length).toBe(2);
+
+            const events = execution.pullDomainEvents();
+            expect(events).toHaveLength(1);
+            expect(events[0]).toBeInstanceOf(ExecutionStarted);
+        });
+
+        it(&apos;debe lanzar InvalidProcessStateError si el proceso no está activo&apos;, () =&gt; {
+            expect(() =&gt; {
+                Execution.start(&apos;exec-2&apos;, inactiveProcess);
+            }).toThrow(InvalidProcessStateError);
+        });
+
+        it(&apos;debe lanzar Error si el proceso no tiene pasos configurados&apos;, () =&gt; {
+            const emptyProcess = Process.create(&apos;proc-3&apos;, &apos;Empty Process&apos;, &apos;org-1&apos;);
+            
+            // Forzamos el estado activo saltando la regla de negocio para evaluar Execution.ts
+            (emptyProcess as any).status = ProcessStatus.ACTIVE;
+
+            expect(() =&gt; {
+                Execution.start(&apos;exec-3&apos;, emptyProcess);
+            }).toThrow(&apos;Execution must contain at least one step&apos;); 
+        });
+    });
+
+    describe(&apos;rehydrate()&apos;, () =&gt; {
+        it(&apos;debe rehidratar la entidad correctamente sin emitir nuevos eventos&apos;, () =&gt; {
+            const step1 = ExecutionStep.rehydrate({ stepId: &apos;step-1&apos;, status: ExecutionStepStatus.PENDING });
+            const step2 = ExecutionStep.rehydrate({ stepId: &apos;step-2&apos;, status: ExecutionStepStatus.COMPLETED });
+            
+            const execution = Execution.rehydrate({
+                id: &apos;exec-rehydrated&apos;,
+                processId: &apos;proc-1&apos;,
+                status: ExecutionStatus.RUNNING,
+                steps: [step1, step2]
+            });
+
+            expect(execution.getId()).toBe(&apos;exec-rehydrated&apos;);
+            expect(execution.getStatus()).toBe(ExecutionStatus.RUNNING);
+            expect(execution.getSteps()).toHaveLength(2);
+            expect(execution.pullDomainEvents()).toHaveLength(0); // Validamos que la rehidratación no dispare eventos
+        });
+
+        it(&apos;debe lanzar Error si se detectan pasos duplicados en la rehidratación&apos;, () =&gt; {
+            const step1 = ExecutionStep.rehydrate({ stepId: &apos;step-1&apos;, status: ExecutionStepStatus.PENDING });
+            const duplicateStep = ExecutionStep.rehydrate({ stepId: &apos;step-1&apos;, status: ExecutionStepStatus.PENDING });
+
+            expect(() =&gt; {
+                Execution.rehydrate({
+                    id: &apos;exec-dup&apos;,
+                    processId: &apos;proc-1&apos;,
+                    status: ExecutionStatus.RUNNING,
+                    steps: [step1, duplicateStep]
+                });
+            }).toThrow(&apos;Duplicate execution steps detected&apos;);
+        });
+    });
+
+    describe(&apos;markStepDone()&apos;, () =&gt; {
+        let execution: Execution;
+
+        beforeEach(() =&gt; {
+            execution = Execution.start(&apos;exec-prog&apos;, activeProcess);
+            execution.pullDomainEvents(); // Limpiamos los eventos iniciales de &apos;start()&apos;
+        });
+
+        it(&apos;debe marcar el paso como completado y registrar ExecutionStepCompleted&apos;, () =&gt; {
+            execution.markStepDone(&apos;step-1&apos;);
+
+            expect(execution.isStepCompleted(&apos;step-1&apos;)).toBe(true);
+            
+            const events = execution.pullDomainEvents();
+            expect(events).toHaveLength(1);
+            expect(events[0]).toBeInstanceOf(ExecutionStepCompleted);
+        });
+
+        it(&apos;debe finalizar la ejecución global si todos los pasos terminaron (y emitir ExecutionCompleted)&apos;, () =&gt; {
+            execution.markStepDone(&apos;step-1&apos;);
+            execution.markStepDone(&apos;step-2&apos;);
+
+            expect(execution.getStatus()).toBe(ExecutionStatus.COMPLETED);
+            
+            const events = execution.pullDomainEvents();
+            // Validamos que el último evento emitido marque el fin de la ejecución
+            expect(events[events.length - 1]).toBeInstanceOf(ExecutionCompleted);
+        });
+
+        it(&apos;no debe mutar estado ni emitir eventos si el paso ya estaba completado&apos;, () =&gt; {
+            execution.markStepDone(&apos;step-1&apos;);
+            execution.pullDomainEvents(); // Limpiamos el evento del primer &quot;done&quot;
+
+            execution.markStepDone(&apos;step-1&apos;); // Intentamos marcarlo de nuevo
+
+            expect(execution.pullDomainEvents()).toHaveLength(0);
+        });
+
+        it(&apos;debe lanzar Error si el ID del paso no pertenece a la ejecución&apos;, () =&gt; {
+            expect(() =&gt; {
+                execution.markStepDone(&apos;step-unknown&apos;);
+            }).toThrow(&apos;Execution step not found&apos;);
+        });
+
+        it(&apos;debe lanzar Error si la ejecución ya no está en estado RUNNING&apos;, () =&gt; {
+            execution.markStepDone(&apos;step-1&apos;);
+            execution.markStepDone(&apos;step-2&apos;); // Aquí pasa automáticamente a COMPLETED
+
+            expect(() =&gt; {
+                // Intentar mutar un estado de algo ya completado
+                execution.markStepDone(&apos;step-1&apos;);
+            }).toThrow(&apos;Cannot update steps when execution is not running&apos;);
+        });
+    });
+});
+</file>
+
+<file path="domain/entities/execution/__tests__/ExecutionErrors.test.ts">
+import { describe, it, expect } from &apos;@jest/globals&apos;;
+import { InvalidExecutionStatusError, InvalidExecutionStepError, ProcessNotActive } from &apos;../ExecutionErrors.js&apos;;
+
+describe(&apos;Execution Custom Errors&apos;, () =&gt; {
+    it(&apos;InvalidExecutionStatusError debe formatear el mensaje con el estado provisto&apos;, () =&gt; {
+        const error = new InvalidExecutionStatusError(&apos;UNKNOWN_STATUS&apos;);
+        expect(error.message).toBe(&apos;Invalid execution status: UNKNOWN_STATUS&apos;);
+        expect(error.name).toBe(&apos;InvalidExecutionStatusError&apos;);
+    });
+
+    it(&apos;InvalidExecutionStepError debe heredar el mensaje literal&apos;, () =&gt; {
+        const error = new InvalidExecutionStepError(&apos;Step config is malformed&apos;);
+        expect(error.message).toBe(&apos;Step config is malformed&apos;);
+        expect(error.name).toBe(&apos;InvalidExecutionStepError&apos;);
+    });
+
+    it(&apos;ProcessNotActive debe poseer un mensaje predeterminado inmutable&apos;, () =&gt; {
+        const error = new ProcessNotActive();
+        expect(error.message).toBe(&apos;Cannot start execution from inactive process&apos;);
+        expect(error.name).toBe(&apos;ProcessNotActive&apos;);
+    });
+});
+</file>
+
+<file path="domain/entities/execution/__tests__/ExecutionEvent.test.ts">
+import { describe, it, expect } from &apos;@jest/globals&apos;;
+// Corregido: Se añade la carpeta &quot;events/&quot; a las rutas
+import { ExecutionStarted } from &apos;../events/ExecutionStarted.js&apos;;
+import { ExecutionCompleted } from &apos;../events/ExecutionCompleted.js&apos;;
+import { ExecutionStepCompleted } from &apos;../events/ExecutionStepCompleted.js&apos;;
+
+describe(&apos;Execution Domain Events&apos;, () =&gt; {
+    it(&apos;ExecutionStarted debe inicializarse y serializarse correctamente&apos;, () =&gt; {
+        const event = new ExecutionStarted(&apos;exec-1&apos;, &apos;proc-1&apos;);
+        
+        expect(event.getEventName()).toBe(&apos;execution.started&apos;);
+        expect(event.eventId).toBeDefined(); // Heredado de DomainEvent
+        
+        const primitives = event.toPrimitives();
+        expect(primitives.executionId).toBe(&apos;exec-1&apos;);
+        expect(primitives.processId).toBe(&apos;proc-1&apos;);
+        expect(primitives.occurredOn).toBeDefined();
+    });
+
+    it(&apos;ExecutionCompleted debe inicializarse y serializarse correctamente&apos;, () =&gt; {
+        const event = new ExecutionCompleted(&apos;exec-1&apos;);
+        
+        expect(event.getEventName()).toBe(&apos;execution.completed&apos;);
+        
+        const primitives = event.toPrimitives();
+        expect(primitives.executionId).toBe(&apos;exec-1&apos;);
+    });
+
+    it(&apos;ExecutionStepCompleted debe inicializarse y serializarse correctamente&apos;, () =&gt; {
+        const event = new ExecutionStepCompleted(&apos;exec-1&apos;, &apos;step-1&apos;);
+        
+        expect(event.getEventName()).toBe(&apos;execution.step.completed&apos;);
+        
+        const primitives = event.toPrimitives();
+        expect(primitives.executionId).toBe(&apos;exec-1&apos;);
+        expect(primitives.stepId).toBe(&apos;step-1&apos;);
+    });
+});
+</file>
+
+<file path="domain/entities/execution/__tests__/ExecutionStep.test.ts">
+import { describe, it, expect } from &apos;@jest/globals&apos;;
+import { ExecutionStep, ExecutionStepStatus } from &apos;../ExecutionStep.js&apos;;
+import { ProcessStep } from &apos;../../process/ProcessStep.js&apos;;
+
+describe(&apos;ExecutionStep Domain Entity&apos;, () =&gt; {
+    it(&apos;debe crearse desde un ProcessStep correctamente (fromProcessStep)&apos;, () =&gt; {
+        // Usamos un ProcessStep ficticio simulando la entrada desde el agregado Process
+        const processStep = new ProcessStep({ id: &apos;step-1&apos;, name: &apos;Validación&apos;, order: 1 });
+        const step = ExecutionStep.fromProcessStep(processStep);
+        
+        expect(step.getStepId()).toBe(&apos;step-1&apos;);
+        expect(step.isDone()).toBe(false);
+    });
+
+    it(&apos;debe rehidratarse con un estado previo (rehydrate)&apos;, () =&gt; {
+        const step = ExecutionStep.rehydrate({ 
+            stepId: &apos;step-2&apos;, 
+            status: ExecutionStepStatus.DONE 
+        });
+
+        expect(step.getStepId()).toBe(&apos;step-2&apos;);
+        expect(step.isDone()).toBe(true);
+    });
+
+    it(&apos;debe marcarse como completado si estaba pendiente (markDone)&apos;, () =&gt; {
+        const step = ExecutionStep.rehydrate({ 
+            stepId: &apos;step-3&apos;, 
+            status: ExecutionStepStatus.PENDING 
+        });
+
+        expect(step.isDone()).toBe(false);
+        step.markDone();
+        expect(step.isDone()).toBe(true);
+    });
+});
 </file>
 
 <file path="domain/entities/process/events/ProcessActivated.ts">
@@ -1058,28 +1373,20 @@ describe(&quot;Process.activate errors&quot;, () =&gt; {
 </file>
 
 <file path="domain/entities/process/events/tests/Process.activate.test.ts">
-import { Process } from &quot;../../Process.js&quot;;
-import { ProcessStep } from &quot;../../ProcessStep.js&quot;;
-import { ProcessStatus } from &quot;../../ProcessStatus.js&quot;;
+import { describe, it, expect } from &apos;@jest/globals&apos;;
+import { ProcessArchived } from &apos;../ProcessArchived.js&apos;;
 
-describe(&quot;Process.activate&quot;, () =&gt; {
-    it(&quot;activates a process with steps&quot;, () =&gt; {
-        const process = Process.create(&quot;p-1&quot;, &quot;My process&quot;, &quot;org-123&quot;);
-
-        const step = new ProcessStep({
-            id: &quot;s-1&quot;,
-            name: &quot;First step&quot;,
-            order: 0,
-        });
-
-        process.addStep(step);
-        process.activate();
-
-        expect(process.getStatus()).toBe(ProcessStatus.ACTIVE);
-        expect(process.isActive()).toBe(true);
+describe(&apos;ProcessArchived Domain Event&apos;, () =&gt; {
+    it(&apos;debe serializarse correctamente&apos;, () =&gt; {
+        const event = new ProcessArchived(&apos;proc-123&apos;);
+        
+        expect(event.getEventName()).toBe(&apos;process.archived&apos;);
+        
+        const primitives = event.toPrimitives();
+        expect(primitives.processId).toBe(&apos;proc-123&apos;);
+        expect(event.occurredOn).toBeInstanceOf(Date);
     });
 });
-
 </file>
 
 <file path="domain/entities/process/events/tests/Process.create.test.ts">
@@ -1317,6 +1624,87 @@ export enum ProcessStepStatus {
     DISABLED = &quot;disabled&quot;,
 }
 
+</file>
+
+<file path="domain/entities/process/__tests__/Process.test.ts">
+import { describe, it, expect, beforeEach } from &apos;@jest/globals&apos;;
+import { Process } from &apos;../Process.js&apos;;
+import { ProcessStep } from &apos;../ProcessStep.js&apos;;
+import { ProcessStatus } from &apos;../ProcessStatus.js&apos;; // Asumiendo que existe según tu árbol
+import { ProcessCreated } from &apos;../events/ProcessCreated.js&apos;;
+import { ProcessActivated } from &apos;../events/ProcessActivated.js&apos;;
+
+describe(&apos;Process Domain Entity&apos;, () =&gt; {
+    it(&apos;debe crear un nuevo proceso y emitir el evento ProcessCreated&apos;, () =&gt; {
+        const process = Process.create(&apos;proc-1&apos;, &apos;Onboarding&apos;, &apos;org-1&apos;);
+        
+        expect(process.getId()).toBe(&apos;proc-1&apos;);
+        expect(process.isActive()).toBe(false); // Al nacer, no debería estar activo
+        
+        const events = process.pullDomainEvents();
+        expect(events).toHaveLength(1);
+        expect(events[0].constructor.name).toBe(&apos;ProcessCreated&apos;);
+    });
+
+    it(&apos;debe permitir añadir pasos (ProcessStep) correctamente&apos;, () =&gt; {
+        const process = Process.create(&apos;proc-1&apos;, &apos;Onboarding&apos;, &apos;org-1&apos;);
+        const step = new ProcessStep({ id: &apos;step-1&apos;, name: &apos;Validación KYC&apos;, order: 1 });
+        
+        process.addStep(step);
+        
+        const steps = process.getSteps();
+        expect(steps).toHaveLength(1);
+        expect(steps[0]).toBe(step); // Verifica que sea la misma instancia
+    });
+
+    it(&apos;debe activar el proceso y emitir ProcessActivated&apos;, () =&gt; {
+        const process = Process.create(&apos;proc-1&apos;, &apos;Onboarding&apos;, &apos;org-1&apos;);
+        process.addStep(new ProcessStep({ id: &apos;step-1&apos;, name: &apos;Validación KYC&apos;, order: 1 }));
+        process.pullDomainEvents(); // Limpiar eventos de la creación
+
+        process.activate();
+        
+        expect(process.isActive()).toBe(true);
+        
+        const events = process.pullDomainEvents();
+        expect(events).toHaveLength(1);
+        expect(events[0].constructor.name).toBe(&apos;ProcessActivated&apos;);
+    });
+
+    it(&apos;debe fallar al intentar activar un proceso sin pasos configurados&apos;, () =&gt; {
+        const process = Process.create(&apos;proc-2&apos;, &apos;Empty Process&apos;, &apos;org-1&apos;);
+        
+        // En DDD, activar un proceso sin pasos suele ser un estado inválido.
+        // Si tienes esta regla de negocio, este test la cubre:
+        expect(() =&gt; {
+            process.activate();
+        }).toThrow(); // Si usas un Custom Error, pon .toThrow(TuErrorCustom)
+    });
+});
+</file>
+
+<file path="domain/entities/process/__tests__/ProcessStep.test.ts">
+import { describe, it, expect } from &apos;@jest/globals&apos;;
+import { ProcessStep } from &apos;../ProcessStep.js&apos;;
+
+describe(&apos;ProcessStep Domain Entity&apos;, () =&gt; {
+    it(&apos;debe instanciarse correctamente mapeando las propiedades&apos;, () =&gt; {
+        const step = new ProcessStep({ 
+            id: &apos;step-xyz&apos;, 
+            name: &apos;Aprobación Legal&apos;, 
+            order: 5 
+        });
+
+        // Casteamos la entidad a &apos;any&apos; solo para propósitos de test.
+        // Esto silencia el error 2341 y nos permite leer variables privadas.
+        const anyStep = step as any;
+
+        // Validamos buscando la propiedad privada directamente o su getter si existe
+        expect(anyStep.id || anyStep.getId?.()).toBe(&apos;step-xyz&apos;);
+        expect(anyStep.name || anyStep.getName?.()).toBe(&apos;Aprobación Legal&apos;);
+        expect(anyStep.order || anyStep.getOrder?.()).toBe(5);
+    });
+});
 </file>
 
 <file path="generated/prisma/client.d.ts">
@@ -23927,7 +24315,7 @@ export class PrismaUnitOfWork implements UnitOfWork {
 import { describe, it, expect, beforeAll, jest } from &apos;@jest/globals&apos;;
 import { PrismaUnitOfWork } from &apos;../PrismaUnitOfWork.js&apos;;
 import { PrismaExecutionRepository } from &apos;../PrismaExecutionRepository.js&apos;;
-import { ExecutionFactory } from &apos;../../../../application/use-cases/test/fakes/ExecutionFactory.js&apos;;
+import { ExecutionFactory } from &apos;../../../../application/use-cases/__tests__/fakes/ExecutionFactory.js&apos;;
 import { getPrismaClient } from &apos;../PrismaClient.js&apos;;
 
 const prisma = getPrismaClient();
@@ -24112,6 +24500,49 @@ export class SubscriptionServiceImpl implements SubscriptionService {
     }
   }
 }
+</file>
+
+<file path="infrastructure/persistence/services/__tests__/EventPublishWorker.test.ts">
+import { describe, it, expect, beforeEach } from &apos;@jest/globals&apos;;
+import { EventPublisherWorker } from &apos;../EventPublishWorker.js&apos;; 
+import { InMemoryOutboxRepository } from &apos;../../../../application/use-cases/ports/test/InMemoryOutboxRepository.js&apos;;
+
+describe(&apos;EventPublisherWorker Infrastructure Service&apos;, () =&gt; {
+    let outboxRepo: InMemoryOutboxRepository;
+    let worker: EventPublisherWorker;
+
+    beforeEach(() =&gt; {
+        outboxRepo = new InMemoryOutboxRepository();
+        
+        // CORRECCIÓN 1: TypeScript nos dice que solo recibe 1 argumento. 
+        // Pasamos únicamente el repositorio.
+        worker = new EventPublisherWorker(outboxRepo); 
+    });
+
+    it(&apos;debe procesar los eventos pendientes y marcarlos como publicados&apos;, async () =&gt; {
+        await outboxRepo.save({
+            id: &apos;evt-1&apos;,
+            eventName: &apos;process.created&apos;,
+            payload: { processId: &apos;p-1&apos; },
+            occurredOn: new Date(),
+            published: false
+        });
+
+        // CORRECCIÓN 2: Reemplaza &apos;execute&apos; por el nombre real de tu método.
+        // Si al escribir &quot;worker.&quot; VS Code te autocompleta con &quot;run&quot;, &quot;process&quot; o &quot;start&quot;, usa ese.
+        await worker.publishPending(); 
+
+        const pending = await outboxRepo.findPending();
+        
+        // Verificamos directamente que el worker hizo su trabajo mutando el estado en el repo
+        expect(pending).toHaveLength(0);
+    });
+
+    it(&apos;no debe fallar si no hay eventos pendientes&apos;, async () =&gt; {
+        // Al no haber eventos, el worker debe terminar su ejecución gracefully (sin arrojar errores)
+        await expect(worker.publishPending()).resolves.not.toThrow();
+    });
+});
 </file>
 
 <file path="interfaces/http/authMiddleware.ts">
