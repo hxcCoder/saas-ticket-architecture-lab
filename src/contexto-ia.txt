@@ -16,14 +16,18 @@
 │       │   │   ├── CompleteExecutionStep.test.ts
 │       │   │   ├── fakes
 │       │   │   │   ├── InMemoryAuditRepository.ts
-│       │   │   │   └── InMemoryExecutionRepository.ts
+│       │   │   │   ├── InMemoryExecutionRepository.ts
+│       │   │   │   ├── InMemoryProcessRepository.ts
+│       │   │   │   └── InMemoryUnitOfWork.ts
 │       │   │   └── InMemoryOutboxRepository.ts
 │       │   └── UnitOfWork.ts
 │       ├── StartExecution.ts
 │       └── test
-│           └── fakes
-│               ├── ExecutionFactory.ts
-│               └── ProcessFactory.ts
+│           ├── CreateAndActivateProcess.ts
+│           ├── fakes
+│           │   ├── ExecutionFactory.ts
+│           │   └── ProcessFactory.ts
+│           └── StartExecution.test.ts
 ├── domain
 │   ├── domain.md
 │   └── entities
@@ -41,10 +45,6 @@
 │       │   ├── ExecutionErrors.ts
 │       │   ├── ExecutionStatus.ts
 │       │   └── ExecutionStep.ts
-│       ├── organization
-│       │   ├── Organization.ts
-│       │   ├── OrganizationErrors.ts
-│       │   └── OrganizationStatus.ts
 │       └── process
 │           ├── events
 │           │   ├── ProcessActivated.ts
@@ -104,7 +104,6 @@
 │   ├── config
 │   │   ├── container.ts
 │   │   └── logger.ts
-│   ├── fix-events.ts
 │   ├── infraestructure.md
 │   └── persistence
 │       ├── prisma
@@ -136,14 +135,15 @@
 <file path="application/use-cases/CompleteExecutionStep.ts">
 import { injectable, inject } from &apos;inversify&apos;;
 import { ExecutionRepository } from &apos;./ports/ExecutionRepository.js&apos;;
-import { UnitOfWork } from &apos;./ports/UnitOfWork.js&apos;;;
+import { AuditRepository } from &apos;./ports/AuditRepository.js&apos;;
+import { UnitOfWork } from &apos;./ports/UnitOfWork.js&apos;;
 
 @injectable()
 export class CompleteExecutionStep {
   constructor(
     @inject(&apos;ExecutionRepository&apos;) private executionRepo: ExecutionRepository,
+    @inject(&apos;AuditRepository&apos;) private auditRepo: AuditRepository,
     @inject(&apos;UnitOfWork&apos;) private unitOfWork: UnitOfWork
-  
   ) {}
 
   async execute(executionId: string, stepId: string): Promise&lt;void&gt; {
@@ -155,14 +155,14 @@ export class CompleteExecutionStep {
     execution.markStepDone(stepId);
 
     // 3. Extraer eventos de dominio generados por markStepDone (ej. ExecutionStepCompleted)
-    // const domainEvents = execution.pullDomainEvents();
+    const domainEvents = execution.pullDomainEvents();
 
     // 4. Persistencia Atómica
     await this.unitOfWork.run(async () =&gt; {
       await this.executionRepo.save(execution);
       
-      // Si decidiste guardar la auditoría desde el Caso de Uso:
-      // await this.auditRepo.saveEvents(domainEvents);
+      // Guardar los eventos en auditoría
+      await this.auditRepo.saveEvents(domainEvents);
     });
   }
 }
@@ -277,46 +277,61 @@ export interface SubscriptionService {
 import { describe, it, expect, beforeEach } from &apos;@jest/globals&apos;;
 import { CompleteExecutionStep } from &apos;../../CompleteExecutionStep.js&apos;;
 import { InMemoryExecutionRepository } from &apos;./fakes/InMemoryExecutionRepository.js&apos;;
-import { ExecutionStep } from &apos;./../../../../domain/entities/execution/ExecutionStep.js&apos;;
+import { InMemoryAuditRepository } from &apos;./fakes/InMemoryAuditRepository.js&apos;;
+import { InMemoryUnitOfWork } from &apos;./fakes/InMemoryUnitOfWork.js&apos;;
+import { ExecutionFactory } from &apos;../../test/fakes/ExecutionFactory.js&apos;;
 
 describe(&apos;CompleteExecutionStep Use Case&apos;, () =&gt; {
   let repo: InMemoryExecutionRepository;
+  let auditRepo: InMemoryAuditRepository;
+  let uow: InMemoryUnitOfWork;
   let useCase: CompleteExecutionStep;
 
   beforeEach(() =&gt; {
     repo = new InMemoryExecutionRepository();
-    useCase = new CompleteExecutionStep(repo);
+    auditRepo = new InMemoryAuditRepository();
+    uow = new InMemoryUnitOfWork();
+    useCase = new CompleteExecutionStep(repo, auditRepo, uow);
   });
 
-  it(&apos;should mark step as completed&apos;, async () =&gt; {
-    // 🔹 Creamos un step mock
-    const stepMock: any = {
-      getId: () =&gt; &apos;step1&apos;,
-      getName: () =&gt; &apos;Step 1&apos;
-    };
-    const step = ExecutionStep.fromProcessStep(stepMock);
-
-    // 🔹 Creamos la ejecución in-memory
-    const execution = repo.createDummyExecution([step]);
+  it(&apos;should mark step as completed and save events&apos;, async () =&gt; {
+    const execution = ExecutionFactory.createExecution();
     await repo.save(execution);
 
-    // 🔹 Ejecutamos el use case
     await useCase.execute(execution.getId(), &apos;step1&apos;);
 
-    // 🔹 Verificamos que el step está completado
     const updated = await repo.findById(execution.getId());
     expect(updated?.isStepCompleted(&apos;step1&apos;)).toBe(true);
 
-    // 🔹 Opcional: verificamos que el evento se registró
-    const events = updated?.pullDomainEvents() ?? [];
+    const events = auditRepo.getEvents();
     expect(events.some(e =&gt; e.constructor.name === &apos;ExecutionStepCompleted&apos;)).toBe(true);
   });
-});
 
+  it(&apos;should throw if execution not found&apos;, async () =&gt; {
+    await expect(useCase.execute(&apos;non-existent&apos;, &apos;step1&apos;)).rejects.toThrow(&apos;Execution not found&apos;);
+  });
+});
 </file>
 
 <file path="application/use-cases/ports/test/fakes/InMemoryAuditRepository.ts">
+import { DomainEvent } from &quot;../../../../../domain/entities/audit/shared/DomainEvent.js&quot;;
+import { AuditRepository } from &quot;../../AuditRepository.js&quot;;
 
+export class InMemoryAuditRepository implements AuditRepository {
+    private events: DomainEvent[] = [];
+
+    async saveEvents(events: DomainEvent[]): Promise&lt;void&gt; {
+    this.events.push(...events);
+}
+
+getEvents(): DomainEvent[] {
+    return this.events;
+}
+
+clear(): void {
+    this.events = [];
+}
+}
 </file>
 
 <file path="application/use-cases/ports/test/fakes/InMemoryExecutionRepository.ts">
@@ -340,6 +355,33 @@ export class InMemoryExecutionRepository {
   }
 }
 
+</file>
+
+<file path="application/use-cases/ports/test/fakes/InMemoryProcessRepository.ts">
+import { Process } from &quot;../../../../../domain/entities/process/Process.js&quot;;
+import { ProcessRepository } from &quot;../../ProcessRepository.js&quot;;
+
+export class InMemoryProcessRepository implements ProcessRepository {
+    private store = new Map&lt;string, Process&gt;();
+
+async save(process: Process): Promise&lt;void&gt; {
+    this.store.set(process.getId(), process);
+}
+
+async findById(id: string): Promise&lt;Process | null&gt; {
+    return this.store.get(id) ?? null;
+}
+}
+</file>
+
+<file path="application/use-cases/ports/test/fakes/InMemoryUnitOfWork.ts">
+import { UnitOfWork } from &quot;../../UnitOfWork.js&quot;;
+
+export class InMemoryUnitOfWork implements UnitOfWork {
+    async run&lt;T&gt;(work: () =&gt; Promise&lt;T&gt;): Promise&lt;T&gt; {
+    return work();
+}
+}
 </file>
 
 <file path="application/use-cases/ports/test/InMemoryOutboxRepository.ts">
@@ -413,6 +455,67 @@ export class StartExecution {
 }
 </file>
 
+<file path="application/use-cases/test/CreateAndActivateProcess.ts">
+import { describe, it, expect, beforeEach, jest } from &apos;@jest/globals&apos;;
+import { CreateAndActivateProcess } from &apos;../CreateAndActivateProcess.js&apos;;
+import { InMemoryProcessRepository } from &apos;../ports/test/fakes/InMemoryProcessRepository.js&apos;;
+import { InMemoryUnitOfWork } from &apos;../ports/test/fakes/InMemoryUnitOfWork.js&apos;;
+import { SubscriptionService } from &apos;../ports/SubscriptionService.js&apos;;
+
+describe(&apos;CreateAndActivateProcess Use Case&apos;, () =&gt; {
+    let processRepo: InMemoryProcessRepository;
+    let uow: InMemoryUnitOfWork;
+    let subscriptionService: jest.Mocked&lt;SubscriptionService&gt;;
+    let useCase: CreateAndActivateProcess;
+
+beforeEach(() =&gt; {
+    processRepo = new InMemoryProcessRepository();
+    uow = new InMemoryUnitOfWork();
+    subscriptionService = {
+        canCreateProcess: jest.fn()
+    } as any;
+    useCase = new CreateAndActivateProcess(processRepo, subscriptionService, uow);
+});
+
+it(&apos;should create and activate a process with steps&apos;, async () =&gt; {
+    subscriptionService.canCreateProcess.mockResolvedValue(true);
+
+    const input = {
+        id: &apos;p1&apos;,
+        organizationId: &apos;org1&apos;,
+        name: &apos;My Process&apos;,
+        steps: [
+        { id: &apos;s1&apos;, name: &apos;Step 1&apos;, order: 1 },
+        { id: &apos;s2&apos;, name: &apos;Step 2&apos;, order: 2 }
+    ]
+    };
+
+    await useCase.execute(input);
+
+    const saved = await processRepo.findById(&apos;p1&apos;);
+    expect(saved).not.toBeNull();
+    expect(saved?.getStatus()).toBe(&apos;ACTIVE&apos;);
+    expect(saved?.getSteps().length).toBe(2);
+    expect(subscriptionService.canCreateProcess).toHaveBeenCalledWith(&apos;org1&apos;);
+});
+
+it(&apos;should throw if subscription limit reached&apos;, async () =&gt; {
+    subscriptionService.canCreateProcess.mockResolvedValue(false);
+
+    const input = {
+        id: &apos;p2&apos;,
+        organizationId: &apos;org1&apos;,
+        name: &apos;My Process&apos;,
+        steps: [{ id: &apos;s1&apos;, name: &apos;Step 1&apos;, order: 1 }]
+    };
+
+    await expect(useCase.execute(input)).rejects.toThrow(&apos;Plan limit reached&apos;);
+    const saved = await processRepo.findById(&apos;p2&apos;);
+    expect(saved).toBeNull();
+});
+});
+</file>
+
 <file path="application/use-cases/test/fakes/ExecutionFactory.ts">
 // src/application/use-cases/test/fakes/ExecutionFactory.ts
 import { Execution } from &quot;../../../../domain/entities/execution/Execution.js&quot;;
@@ -452,6 +555,62 @@ export class ProcessFactory {
   }
 }
 
+</file>
+
+<file path="application/use-cases/test/StartExecution.test.ts">
+import { describe, it, expect, beforeEach, jest } from &apos;@jest/globals&apos;;
+import { StartExecution } from &apos;../StartExecution.js&apos;;
+import { InMemoryExecutionRepository } from &apos;../ports/test/fakes/InMemoryExecutionRepository.js&apos;;
+import { InMemoryProcessRepository } from &apos;../ports/test/fakes/InMemoryProcessRepository.js&apos;;
+import { InMemoryAuditRepository } from &apos;../ports/test/fakes/InMemoryAuditRepository.js&apos;;
+import { InMemoryUnitOfWork } from &apos;../ports/test/fakes/InMemoryUnitOfWork.js&apos;;
+import { ProcessFactory } from &apos;./fakes/ProcessFactory.js&apos;;
+import { ProcessNotActive } from &apos;../../../domain/entities/execution/ExecutionErrors.js&apos;;
+
+describe(&apos;StartExecution Use Case&apos;, () =&gt; {
+    let execRepo: InMemoryExecutionRepository;
+    let processRepo: InMemoryProcessRepository;
+    let auditRepo: InMemoryAuditRepository;
+    let uow: InMemoryUnitOfWork;
+    let useCase: StartExecution;
+
+beforeEach(() =&gt; {
+    execRepo = new InMemoryExecutionRepository();
+    processRepo = new InMemoryProcessRepository();
+    auditRepo = new InMemoryAuditRepository();
+    uow = new InMemoryUnitOfWork();
+    useCase = new StartExecution(execRepo, processRepo, auditRepo, uow);
+});
+
+it(&apos;should start execution for an active process&apos;, async () =&gt; {
+    const process = ProcessFactory.withSteps(&apos;proc1&apos;, &apos;My Process&apos;, &apos;org1&apos;, [
+        { id: &apos;s1&apos;, name: &apos;Step 1&apos;, order: 1 }
+    ]);
+    process.activate();
+    await processRepo.save(process);
+
+    await useCase.execute(&apos;proc1&apos;, &apos;exec1&apos;);
+
+    const execution = await execRepo.findById(&apos;exec1&apos;);
+    expect(execution).not.toBeNull();
+    expect(execution?.getStatus()).toBe(&apos;RUNNING&apos;);
+    expect(execution?.getSteps().length).toBe(1);
+
+    const events = auditRepo.getEvents();
+    expect(events.some(e =&gt; e.constructor.name === &apos;ExecutionStarted&apos;)).toBe(true);
+});
+
+it(&apos;should throw if process is not active&apos;, async () =&gt; {
+    const process = ProcessFactory.create(&apos;proc2&apos;, &apos;Inactive&apos;, &apos;org1&apos;);
+    await processRepo.save(process);
+
+    await expect(useCase.execute(&apos;proc2&apos;, &apos;exec2&apos;)).rejects.toThrow(ProcessNotActive);
+});
+
+    it(&apos;should throw if process not found&apos;, async () =&gt; {
+    await expect(useCase.execute(&apos;non-existent&apos;, &apos;exec3&apos;)).rejects.toThrow(ProcessNotActive);
+});
+});
 </file>
 
 <file path="domain/entities/audit/AuditLog.ts">
@@ -804,18 +963,6 @@ export class ExecutionStep {
     return this.status;
   }
 }
-</file>
-
-<file path="domain/entities/organization/Organization.ts">
-
-</file>
-
-<file path="domain/entities/organization/OrganizationErrors.ts">
-
-</file>
-
-<file path="domain/entities/organization/OrganizationStatus.ts">
-
 </file>
 
 <file path="domain/entities/process/events/ProcessActivated.ts">
@@ -23439,88 +23586,6 @@ export const logger = winston.createLogger({
 });
 </file>
 
-<file path="infrastructure/fix-events.ts">
-import fs from &apos;fs&apos;;
-import path from &apos;path&apos;;
-
-const EVENTS_ROOT = path.join(__dirname, &apos;domain/entities&apos;);
-
-
-function pascalToSnake(name: string): string {
-  return name
-    .replace(/([a-z])([A-Z])/g, &apos;$1.$2&apos;)
-    .toLowerCase();
-}
-
-function fixEventFile(filePath: string) {
-  const content = fs.readFileSync(filePath, &apos;utf-8&apos;);
-
-  if (!content.includes(&apos;extends DomainEvent&apos;)) return;
-
-  const classMatch = content.match(/export class (\w+) extends DomainEvent/);
-  if (!classMatch) return;
-
-  const className = classMatch[1];
-  const eventName = pascalToSnake(className);
-
-  let fixed = content;
-
-  // 1️⃣ Constructor
-  if (!/constructor\(/.test(content)) {
-    fixed = fixed.replace(
-      /extends DomainEvent\s*{/,
-      `extends DomainEvent {
-  constructor(eventId?: string, occurredOn?: Date) {
-    super(eventId, occurredOn);
-  }`
-    );
-  } else {
-    // Si ya hay constructor, agrega super si no existe
-    if (!/super\(/.test(content)) {
-      fixed = fixed.replace(
-        /constructor\s*\(([^)]*)\)\s*{/,
-        `constructor($1) {\n    super();`
-      );
-    }
-  }
-
-  // 2️⃣ getEventName()
-  if (!/getEventName\(\)/.test(fixed)) {
-    fixed += `
-
-  getEventName(): string {
-    return &apos;${eventName}&apos;;
-  }`;
-  }
-
-  // 3️⃣ toPrimitives()
-  if (!/toPrimitives\(\)/.test(fixed)) {
-    fixed += `
-
-  toPrimitives(): Record&lt;string, unknown&gt; {
-    return {};
-  }`;
-  }
-
-  fs.writeFileSync(filePath, fixed, &apos;utf-8&apos;);
-  console.log(`✅ Fixed: ${filePath}`);
-}
-
-function walkDir(dir: string) {
-  const files = fs.readdirSync(dir);
-  for (const file of files) {
-    const fullPath = path.join(dir, file);
-    const stat = fs.statSync(fullPath);
-    if (stat.isDirectory()) walkDir(fullPath);
-    else if (file.endsWith(&apos;.ts&apos;)) fixEventFile(fullPath);
-  }
-}
-
-walkDir(EVENTS_ROOT);
-console.log(&apos;🎯 Todos los eventos procesados.&apos;);
-
-</file>
-
 <file path="infrastructure/persistence/prisma/Json.ts">
 export type JsonPrimitive = string | number | boolean | null;
 
@@ -23859,10 +23924,11 @@ export class PrismaUnitOfWork implements UnitOfWork {
 </file>
 
 <file path="infrastructure/persistence/prisma/__tests__/execution.integration.test.ts">
-import { PrismaUnitOfWork } from &quot;../PrismaUnitOfWork.js&quot;;
-import { PrismaExecutionRepository } from &quot;../PrismaExecutionRepository.js&quot;;
-import { ExecutionFactory } from &quot;../../../../application/use-cases/test/fakes/ExecutionFactory.js&quot;;
-import { getPrismaClient } from &quot;../PrismaClient.js&quot;;
+import { describe, it, expect, beforeAll, jest } from &apos;@jest/globals&apos;;
+import { PrismaUnitOfWork } from &apos;../PrismaUnitOfWork.js&apos;;
+import { PrismaExecutionRepository } from &apos;../PrismaExecutionRepository.js&apos;;
+import { ExecutionFactory } from &apos;../../../../application/use-cases/test/fakes/ExecutionFactory.js&apos;;
+import { getPrismaClient } from &apos;../PrismaClient.js&apos;;
 
 const prisma = getPrismaClient();
 const outboxRepo = {
@@ -23870,18 +23936,18 @@ const outboxRepo = {
   findPending: jest.fn(),
   markAsPublished: jest.fn(),
 };
-const uow = new PrismaUnitOfWork(prisma, outboxRepo as any);
+const uow = new PrismaUnitOfWork();
 const repo = new PrismaExecutionRepository(outboxRepo as any);
 
-describe(&quot;Execution Repository Integration&quot;, () =&gt; {
+describe(&apos;Execution Repository Integration&apos;, () =&gt; {
   beforeAll(async () =&gt; {
     await prisma.executionStep.deleteMany({});
     await prisma.execution.deleteMany({});
   });
 
-  it(&quot;should save and retrieve an execution&quot;, async () =&gt; {
+  it(&apos;should save and retrieve an execution&apos;, async () =&gt; {
     const execution = ExecutionFactory.createExecution();
-    await uow.run(async (tx, outbox) =&gt; await repo.save(execution));
+    await uow.run(async () =&gt; await repo.save(execution));
 
     const loaded = await repo.findById(execution.getId());
     expect(loaded).not.toBeNull();
@@ -23889,45 +23955,39 @@ describe(&quot;Execution Repository Integration&quot;, () =&gt; {
     expect(loaded!.getSteps().length).toBe(execution.getSteps().length);
   });
 });
-
 </file>
 
 <file path="infrastructure/persistence/prisma/__tests__/process.integration.test.ts">
-import { PrismaUnitOfWork } from &quot;../PrismaUnitOfWork.js&quot;;
-import { PrismaProcessRepository } from &quot;../PrismaProcessRepository.js&quot;;
-import { Process } from &quot;../../../../domain/entities/process/Process.js&quot;;
-import { ProcessStep } from &quot;../../../../domain/entities/process/ProcessStep.js&quot;;
-import { getPrismaClient } from &quot;../PrismaClient.js&quot;;
+import { describe, it, expect, beforeAll } from &apos;@jest/globals&apos;;
+import { PrismaUnitOfWork } from &apos;../PrismaUnitOfWork.js&apos;;
+import { PrismaProcessRepository } from &apos;../PrismaProcessRepository.js&apos;;
+import { Process } from &apos;../../../../domain/entities/process/Process.js&apos;;
+import { ProcessStep } from &apos;../../../../domain/entities/process/ProcessStep.js&apos;;
+import { getPrismaClient } from &apos;../PrismaClient.js&apos;;
 
 const prisma = getPrismaClient();
-const outboxRepo = {
-  save: jest.fn(),
-  findPending: jest.fn(),
-  markAsPublished: jest.fn(),
-};
-const uow = new PrismaUnitOfWork(prisma, outboxRepo as any);
+const uow = new PrismaUnitOfWork();
 const processRepo = new PrismaProcessRepository();
 
-describe(&quot;Process Repository Integration&quot;, () =&gt; {
+describe(&apos;Process Repository Integration&apos;, () =&gt; {
   beforeAll(async () =&gt; {
     await prisma.processStep.deleteMany({});
     await prisma.process.deleteMany({});
   });
 
-  it(&quot;should save and retrieve a process with steps&quot;, async () =&gt; {
-    const process = Process.create(&quot;p1&quot;, &quot;Test Process&quot;, &quot;org1&quot;);
-    process.addStep(new ProcessStep({ id: &quot;s1&quot;, name: &quot;Step 1&quot;, order: 1 }));
-    process.addStep(new ProcessStep({ id: &quot;s2&quot;, name: &quot;Step 2&quot;, order: 2 }));
+  it(&apos;should save and retrieve a process with steps&apos;, async () =&gt; {
+    const process = Process.create(&apos;p1&apos;, &apos;Test Process&apos;, &apos;org1&apos;);
+    process.addStep(new ProcessStep({ id: &apos;s1&apos;, name: &apos;Step 1&apos;, order: 1 }));
+    process.addStep(new ProcessStep({ id: &apos;s2&apos;, name: &apos;Step 2&apos;, order: 2 }));
 
-    await uow.run(async (tx, outbox) =&gt; await processRepo.save(process, tx));
+    await uow.run(async () =&gt; await processRepo.save(process));
 
-    const loaded = await processRepo.findById(&quot;p1&quot;);
+    const loaded = await processRepo.findById(&apos;p1&apos;);
     expect(loaded).not.toBeNull();
     expect(loaded!.getId()).toBe(process.getId());
     expect(loaded!.getSteps().length).toBe(2);
   });
 });
-
 </file>
 
 <file path="infrastructure/persistence/services/EventPublishWorker.ts">
@@ -24061,7 +24121,7 @@ export class ProcessController {
     try {
       const { processId, executionId } = startExecutionSchema.parse(req.body);
       await this.startExecUseCase.execute(processId, executionId);
-      res.status(201).send();
+      res.status(201).json({ executionId });;
     } catch (error) {
       this.handleError(res, error);
     }
@@ -24098,7 +24158,7 @@ export class ProcessController {
       return;
     }
 
-    // AHORA SÍ: Imprimimos el error real en la terminal para no estar a ciegas
+    
     console.error(&quot;🔥 Error crítico en ProcessController:&quot;, error);
     res.status(500).json({ error: &quot;Internal server error&quot; });
   }

@@ -3,6 +3,7 @@
 # Backend Tickets
 
 **Ticket workflow automation backend** built with Domain-Driven Design, Clean Architecture, and Event-Driven patterns.
+[![codecov](https://codecov.io/gh/tu-usuario/logisparse/graph/badge.svg?token=TU_TOKEN_OPCIONAL)](https://codecov.io/gh/hxcCoder/saas-ticket-backend)
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)

@@ -1,38 +1,37 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
 import { CompleteExecutionStep } from '../../CompleteExecutionStep.js';
 import { InMemoryExecutionRepository } from './fakes/InMemoryExecutionRepository.js';
-import { ExecutionStep } from './../../../../domain/entities/execution/ExecutionStep.js';
+import { InMemoryAuditRepository } from './fakes/InMemoryAuditRepository.js';
+import { InMemoryUnitOfWork } from './fakes/InMemoryUnitOfWork.js';
+import { ExecutionFactory } from '../../test/fakes/ExecutionFactory.js';
 
 describe('CompleteExecutionStep Use Case', () => {
   let repo: InMemoryExecutionRepository;
+  let auditRepo: InMemoryAuditRepository;
+  let uow: InMemoryUnitOfWork;
   let useCase: CompleteExecutionStep;
 
   beforeEach(() => {
     repo = new InMemoryExecutionRepository();
-    useCase = new CompleteExecutionStep(repo);
+    auditRepo = new InMemoryAuditRepository();
+    uow = new InMemoryUnitOfWork();
+    useCase = new CompleteExecutionStep(repo, auditRepo, uow);
   });
 
-  it('should mark step as completed', async () => {
-    // 🔹 Creamos un step mock
-    const stepMock: any = {
-      getId: () => 'step1',
-      getName: () => 'Step 1'
-    };
-    const step = ExecutionStep.fromProcessStep(stepMock);
-
-    // 🔹 Creamos la ejecución in-memory
-    const execution = repo.createDummyExecution([step]);
+  it('should mark step as completed and save events', async () => {
+    const execution = ExecutionFactory.createExecution();
     await repo.save(execution);
 
-    // 🔹 Ejecutamos el use case
     await useCase.execute(execution.getId(), 'step1');
 
-    // 🔹 Verificamos que el step está completado
     const updated = await repo.findById(execution.getId());
     expect(updated?.isStepCompleted('step1')).toBe(true);
 
-    // 🔹 Opcional: verificamos que el evento se registró
-    const events = updated?.pullDomainEvents() ?? [];
+    const events = auditRepo.getEvents();
     expect(events.some(e => e.constructor.name === 'ExecutionStepCompleted')).toBe(true);
+  });
+
+  it('should throw if execution not found', async () => {
+    await expect(useCase.execute('non-existent', 'step1')).rejects.toThrow('Execution not found');
   });
 });

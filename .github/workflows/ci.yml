@@ -1,0 +1,43 @@
+name: CI & Coverage
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  test-and-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18' # Puedes usar '20' si es tu versión local
+        cache: 'npm'
+
+    - name: Instalar dependencias
+      run: npm ci
+
+    - name: Generar Prisma Client
+      # Ejecuta tu propio script del package.json
+      run: npm run prisma:generate
+
+    - name: Compilar TypeScript (Type Check)
+      run: npm run build
+
+    - name: Ejecutar Tests y Cobertura
+      # Llama al script exacto de tu package.json
+      run: npm run test:coverage
+
+    - name: Subir reporte a Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        fail_ci_if_error: false
+        verbose: true
+      # Nota: Si tu repositorio de GitHub es privado, Codecov te pedirá un Token. 
+      # Si es público, funcionará automáticamente sin configuración adicional.
