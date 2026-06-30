@@ -211,10 +211,6 @@ npm run test:integration
 npm run test:cov
 ```
 
-## Roadmap
-
-> _Pendiente de definir en la fuente original._
-
 ## Learning Goals
 
 This project was built to practice and demonstrate:
